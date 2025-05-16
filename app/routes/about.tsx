@@ -373,45 +373,47 @@ export default function AboutPage() {
         <Header />
         <main className="flex-1 p-8">
           <div className="max-w-4xl mx-auto">
-            <div className="mb-8">
-              <label htmlFor="stage" className="block mb-3 text-lg font-medium">
-                المرحلة:
-              </label>
-              <select
-                id="stage"
-                value={stage}
-                onChange={(e) => setStage(e.target.value)}
-                className="w-full p-3 bg-gray-700 text-white border border-blue-500 rounded-lg cursor-pointer transition-all hover:border-blue-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
-              >
-                <option value="">اختر المرحلة</option>
-                <option value="kindergarten">حضانة</option>
-                <option value="firstSecond">أولي و تانية</option>
-                <option value="thirdFourth">ثالثة و رابعة</option>
-                <option value="fifthSixth">خامسة و سادسة</option>
-                <option value="middle">اعدادي</option>
-                <option value="high">ثانوي</option>
-                <option value="university">جامعة</option>
-                <option value="servants">خدام و خادمات</option>
-              </select>
-            </div>
-            <div className="mb-8">
-              <label htmlFor="level" className="block mb-3 text-lg font-medium">
-                المستوى:
-              </label>
-              <select
-                id="level"
-                value={level}
-                onChange={(e) => setLevel(e.target.value)}
-                className="w-full p-3 bg-gray-700 text-white border border-blue-500 rounded-lg cursor-pointer transition-all hover:border-blue-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
-                disabled={levels.length === 0}
-              >
-                <option value="">اختر المستوى</option>
-                {levels.map((lvl) => (
-                  <option key={lvl} value={lvl}>
-                    {lvl}
-                  </option>
-                ))}
-              </select>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+              <div>
+                <label htmlFor="stage" className="block mb-3 text-lg font-medium">
+                  المرحلة:
+                </label>
+                <select
+                  id="stage"
+                  value={stage}
+                  onChange={(e) => setStage(e.target.value)}
+                  className="w-full p-3 bg-gray-700 text-white border border-blue-500 rounded-lg cursor-pointer transition-all hover:border-blue-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                >
+                  <option value="">اختر المرحلة</option>
+                  <option value="kindergarten">حضانة</option>
+                  <option value="firstSecond">أولي و تانية</option>
+                  <option value="thirdFourth">ثالثة و رابعة</option>
+                  <option value="fifthSixth">خامسة و سادسة</option>
+                  <option value="middle">اعدادي</option>
+                  <option value="high">ثانوي</option>
+                  <option value="university">جامعة</option>
+                  <option value="servants">خدام و خادمات</option>
+                </select>
+              </div>
+              <div>
+                <label htmlFor="level" className="block mb-3 text-lg font-medium">
+                  المستوى:
+                </label>
+                <select
+                  id="level"
+                  value={level}
+                  onChange={(e) => setLevel(e.target.value)}
+                  className="w-full p-3 bg-gray-700 text-white border border-blue-500 rounded-lg cursor-pointer transition-all hover:border-blue-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                  disabled={levels.length === 0}
+                >
+                  <option value="">اختر المستوى</option>
+                  {levels.map((lvl) => (
+                    <option key={lvl} value={lvl}>
+                      {lvl}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
             <div className="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 justify-center">
               {content.length === 0 && stage && level ? (
@@ -428,20 +430,17 @@ export default function AboutPage() {
                       {item.title}
                     </h3>
                     <p className="text-gray-300 mb-4">{item.content}</p>
+                    {/* تم إزالة حالة "مكتمل" من البيانات، لذلك نعرض فقط حالة افتراضية */}
                     <div className="flex justify-between items-center">
                       <span
-                        className={`px-3 py-1 rounded-full text-sm ${
-                          item.status === "مكتمل"
-                            ? "bg-green-500/20 text-green-400"
-                            : "bg-yellow-500/20 text-yellow-400"
-                        }`}
+                        className="px-3 py-1 rounded-full text-sm bg-yellow-500/20 text-yellow-400"
                       >
-                        {item.status || "قيد التنفيذ"}
+                        قيد التنفيذ
                       </span>
                     </div>
                   </div>
                 ))
-              )}
+              }
             </div>
           </div>
         </main>
