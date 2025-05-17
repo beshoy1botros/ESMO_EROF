@@ -8,12 +8,12 @@ const videoData = {
       {
         id: "dQw4w9WgXcQ",
         title: "سوتيس امين دمج",
-        url: "https://www.youtube.com/watch?v=jFO2dlI7yyU",
+        url: "public/الحان مهرجان الكرازة 2022 مرحلة الحضانة - المستوى الاول _ لحن سوتيس أمين دمجاً.mp4",
       },
       {
         id: "dQw4w9WgXcQ",
         title: "مرد مزمور عشية وباكر وقداس عيد النيروز",
-        url: "https://www.youtube.com/watch?v=SOXEIj43DVg",
+        url: "public/مرد مزمور - عيد النيروز - للمعلم ابراهيم عياد.mp4",
       },
       {
         id: "dQw4w9WgXcQ",
@@ -30,39 +30,39 @@ const videoData = {
       {
         id: "dQw4w9WgXcQ",
         title: "ذكصولوجية العذراء عشية (ايريه ابصول سيل)",
-        url: "https://www.youtube.com/watch?v=s9dP-j8u7u0",
+        url: "public/ذكصولوجية السيدة العذراء في رفع بخور عشية للايبيذياكون اسامه لطفي.mp4",
       },
       {
         id: "dQw4w9WgXcQ",
         title: "مرد المجمع الباسيلي (ايريه بو اسمو)",
-        url: "https://www.youtube.com/watch?v=oa3dTfPzRNU",
+        url: "public/الحان مهرجان الكرازة 2024 مرحلة الحضانة - المستوى الثاني _ مرد المجمع الباسيلي إيريه بو إسمو.mp4",
       },
       {
         id: "dQw4w9WgXcQ",
         title: "المزمور 150 الهوس الرابع بالطريقة السنوي",
-        url: "https://www.youtube.com/watch?v=YWqBsxHXIgw",
+        url: "public/الحان مهرجان الكرازة 2022 مرحلة 3 ، 4 ابتدائي - المستوى الثاني _ المزمور 150 من الهوس الرابع السنوي.mp4",
       },
       {
         id: "dQw4w9WgXcQ",
         title: "مرد انجيل القداس السنوي أوأونياتو",
-        url: "https://www.youtube.com/watch?v=zMG1DkU-zng",
+        url: "public/الحان مهرجان الكرازة 2022 مرحلة الحضانة - المستوى الثاني _ مرد انجيل القداس السنوي أوأونياتو.mp4",
       },
     ],
     gifted: [
       {
         id: "dQw4w9WgXcQ",
         title: "تي شوري السنوي",
-        url: "https://www.youtube.com/watch?v=ivRDyjwad3I",
+        url: "public/لحن تى شورى السنوى_ قبطى كاملا بالهزات_للمعلم ابراهيم معوض.mp4",
       },
       {
         id: "dQw4w9WgXcQ",
         title: "لحن البركة (بدون البرلكس)",
-        url: "https://www.youtube.com/watch?v=iOJbe7u5CQQ",
+        url: "public/لحن البركة تين اواوشت بالهزات _ مهرجان الكرازة المرقسية 2023 -مرحلة اعدادى.mp4",
       },
       {
         id: "dQw4w9WgXcQ",
         title: "لحن خين افران (التمجيد)",
-        url: "https://www.youtube.com/watch?v=cVjvecHRWkc",
+        url: "public/لحن خين افران - بصوت المُعلم ابراهيم عياد.mp4",
       },
     ],
   },
@@ -71,38 +71,38 @@ const videoData = {
       {
         id: "fs1-1",
         title: "الليلويا فاي بيه بي",
-        url: "https://www.youtube.com/watch?v=YDG5SlbM-7M",
+        url: "public/لحن الليلويا فاى بيه بى بالقبطى بالهزات بصوت الايبذياكون اسامة لطفى.mp4",
       },
       {
         id: "fs1-2",
         title: "مرد انجيل عيد النيروز",
-        url: "https://www.youtube.com/watch?v=NnvMalZCeVA",
+        url: "public/مرد الانجيل لعيد النيروز للايبيذياكون اسامه لطفى.mp4",
       },
       {
         id: "fs1-3",
         title: "ذوكصولوجية العذراء رفع بخور باكر",
-        url: "https://www.youtube.com/watch?v=vjB7gY_wgtw",
+        url: "public/ذكصولوجية السيدة العذراء في رفع بخور باكر للايبيذياكون اسامه لطفي.mp4",
       },
       {
         id: "fs1-4",
         title: "طلبة افنوتي ناي نان تسبحة نصف الليل",
-        url: "https://www.youtube.com/watch?v=hXS3O8hkEKQ",
+        url: "public/ختام التسبحة للمعلم ابراهيم عياد.mp4",
       },
     ],
     second: [
       {
         id: "fs2-1",
         title: "تي شوري السنوي",
-        url: "https://www.youtube.com/watch?v=ivRDyjwad3I",
+        url: "public/لحن تى شورى السنوى_ قبطى كاملا بالهزات_للمعلم ابراهيم معوض.mp4",
       },
       {
         id: "fs2-2",
         title: "ذوكصولوجية الاباء الرسل (كيريوس)",
-        url: "https://www.youtube.com/watch?v=97QDmOgr2Zk",
+        url: "public/ذكصولوجية ثانية للاباء الرسل تقال في صوم الرسل - للمُعلم ابراهيم عياد.mp4",
       },
       {
         id: "fs2-3",
-        title: "مرد (اوس بيرين) للقداس الباسيلي",
+        title: "public/أوس بيرين للشماس مينا عبده.mp4",
         url: "https://www.youtube.com/watch?v=UcBqXdocQsA",
       },
       {
