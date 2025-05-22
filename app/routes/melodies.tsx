@@ -489,7 +489,7 @@ function getYouTubeEmbedUrl(url: string) {
   return url;
 }
 
-export function meta({}: Route.MetaArgs) {
+export function meta() {
   return [
     { title: "ⲥⲙⲟⲩ ⲉⲣⲟϥ - الألحان" },
     {
@@ -643,7 +643,7 @@ export default function MelodiesPage() {
                             src={video.url}
                             controls
                             preload="auto"
-                            poster="العذراء مريم.ico" // يمكنك تغيير الصورة المصغرة هنا إذا كان لديك صورة لكل فيديو
+                            poster="/العذراء مريم.ico" // تأكد من وجود الصورة في مجلد public
                             className="absolute top-0 left-0 w-full h-full rounded-lg"
                             style={{ background: "#222" }}
                           />

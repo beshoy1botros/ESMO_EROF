@@ -454,7 +454,7 @@ export default function AboutPage() {
   );
 }
 
-export function meta({}: Route.MetaArgs) {
+export function meta() {
   return [
     { title: "ⲥⲙⲟⲩ ⲉⲣⲟϥ - طقس اللحن" },
     {
