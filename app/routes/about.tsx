@@ -403,7 +403,7 @@ export default function AboutPage() {
                   htmlFor="level"
                   className="block mb-3 text-lg font-medium"
                 >
-                  المستوى:
+                   المستوى:
                 </label>
                 <select
                   id="level"
