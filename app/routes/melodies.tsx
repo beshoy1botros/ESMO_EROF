@@ -633,7 +633,7 @@ export default function MelodiesPage() {
                             src={video.url}
                             controls
                             preload="auto"
-                            poster="" // يمكنك تغيير الصورة المصغرة هنا إذا كان لديك صورة لكل فيديو
+                            poster="/العذراء مريم.ico" // يمكنك تغيير الصورة المصغرة هنا إذا كان لديك صورة لكل فيديو
                             className="absolute top-0 left-0 w-full h-full rounded-lg"
                             style={{ background: "#222" }}
                           />
