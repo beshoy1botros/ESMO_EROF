@@ -3,15 +3,15 @@ import type { RouteObject } from "react-router";
 const routes: RouteObject[] = [
   {
     path: "/",
-    element: require("./routes/home").default,
+    element: require("./routes/home.tsx").default,
   },
   {
     path: "melodies",
-    element: require("./routes/melodies").default,
+    element: require("./routes/melodies.tsx").default,
   },
   {
     path: "about",
-    element: require("./routes/about").default,
+    element: require("./routes/about.tsx").default,
   },
 ];
 
