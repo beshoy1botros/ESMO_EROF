@@ -9,8 +9,6 @@ import {
 
 import type { Route } from "./+types/root";
 import "./app.css";
-import Header from "./components/Header";
-import Footer from "./components/Footer";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -23,20 +21,24 @@ export const links: Route.LinksFunction = () => [
     rel: "stylesheet",
     href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Noto+Sans+Coptic&display=swap",
   },
-  {
-    rel: "shortcut icon",
-    href: "/العذراء مريم.ico",
-    type: "icon",
-  },
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen flex flex-col bg-white dark:bg-blue-950">
-      <Header />
-      <main className="flex-1 flex flex-col">{children}</main>
-      <Footer />
-    </div>
+    <html lang="en , ar">
+      <head>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <Meta />
+        <Links />
+      </head>
+      <body>
+        {/* لا تضع Header أو Footer هنا */}
+        {children}
+        <ScrollRestoration />
+        <Scripts />
+      </body>
+    </html>
   );
 }
 

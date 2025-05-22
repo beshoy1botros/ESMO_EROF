@@ -1,5 +1,5 @@
 import React from "react";
-import { useLocation, Link } from "react-router";
+import { Link, useLocation } from "react-router";
 
 const navLinks = [
   { to: "/", label: "الرئيسية" },
@@ -13,19 +13,28 @@ export default function Header() {
     <header className="bg-blue-950 p-6 text-center shadow-md">
       <h1 className="text-3xl font-bold text-blue-500 mb-4">ⲥⲙⲟⲩ ⲉⲣⲟϥ</h1>
       <nav className="flex justify-center gap-4">
-        {navLinks.map((link) => (
-          <Link
-            key={link.to}
-            to={link.to}
-            className={
-              location.pathname === link.to
-                ? "text-blue-400 font-bold border-b-2 border-blue-400 pb-1"
-                : "text-gray-300 hover:text-blue-300 transition-colors"
-            }
-          >
-            {link.label}
-          </Link>
-        ))}
+        {navLinks.map((link) => {
+          const isActive =
+            link.to === "/"
+              ? location.pathname === "/"
+              : location.pathname.startsWith(link.to);
+          return (
+            <Link
+              key={link.to}
+              to={link.to}
+              className={`no-underline px-4 py-2 transition-all font-medium
+                ${
+                  isActive
+                    ? "text-blue-400 border-b-2 border-blue-500"
+                    : "text-white hover:text-blue-400"
+                }
+              `}
+              style={{ borderRadius: 0, background: "none" }}
+            >
+              {link.label}
+            </Link>
+          );
+        })}
       </nav>
     </header>
   );
