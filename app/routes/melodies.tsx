@@ -632,7 +632,7 @@ export default function MelodiesPage() {
                           <video
                             src={video.url}
                             controls
-                            preload="none"
+                            preload="metadata"
                             className="absolute top-0 left-0 w-full h-full rounded-lg"
                             style={{ background: "#222" }}
                           />
