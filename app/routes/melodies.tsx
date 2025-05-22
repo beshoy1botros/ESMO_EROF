@@ -489,7 +489,7 @@ function getYouTubeEmbedUrl(url: string) {
   return url;
 }
 
-export function meta() {
+export function meta({}: Route.MetaArgs) {
   return [
     { title: "ⲥⲙⲟⲩ ⲉⲣⲟϥ - الألحان" },
     {
