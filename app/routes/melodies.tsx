@@ -116,12 +116,12 @@ const videoData = {
         id: "fsg-1",
         title:
           "لبش الهوس الاول خين اوشوت (اول ربعين باللحن+التكملة دمج+اخر 3 ارباع بالطريقة المطولة)",
-        url: "https://www.youtube.com/watch?v=l7i80RIFCvw",
+        url: "/لحن لبش الهوس الاول ( خين اوشوت )مهرجان الكرازة ٢٠١٩ مرحلة اعدادي.mp4",
       },
       {
         id: "fsg-2",
         title: "مرد الابركسيس لصوم الاباء الرسل",
-        url: "https://www.youtube.com/watch?v=o7Sa2sUkubk",
+        url: "/مرد الابركسيس لصوم الاباء الرسل_ بالهزات_للمعلم ابراهيم معوض.mp4",
       },
     ],
   },
@@ -130,56 +130,56 @@ const videoData = {
       {
         id: "tf1-1",
         title: "ذوكصولوجية الاباء الرسل (كيريوس)",
-        url: "https://www.youtube.com/watch?v=97QDmOgr2Zk",
+        url: "/ذكصولوجية ثانية للاباء الرسل تقال في صوم الرسل - للمُعلم ابراهيم عياد.mp4",
       },
       {
         id: "tf1-2",
         title: "مرد امين امين طون ثاناطون",
-        url: "https://www.youtube.com/watch?v=qLL5KcO1J3E",
+        url: "/آمين آمين آمين طون ثاناطون للمعلم زاهر أندراوس.mp4",
       },
       {
         id: "tf1-3",
         title: "مرد انجيل عشية في صوم العذراء (آ اوميش ان اسهيمي)",
-        url: "https://www.youtube.com/watch?v=84hnj4ZiQok",
+        url: "/مرد انجيل عشية صوم العذراء مريم - للمُعلم ابراهيم عياد.mp4",
       },
       {
         id: "tf1-4",
         title: "لحن التمجيد (اك اسماروؤت)",
-        url: "https://www.youtube.com/watch?v=DGOl4Zjokog",
+        url: "/لحن إك إسماروؤت _ مبارك أنت بالحقيقة للتمجيد والتوزيع _ للمُعلم جاد لويس.mp4",
       },
     ],
     second: [
       {
         id: "tf2-1",
         title: "طاي شوري السنوي",
-        url: "https://www.youtube.com/watch?v=YfWZRCkSNAs",
+        url: "/لحن طاى شورى السنوى كاملا بالهزات_للمعلم ابراهيم معوض.mp4",
       },
       {
         id: "tf2-2",
         title: "ذكصولوجية العذراء في تسبحة نصف الليل",
-        url: "https://www.youtube.com/watch?v=wM5ZBs3UD24",
+        url: "/ذكصولوجية السيدة العذراء مريم نصف الليل المعلم زاهر اندراوس.mp4",
       },
       {
         id: "tf2-3",
         title: "مرد الابركسيس لصوم الاباء الرسل (شيريه ناتشويس)",
-        url: "https://www.youtube.com/watch?v=o7Sa2sUkubk",
+        url: "/مرد الابركسيس لصوم الاباء الرسل_ بالهزات_للمعلم ابراهيم معوض.mp4",
       },
       {
         id: "tf2-4",
         title: "مرد (اوس بيرين) للقداس الغريغوري بالختام المطول",
-        url: "https://www.youtube.com/watch?v=RSRSnMToKyw",
+        url: "/مرد  اوس بيرين_للمعلم_جاد لويس.mp4",
       },
     ],
     gifted: [
       {
         id: "tfg-1",
         title: "قطعة التمجيد (شاشف انسوب)",
-        url: "https://www.youtube.com/watch?v=026lSE63o5I",
+        url: "/قطعة شاشف انسوب للمعلم جاد لويز.mp4",
       },
       {
         id: "tfg-2",
         title: "لحن افشوليم لتسبحة الاحد",
-        url: "https://www.youtube.com/watch?v=1ZoU2sMHuSI",
+        url: "/لحن افشوليم إيروف _ المعلم زاهر أندراوس.mp4",
       },
       {
         id: "tfg-3",
@@ -194,62 +194,62 @@ const videoData = {
       {
         id: "fs1-1",
         title: "مرد فول ايفول للقداس الغريغوري",
-        url: "https://www.youtube.com/watch?v=XZS-fw3Q8sE",
+        url: "/فول ايفول - المعلم جاد لويس.mp4",
       },
       {
         id: "fs1-2",
         title: "مرد الابركسيس لصوم الاباء الرسل (شيريه ناتشويس)",
-        url: "https://www.youtube.com/watch?v=o7Sa2sUkubk",
+        url: "/مرد الابركسيس لصوم الاباء الرسل_ بالهزات_للمعلم ابراهيم معوض.mp4",
       },
       {
         id: "fs1-3",
         title: "لحن البركة (بدون البرلكس)",
-        url: "https://www.youtube.com/watch?v=iOJbe7u5CQQ",
+        url: "/لحن البركة تين اواوشت بالهزات _ مهرجان الكرازة المرقسية 2023 -مرحلة اعدادى.mp4",
       },
       {
         id: "fs1-4",
         title: "ذوكصولوجية الاباء الرسل (كيريوس)",
-        url: "https://www.youtube.com/watch?v=97QDmOgr2Zk",
+        url: "/ذكصولوجية ثانية للاباء الرسل تقال في صوم الرسل - للمُعلم ابراهيم عياد.mp4",
       },
     ],
     second: [
       {
         id: "fs2-1",
         title: "ذكصولوجية العذراء في تسبحة نصف الليل",
-        url: "https://www.youtube.com/watch?v=wM5ZBs3UD24",
+        url: "/ذكصولوجية السيدة العذراء مريم نصف الليل المعلم زاهر اندراوس.mp4",
       },
       {
         id: "fs2-2",
         title: "المزمور السنوي المختصر (او اويني افشاي)",
-        url: "https://www.youtube.com/watch?v=3ZkBM6BcVi4",
+        url: "/المزمور السنوي المختصر او اويني افشاي.mp4",
       },
       {
         id: "fs2-3",
         title: "طاي شوري السنوي",
-        url: "https://www.youtube.com/watch?v=YfWZRCkSNAs",
+        url: "/لحن طاى شورى السنوى كاملا بالهزات_للمعلم ابراهيم معوض.mp4",
       },
       {
         id: "fs2-4",
         title:
           "لبش الهوس الثاني (اول ربعين باللحن+التكملة دمج+اخر 4 ارباع باللحن)",
-        url: "https://www.youtube.com/watch?v=WqIpQWq057Y",
+        url: "/ليش الهوس الثاني _ مارين أووؤنه _ للمرتل زاهر أندراوس.mp4",
       },
     ],
     gifted: [
       {
         id: "fsg-1",
         title: "لحن اطاي بارثينوس كاملا",
-        url: "https://www.youtube.com/watch?v=o_D149fkt6U",
+        url: "/اطاي بارثينوس.mp4",
       },
       {
         id: "fsg-2",
         title: "اوشية القرابين الكبيرة",
-        url: "https://www.youtube.com/watch?v=XJbfHWUmNZo&list=PLYlhTsAnmNqXkcZHvWAOj93c_weL5HLom&index=5",
+        url: "/مردات الشماس داخل الهيكل  ما يقال أثناء رفع بخوري عشية وباكر  أوشية القرابين.mp4",
       },
       {
         id: "fsg-3",
         title: "اسبسمس الادام(افرحي يا مريم )عربي كاملا",
-        url: "https://www.youtube.com/watch?v=VfRPnqm-vVw",
+        url: "/الحان القداس _ الطقس السنوي _ للمعلم ابراهيم عياد _ لحن افرحي يا مريم.mp4",
       },
     ],
   },
@@ -258,23 +258,23 @@ const videoData = {
       {
         id: "m1-1",
         title: "ابصالية الاحد(ايكوتي) كاملة",
-        url: "https://www.youtube.com/watch?v=k4yPu3lYhe8",
+        url: "/ابصالية ايكوتى للمعلم ابراهيم عياد.mp4",
       },
       {
         id: "m1-2",
         title:
           "قطعة توزيع عيد العنصرة وصوم الاباء الرسل (اسومين) كاملا يوناني+قبطي+عربي",
-        url: "https://www.youtube.com/watch?v=dvRM2sayfJQ",
+        url: "/اسومين توزيع عيد العنصرة و صوم الاباء الرسل المعلم ابراهيم عياد.mp4",
       },
       {
         id: "m1-3",
         title: "المزمور السنوي المختصر",
-        url: "https://www.youtube.com/watch?v=3ZkBM6BcVi4",
+        url: "/المزمور السنوي المختصر او اويني افشاي.mp4",
       },
       {
         id: "m1-4",
         title: "اسبسمس الادام (اونوف اممو ماريا) قبطي كاملا",
-        url: "https://www.youtube.com/watch?v=eAXJkkNnCUQ",
+        url: "/اونوف اممو ماريا للمعلم ابراهيم عياد.mp4",
       },
     ],
     second: [
@@ -282,12 +282,12 @@ const videoData = {
         id: "m2-1",
         title:
           "لحن اوندوس(المقدمة+ابوخروؤ+اري ابريسفيفين+طوبه ام ابتشويس للرسل)",
-        url: "https://www.youtube.com/watch?v=cTsZOCs9g2M",
+        url: "/لحن أوندوس للمعلم إبراهيم عياد واالمعلم زاهر أندراوس من كاتدرائية البابا كيرلس بدير مارمينا بمريوط.mp4",
       },
       {
         id: "m2-2",
         title: "ابصالية الثلاثة فتية(اربصالين)",
-        url: "https://www.youtube.com/watch?v=PE-ZQlXZz9c",
+        url: "/قطعة اريبصالين للمعلم ابراهيم عياد.mp4",
       },
       {
         id: "m2-3",
@@ -297,19 +297,19 @@ const videoData = {
       {
         id: "m2-4",
         title: "طواف عشية + طواف باكر السنوي",
-        url: "https://www.youtube.com/watch?v=ps65gYhlWx0",
+        url: "/طوافات رفع بخوري عشية وباكر السنوي   للمعلم زاهر أندراوس.mp4",
       },
     ],
     gifted: [
       {
         id: "mg-1",
         title: "ني اثنوس تيرو كاملا",
-        url: "https://www.youtube.com/watch?v=0Lt8B-Qbdz8",
+        url: "/تسبحة الأيام وتسبحة العشية السنوي _ تسبحة يوم السبت _ لحن ني اثنوس تيرو.mp4",
       },
       {
         id: "mg-2",
         title: "لحن الفضائل الاثني عشر قبطي (تي ميتي اسنوتي)",
-        url: "https://www.youtube.com/watch?v=FiYEsxAizQE",
+        url: "/لحن الفضائل تي ميت إسنوتي من قداس عيد القيامة 2013 للمعلم ابراهيم عياد وخوروس الاكليريكة.mp4",
       },
     ],
   },
@@ -318,51 +318,51 @@ const videoData = {
       {
         id: "h1-1",
         title: "الهوس الاول كاملا",
-        url: "https://www.youtube.com/watch?v=0u0nY31iXqE",
+        url: "/الهوس الاول.mp4",
       },
       {
         id: "h1-2",
         title: "اطاي بارثينوس كاملا",
-        url: "https://www.youtube.com/watch?v=o_D149fkt6U",
+        url: "/اطاي بارثينوس.mp4",
       },
       {
         id: "h1-3",
         title: "اسبسمس واطس للعذراء(ماريا تي تشرومبي)",
-        url: "https://www.youtube.com/watch?v=BVVB4o0gqN0",
+        url: "/ماريا تي تشرومبي.mp4",
       },
       {
         id: "h1-4",
         title: "مرد الابركسيس لعيد النيروز + الختام بالطريقة المطولة",
-        url: "https://www.youtube.com/watch?v=bzacrRVhRBE",
+        url: "/مرد ابركسيس عيد النيروز بالتكملة الكبيرة - بصوت المرتل اسامة فوزي.mp4",
       },
     ],
     second: [
       {
         id: "h2-1",
         title: "تين اويه انسوك السنوي",
-        url: "https://www.youtube.com/watch?v=ZM1CHrsAKZc",
+        url: "/تين اووية انسوك .mp4",
       },
       {
         id: "h2-2",
         title: "محير(افناف امبي اسمو) للعذراء",
-        url: "https://www.youtube.com/watch?v=563yhpV8INI",
+        url: "/افناف امبي اسمو.mp4",
       },
       {
         id: "h2-3",
         title: "ذوكصولوجية باكر",
-        url: "https://www.youtube.com/watch?v=tbreXiaMnmE",
+        url: "/ذكصولوجية باكر.mp4",
       },
       {
         id: "h2-4",
         title: "اوندوس",
-        url: "https://www.youtube.com/watch?v=cTsZOCs9g2M",
+        url: "/لحن أوندوس للمعلم إبراهيم عياد واالمعلم زاهر أندراوس من كاتدرائية البابا كيرلس بدير مارمينا بمريوط.mp4",
       },
     ],
     gifted: [
       {
         id: "hg-1",
         title: "اسبازيستي الكبير",
-        url: "https://www.youtube.com/watch?v=Rd7vZzwsNI0",
+        url: "/اسبازيستي.mp4",
       },
       {
         id: "hg-2",
@@ -376,44 +376,44 @@ const videoData = {
       {
         id: "u1-1",
         title: "اوندوس",
-        url: "https://www.youtube.com/watch?v=cTsZOCs9g2M",
+        url: "/لحن أوندوس للمعلم إبراهيم عياد واالمعلم زاهر أندراوس من كاتدرائية البابا كيرلس بدير مارمينا بمريوط.mp4",
       },
       {
         id: "u1-2",
         title: "اطاي بارثينوس كاملا",
-        url: "https://www.youtube.com/watch?v=o_D149fkt6U",
+        url: "/اطاي بارثينوس.mp4",
       },
       {
         id: "u1-3",
         title: "لحن افشوليم + ايفول هيتين الصغير",
-        url: "https://www.youtube.com/watch?v=BRX1GxomF8Q",
+        url: "/لحن افئين بى ارشى ايرفس+افشوليم+ايفول هيتين للمعلم ابراهيم عياد.mp4",
       },
       {
         id: "u1-4",
         title: "محير التمجيد(فاي بي ابليمين)",
-        url: "https://www.youtube.com/watch?v=pd_ye6N8uvY",
+        url: "/لحن فاى بى ابلمين لتماجيد العذراء_كاملا بالهزات_للمعلم ابراهيم معوض.mp4",
       },
     ],
     second: [
       {
         id: "u2-1",
         title: "الهوس الرابع كاملا",
-        url: "https://www.youtube.com/watch?v=-KWuTNViajg",
+        url: "/الهوس الرابع للمعلم ابراهيم عياد.mp4",
       },
       {
         id: "u2-2",
         title: "التوزيع الفرايحي الكبير لعيد النيروز قبطيا كاملا",
-        url: "https://www.youtube.com/watch?v=jGqnGDFcqzE",
+        url: "/مزمور التوزيع الكبير - عيد النيروز - للمعلم ابراهيم عياد.mp4",
       },
       {
         id: "u2-3",
         title: "لحن افئين بي ارشي",
-        url: "https://www.youtube.com/watch?v=4uIjX-dff1w",
+        url: "/لحن أفئين بي ارشي ايريفس _ المعلم زاهر أندراوس.mp4",
       },
       {
         id: "u2-4",
         title: "لحن فاني تينه (للملاك ميخائيل)",
-        url: "https://www.youtube.com/watch?v=GJG83hPESJA",
+        url: "/لحن فاني تينه _ المعلم زاهر اندراوس _ يقال في أعياد الملاك ميخائيل.mp4",
       },
     ],
   },
@@ -423,41 +423,41 @@ const videoData = {
         id: "s1-1",
         title:
           "لحن بي إنفما كامل + المجمع (الربع الأول والثاني في خين هان ميش إن لاس)",
-        url: "https://www.youtube.com/watch?v=Wjz0lpFXnZo",
+        url: "/لحن بي ابنفما - للمًعلم ابراهيم عياد.mp4",
       },
       {
         id: "s1-2",
         title:
           "لحن تين ثينو الكبير كامل + التكملة حتى النهاية الأرباع (إبشويس إك إيسه أوراون إتنا إيسوتو أووه)",
-        url: "https://www.youtube.com/watch?v=GfznTDsfuBE",
+        url: "/لحن تين ثينو الكبير للمعلم ابراهيم عياد.mp4",
       },
       {
         id: "s1-3",
         title: "لحن إسبازيسي الكبير كامل",
-        url: "https://www.youtube.com/watch?v=Rd7vZzwsNI0",
+        url: "/اسبازيستي.mp4",
       },
     ],
     second: [
       {
         id: "s2-1",
         title: "لحن أفئين بي أرشي",
-        url: "https://www.youtube.com/watch?v=4uIjX-dff1w",
+        url: "/لحن أفئين بي ارشي ايريفس _ المعلم زاهر أندراوس.mp4",
       },
       {
         id: "s2-2",
         title: "إبصالية آدم لصوم الآباء الرسل (اي اوش أوفيك إيبشويس) كاملة",
-        url: "https://www.youtube.com/watch?v=9M3X9uq8S6k",
+        url: "/ابصالية ادام لصوم الاباء الرسل.mp4",
       },
       {
         id: "s2-3",
         title:
           "لحن أوندوس (المقدمة + أبو إخراوؤو شينيف + آري إبؤسفيقين + طوبه إيبشويس للرسل)",
-        url: "https://www.youtube.com/watch?v=cTsZOCs9g2M",
+        url: "/لحن أوندوس للمعلم إبراهيم عياد واالمعلم زاهر أندراوس من كاتدرائية البابا كيرلس بدير مارمينا بمريوط.mp4",
       },
       {
         id: "s2-4",
         title: "لحن سينا نشو للتمجيد",
-        url: "https://www.youtube.com/watch?v=DkwSGXy_Jec",
+        url: "/لحن سينا اتشو 0 للمعلم ابراهيم معوض.mp4",
       },
     ],
   },
