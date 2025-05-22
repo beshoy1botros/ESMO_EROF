@@ -41,6 +41,12 @@ export function Welcome() {
             </ul>
           </nav>
         </div>
+        <div className="text-center p-8">
+          <h2 className="text-2xl font-bold mb-4">مرحباً بك في الموقع!</h2>
+          <p className="mb-4">
+            هذا الموقع مخصص لتعليم الألحان القبطية للطلاب في مختلف المراحل.
+          </p>
+        </div>
       </div>
     </main>
   );
