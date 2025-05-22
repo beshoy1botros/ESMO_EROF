@@ -489,6 +489,16 @@ function getYouTubeEmbedUrl(url: string) {
   return url;
 }
 
+export function meta({}: Route.MetaArgs) {
+  return [
+    { title: "ⲥⲙⲟⲩ ⲉⲣⲟϥ - الألحان" },
+    {
+      name: "description",
+      content: "موقع متخصص في تعليم الألحان القبطية للطلاب في مختلف المراحل",
+    },
+  ];
+}
+
 export default function MelodiesPage() {
   const [stage, setStage] = useState("");
   const [level, setLevel] = useState("");
