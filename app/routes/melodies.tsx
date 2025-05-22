@@ -628,13 +628,22 @@ export default function MelodiesPage() {
                     </h3>
                     <div className="relative w-full pt-[56.25%] mb-4">
                       {video.url ? (
-                        <iframe
-                          src={getYouTubeEmbedUrl(video.url)}
-                          className="absolute top-0 left-0 w-full h-full rounded-lg"
-                          frameBorder="0"
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                          allowFullScreen
-                        ></iframe>
+                        video.url.endsWith(".mp4") ? (
+                          <video
+                            src={video.url}
+                            controls
+                            className="absolute top-0 left-0 w-full h-full rounded-lg"
+                            style={{ background: "#222" }}
+                          />
+                        ) : (
+                          <iframe
+                            src={getYouTubeEmbedUrl(video.url)}
+                            className="absolute top-0 left-0 w-full h-full rounded-lg"
+                            frameBorder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                          ></iframe>
+                        )
                       ) : (
                         <div className="absolute top-0 left-0 w-full h-full bg-gray-700 rounded-lg flex items-center justify-center">
                           <p className="text-gray-400">لا يوجد فيديو متاح</p>
