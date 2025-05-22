@@ -1,18 +1,7 @@
-import type { RouteObject } from "react-router";
+import { type RouteConfig, index, route } from "@react-router/dev/routes";
 
-const routes: RouteObject[] = [
-  {
-    path: "/",
-    element: require("./routes/home.tsx").default,
-  },
-  {
-    path: "melodies",
-    element: require("./routes/melodies.tsx").default,
-  },
-  {
-    path: "about",
-    element: require("./routes/about.tsx").default,
-  },
-];
-
-export default routes;
+export default [
+  index("routes/home.tsx"),
+  route("melodies", "routes/melodies.tsx"),
+  route("about", "routes/about.tsx"),
+] satisfies RouteConfig;
