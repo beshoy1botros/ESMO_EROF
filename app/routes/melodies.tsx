@@ -611,7 +611,7 @@ export default function MelodiesPage() {
                   className="w-full p-3 bg-gray-700 text-white border border-blue-500 rounded-lg cursor-pointer transition-all hover:border-blue-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
                   disabled={levels.length === 0}
                 >
-                  <option value="">اختر </option>
+                  <option value="">اختر المستوى</option>
                   {levels.map((lvl) => (
                     <option key={lvl} value={lvl}>
                       {lvl}
