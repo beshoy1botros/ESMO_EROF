@@ -375,7 +375,10 @@ export default function AboutPage() {
           <div className="max-w-4xl mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
               <div>
-                <label htmlFor="stage" className="block mb-3 text-lg font-medium">
+                <label
+                  htmlFor="stage"
+                  className="block mb-3 text-lg font-medium"
+                >
                   المرحلة:
                 </label>
                 <select
@@ -396,7 +399,10 @@ export default function AboutPage() {
                 </select>
               </div>
               <div>
-                <label htmlFor="level" className="block mb-3 text-lg font-medium">
+                <label
+                  htmlFor="level"
+                  className="block mb-3 text-lg font-medium"
+                >
                   المستوى:
                 </label>
                 <select
@@ -432,9 +438,7 @@ export default function AboutPage() {
                     <p className="text-gray-300 mb-4">{item.content}</p>
                     {/* تم إزالة حالة "مكتمل" من البيانات، لذلك نعرض فقط حالة افتراضية */}
                     <div className="flex justify-between items-center">
-                      <span
-                        className="px-3 py-1 rounded-full text-sm bg-yellow-500/20 text-yellow-400"
-                      >
+                      <span className="px-3 py-1 rounded-full text-sm bg-yellow-500/20 text-yellow-400">
                         قيد التنفيذ
                       </span>
                     </div>
@@ -448,4 +452,14 @@ export default function AboutPage() {
       </div>
     </div>
   );
+}
+
+export function meta() {
+  return [
+    { title: "ⲥⲙⲟⲩ ⲉⲣⲟϥ - طقس اللحن" },
+    {
+      name: "description",
+      content: "موقع متخصص في تعليم الألحان القبطية للطلاب في مختلف المراحل",
+    },
+  ];
 }
