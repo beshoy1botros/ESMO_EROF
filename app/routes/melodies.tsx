@@ -640,7 +640,7 @@ export default function MelodiesPage() {
                             src={getYouTubeEmbedUrl(video.url)}
                             className="absolute top-0 left-0 w-full h-full rounded-lg"
                             frameBorder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allow="accelerometer; controls; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                             allowFullScreen
                           ></iframe>
                         )
