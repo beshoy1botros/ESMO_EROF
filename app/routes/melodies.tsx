@@ -102,8 +102,8 @@ const videoData = {
       },
       {
         id: "fs2-3",
-        title: "public/أوس بيرين للشماس مينا عبده.mp4",
-        url: "https://www.youtube.com/watch?v=UcBqXdocQsA",
+        title: "مرد (اوس بيرين للقداس الباسيلي) بدون امين المطولة",
+        url: "public/أوس بيرين للشماس مينا عبده.mp4",
       },
       {
         id: "fs2-4",
