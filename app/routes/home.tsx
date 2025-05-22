@@ -5,7 +5,7 @@ import Footer from "../components/Footer";
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "ⲥⲙⲟⲩ ⲉⲣⲟϥ - موقع الألحان القبطية" },
+    { title: "ⲥⲙⲟⲩ ⲉⲣⲟϥ" },
     {
       name: "description",
       content: "موقع متخصص في تعليم الألحان القبطية للطلاب في مختلف المراحل",
