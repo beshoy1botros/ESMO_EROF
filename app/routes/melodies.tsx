@@ -6,61 +6,50 @@ const videoData = {
   kindergarten: {
     first: [
       {
-        id: "dQw4w9WgXcQ",
         title: "سوتيس امين دمج",
         url: "/الحان مهرجان الكرازة 2022 مرحلة الحضانة - المستوى الاول _ لحن سوتيس أمين دمجاً.mp4",
       },
       {
-        id: "dQw4w9WgXcQ",
         title: "مرد مزمور عشية وباكر وقداس عيد النيروز",
         url: "/مرد مزمور - عيد النيروز - للمعلم ابراهيم عياد.mp4",
       },
       {
-        id: "dQw4w9WgXcQ",
         title: "ختام الصلوات الاجتماعية(المياة والاهوية)", //record
         url: "",
       },
       {
-        id: "dQw4w9WgXcQ",
         title: "هيتين القداس للعذراء+الاباء الرسل", //record
         url: "",
       },
     ],
     second: [
       {
-        id: "dQw4w9WgXcQ",
         title: "ذكصولوجية العذراء عشية (ايريه ابصول سيل)",
         url: "/ذكصولوجية السيدة العذراء في رفع بخور عشية للايبيذياكون اسامه لطفي.mp4",
       },
       {
-        id: "dQw4w9WgXcQ",
         title: "مرد المجمع الباسيلي (ايريه بو اسمو)",
         url: "/الحان مهرجان الكرازة 2024 مرحلة الحضانة - المستوى الثاني _ مرد المجمع الباسيلي إيريه بو إسمو.mp4",
       },
       {
-        id: "dQw4w9WgXcQ",
         title: "المزمور 150 الهوس الرابع بالطريقة السنوي",
         url: "/الحان مهرجان الكرازة 2022 مرحلة 3 ، 4 ابتدائي - المستوى الثاني _ المزمور 150 من الهوس الرابع السنوي.mp4",
       },
       {
-        id: "dQw4w9WgXcQ",
         title: "مرد انجيل القداس السنوي أوأونياتو",
         url: "/الحان مهرجان الكرازة 2022 مرحلة الحضانة - المستوى الثاني _ مرد انجيل القداس السنوي أوأونياتو.mp4",
       },
     ],
     gifted: [
       {
-        id: "dQw4w9WgXcQ",
         title: "تي شوري السنوي",
         url: "/لحن تى شورى السنوى_ قبطى كاملا بالهزات_للمعلم ابراهيم معوض.mp4",
       },
       {
-        id: "dQw4w9WgXcQ",
         title: "لحن البركة (بدون البرلكس)",
         url: "/لحن البركة تين اواوشت بالهزات _ مهرجان الكرازة المرقسية 2023 -مرحلة اعدادى.mp4",
       },
       {
-        id: "dQw4w9WgXcQ",
         title: "لحن خين افران (التمجيد)",
         url: "/لحن خين افران - بصوت المُعلم ابراهيم عياد.mp4",
       },
@@ -479,16 +468,6 @@ function getVideos(stage: string, level: string) {
   return videoData[stage]?.[englishLevel] || [];
 }
 
-function getYouTubeEmbedUrl(url: string) {
-  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
-  const match = url.match(regExp);
-  const videoId = match && match[2].length === 11 ? match[2] : null;
-  if (videoId) {
-    return `https://www.youtube.com/embed/${videoId}`;
-  }
-  return url;
-}
-
 export function meta() {
   return [
     { title: "ⲥⲙⲟⲩ ⲉⲣⲟϥ - الألحان" },
@@ -643,18 +622,14 @@ export default function MelodiesPage() {
                             src={video.url}
                             controls
                             preload="auto"
-                            poster="/العذراء مريم.ico" // تأكد من وجود الصورة في مجلد public
+                            poster="/العذراء مريم.ico"
                             className="absolute top-0 left-0 w-full h-full rounded-lg"
                             style={{ background: "#222" }}
                           />
                         ) : (
-                          <iframe
-                            src={getYouTubeEmbedUrl(video.url)}
-                            className="absolute top-0 left-0 w-full h-full rounded-lg"
-                            frameBorder="0"
-                            allow="accelerometer; controls; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowFullScreen
-                          ></iframe>
+                          <div className="absolute top-0 left-0 w-full h-full bg-gray-700 rounded-lg flex items-center justify-center">
+                            <p className="text-gray-400">لا يوجد فيديو متاح</p>
+                          </div>
                         )
                       ) : (
                         <div className="absolute top-0 left-0 w-full h-full bg-gray-700 rounded-lg flex items-center justify-center">
