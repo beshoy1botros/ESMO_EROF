@@ -300,7 +300,7 @@ function getContent(stage: string, level: string) {
   return textData[stage]?.[englishLevel] || [];
 }
 
-export default function AboutPage() {
+export default function About() {
   const [stage, setStage] = useState("");
   const [level, setLevel] = useState("");
   const [levels, setLevels] = useState<string[]>([]);
@@ -336,7 +336,7 @@ export default function AboutPage() {
   }, [stage, level]);
 
   return (
-    <div className="min-h-screen flex flex-col font-sans relative overflow-hidden">
+    <div dir="rtl" className="min-h-screen flex flex-col font-sans relative overflow-hidden">
       {/* خلفية ديناميكية لصفحة الطقس */}
       <div
         aria-hidden="true"
