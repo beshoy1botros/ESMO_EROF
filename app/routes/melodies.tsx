@@ -622,7 +622,7 @@ export default function MelodiesPage() {
                             src={video.url}
                             controls
                             preload="auto"
-                            poster="/العذراء مريم.ico"
+                            poster="/icon.jpg"
                             className="absolute top-0 left-0 w-full h-full rounded-lg"
                             style={{ background: "#222" }}
                           />
