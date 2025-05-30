@@ -23,7 +23,7 @@ export const links: Route.LinksFunction = () => [
   },
   {
     rel: "shortcut icon",
-    href: "/العذراء مريم.ico",
+    href: "/icon.jpg",
     type: "icon",
   },
 ];
