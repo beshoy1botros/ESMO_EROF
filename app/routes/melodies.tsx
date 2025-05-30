@@ -616,29 +616,26 @@ export default function MelodiesPage() {
                       {video.title}
                     </h3>
                     <div className="relative w-full pt-[56.25%] mb-4">
-                      {/* الفيديو تحته */}
-                      <video
-                        src={video.url}
-                        controls
-                        preload="auto"
-                        className="absolute top-0 left-0 w-full h-full rounded-lg z-0"
-                        style={{ background: "#222" }}
-                      />
-                      {/* صورة البوستر فوق الفيديو */}
-                      <img
-                        src="/icon.jpg"
-                        alt="بوستر ثابت"
-                        className="absolute top-0 left-0 w-full h-full object-cover rounded-lg pointer-events-none z-10"
-                      />
-                      : (
-                      <div className="absolute top-0 left-0 w-full h-full bg-gray-700 rounded-lg flex items-center justify-center">
-                        <p className="text-gray-400">لا يوجد فيديو متاح</p>
-                      </div>
+                      {video.url ? (
+                        video.url.endsWith(".mp4") ? (
+                          <video
+                            src={video.url}
+                            controls
+                            preload="auto"
+                            poster="/icon.jpg"
+                            className="absolute top-0 left-0 w-full h-full rounded-lg"
+                            style={{ background: "#222" }}
+                          />
+                        ) : (
+                          <div className="absolute top-0 left-0 w-full h-full bg-gray-700 rounded-lg flex items-center justify-center">
+                            <p className="text-gray-400">لا يوجد فيديو متاح</p>
+                          </div>
+                        )
                       ) : (
-                      <div className="absolute top-0 left-0 w-full h-full bg-gray-700 rounded-lg flex items-center justify-center">
-                        <p className="text-gray-400">لا يوجد فيديو متاح</p>
-                      </div>
-                      ))
+                        <div className="absolute top-0 left-0 w-full h-full bg-gray-700 rounded-lg flex items-center justify-center">
+                          <p className="text-gray-400">لا يوجد فيديو متاح</p>
+                        </div>
+                      )}
                     </div>
                   </div>
                 ))
