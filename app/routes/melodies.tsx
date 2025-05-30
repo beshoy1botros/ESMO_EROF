@@ -524,14 +524,80 @@ export default function MelodiesPage() {
             "linear-gradient(120deg,rgb(8, 30, 86) 0%,rgb(6, 26, 73) 100%)",
         }}
       >
-        {/* زخارف */}
+        <div
+          style={{
+            position: "absolute",
+            top: 80,
+            left: 60,
+            width: 200,
+            height: 200,
+            backgroundImage: "rgba(34,197,94,0.10)",
+            borderRadius: "50%",
+          }}
+        ></div>
+        <div
+          style={{
+            position: "absolute",
+            bottom: 100,
+            right: 80,
+            width: 160,
+            height: 160,
+            background: "rgba(20,184,166,0.10)",
+            borderRadius: "50%",
+          }}
+        ></div>
       </div>
       <div className="relative z-10 min-h-screen bg-gray-900/70 text-white flex flex-col">
         <Header />
         <main className="flex-1 p-8">
           <div className="max-w-6xl mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-              {/* عناصر الاختيار */}
+              <div>
+                <label
+                  htmlFor="stage"
+                  className="block mb-3 text-lg font-medium"
+                >
+                  المرحلة:
+                </label>
+                <select
+                  id="stage"
+                  value={stage}
+                  onChange={(e) => setStage(e.target.value)}
+                  className="w-full p-3 bg-gray-700 text-white border border-blue-500 rounded-lg cursor-pointer transition-all hover:border-blue-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                >
+                  <option value="">اختر المرحلة</option>
+                  <option value="kindergarten">حضانة</option>
+                  <option value="firstSecond">أولي و تانية</option>
+                  <option value="thirdFourth">ثالثة و رابعة</option>
+                  <option value="fifthSixth">خامسة و سادسة</option>
+                  <option value="middle">اعدادي</option>
+                  <option value="high">ثانوي</option>
+                  <option value="university">جامعة</option>
+                  <option value="servants">خدام و خادمات</option>
+                </select>
+              </div>
+              <div>
+                <label
+                  htmlFor="level"
+                  className="block mb-3 text-lg font-medium"
+                >
+                  المستوى:
+                </label>
+                <select
+                  id="level"
+                  value={level}
+                  onChange={(e) => setLevel(e.target.value)}
+                  className="w-full p-3 bg-gray-700 text-white border border-blue-500 rounded-lg cursor-pointer transition-all hover:border-blue-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                  disabled={levels.length === 0}
+                >
+                  <option value="">اختر المستوى</option>
+                  {levels.map((lvl) => (
+                    <option key={lvl} value={lvl}>
+                      {lvl}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
             <div className="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 justify-center">
               {videos.length === 0 && stage && level ? (
@@ -552,20 +618,14 @@ export default function MelodiesPage() {
                     <div className="relative w-full pt-[56.25%] mb-4">
                       {video.url ? (
                         video.url.endsWith(".mp4") ? (
-                          <>
-                            <video
-                              src={video.url}
-                              controls
-                              preload="auto"
-                              className="absolute top-0 left-0 w-full h-full rounded-lg"
-                              style={{ background: "#222" }}
-                            />
-                            <img
-                              src="/icon.jpg"
-                              alt="بوستر ثابت"
-                              className="absolute top-0 left-0 w-full h-full object-cover rounded-lg pointer-events-none z-10"
-                            />
-                          </>
+                          <video
+                            src={video.url}
+                            controls
+                            preload="auto"
+                            poster="/icon.jpg"
+                            className="absolute top-0 left-0 w-full h-full rounded-lg"
+                            style={{ background: "#222" }}
+                          />
                         ) : (
                           <div className="absolute top-0 left-0 w-full h-full bg-gray-700 rounded-lg flex items-center justify-center">
                             <p className="text-gray-400">لا يوجد فيديو متاح</p>
