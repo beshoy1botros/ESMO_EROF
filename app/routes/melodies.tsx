@@ -623,7 +623,7 @@ export default function MelodiesPage() {
                             controls
                             preload="auto"
                             poster="/icon.jpg"
-                            className="absolute top-0 left-0 w-full h-full rounded-lg"
+                            className="absolute top-0 left-0 w-full h-full object-cover rounded-lg pointer-events-none z-10"
                             style={{ background: "#222" }}
                           />
                         ) : (
