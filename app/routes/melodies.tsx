@@ -531,7 +531,7 @@ export default function MelodiesPage() {
             left: 60,
             width: 200,
             height: 200,
-            backgroundImage: "rgba(34,197,94,0.10)",
+            backgroundColor: "rgba(34,197,94,0.10)",
             borderRadius: "50%",
           }}
         ></div>
@@ -542,7 +542,7 @@ export default function MelodiesPage() {
             right: 80,
             width: 160,
             height: 160,
-            background: "rgba(20,184,166,0.10)",
+            backgroundColor: "rgba(20,184,166,0.10)",
             borderRadius: "50%",
           }}
         ></div>
@@ -616,21 +616,24 @@ export default function MelodiesPage() {
                       {video.title}
                     </h3>
                     <div className="relative w-full pt-[56.25%] mb-4">
-                      {video.url ? (
-                        video.url.endsWith(".mp4") ? (
+                      {video.url && video.url.endsWith(".mp4") ? (
+                        <>
+                          {/* صندوق الخلفية: البوستر كخلفية */}
+                          <div
+                            className="absolute top-0 left-0 w-full h-full rounded-lg bg-center bg-cover"
+                            style={{
+                              backgroundImage: 'url("/icon.jpg")',
+                            }}
+                          />
+                          {/* فيديو فوق الخلفية مع ظهور عناصر التحكم الأصلية */}
                           <video
                             src={video.url}
                             controls
                             preload="auto"
-                            poster="/icon.jpg"
-                            className="absolute top-0 left-0 w-full h-full rounded-lg"
-                            style={{ background: "#222" }}
+                            className="absolute top-0 left-0 w-full h-full rounded-lg z-10"
+                            style={{ background: "transparent" }}
                           />
-                        ) : (
-                          <div className="absolute top-0 left-0 w-full h-full bg-gray-700 rounded-lg flex items-center justify-center">
-                            <p className="text-gray-400">لا يوجد فيديو متاح</p>
-                          </div>
-                        )
+                        </>
                       ) : (
                         <div className="absolute top-0 left-0 w-full h-full bg-gray-700 rounded-lg flex items-center justify-center">
                           <p className="text-gray-400">لا يوجد فيديو متاح</p>
