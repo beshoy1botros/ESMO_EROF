@@ -622,7 +622,7 @@ export default function MelodiesPage() {
                             src={video.url}
                             controls
                             preload="auto"
-                            poster="/icon.jpg"
+                            poster=""
                             className="absolute top-0 left-0 w-full h-full rounded-lg"
                             style={{ background: "#222" }}
                           />
