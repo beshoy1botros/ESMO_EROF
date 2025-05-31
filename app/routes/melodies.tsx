@@ -531,10 +531,10 @@ export default function MelodiesPage() {
             left: 60,
             width: 200,
             height: 200,
-            backgroundColor: "rgba(34,197,94,0.10)",
+            backgroundImage: "rgba(34,197,94,0.10)",
             borderRadius: "50%",
           }}
-        />
+        ></div>
         <div
           style={{
             position: "absolute",
@@ -542,17 +542,15 @@ export default function MelodiesPage() {
             right: 80,
             width: 160,
             height: 160,
-            backgroundColor: "rgba(20,184,166,0.10)",
+            background: "rgba(20,184,166,0.10)",
             borderRadius: "50%",
           }}
-        />
+        ></div>
       </div>
-
       <div className="relative z-10 min-h-screen bg-gray-900/70 text-white flex flex-col">
         <Header />
         <main className="flex-1 p-8">
           <div className="max-w-6xl mx-auto">
-            {/* اختيار المرحلة والمستوى */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
               <div>
                 <label
@@ -601,8 +599,6 @@ export default function MelodiesPage() {
                 </select>
               </div>
             </div>
-
-            {/* عرض الفيديوهات */}
             <div className="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 justify-center">
               {videos.length === 0 && stage && level ? (
                 <div className="col-span-full text-center p-8 bg-gray-800 rounded-lg border border-blue-500">
@@ -619,36 +615,20 @@ export default function MelodiesPage() {
                     <h3 className="text-xl font-semibold text-blue-500 mb-4">
                       {video.title}
                     </h3>
-
-                    {/* حاوية بنسبة 16:9 */}
                     <div className="relative w-full pt-[56.25%] mb-4">
                       {video.url ? (
                         video.url.endsWith(".mp4") ? (
-                          <>
-                            {/* 
-                              1) نُظهر الفيديو مع عناصر التحكم الأصلية controls 
-                              2) نضع صورة البوستر فوق الفيديو دائمًا باستخدام <img>، 
-                                 مع z-index أعلى و pointer-events: none لكي تمر النقرات إلى الفيديو أسفله 
-                            */}
-                            <video
-                              src={video.url}
-                              controls
-                              preload="auto"
-                              className="absolute top-0 left-0 w-full h-full rounded-lg z-10"
-                              style={{ backgroundColor: "#222" }}
-                            />
-
-                            <img
-                              src="/icon.jpg" /* عدِّل هذا المسار إذا لزم */
-                              alt="بوستر الفيديو"
-                              className="absolute top-0 left-0 w-full h-full object-cover rounded-lg z-20 pointer-events-none"
-                            />
-                          </>
+                          <video
+                            src={video.url}
+                            controls
+                            preload="auto"
+                            poster="/icon.jpg"
+                            className="absolute top-0 left-0 w-full h-full rounded-lg"
+                            style={{ background: "#222" }}
+                          />
                         ) : (
                           <div className="absolute top-0 left-0 w-full h-full bg-gray-700 rounded-lg flex items-center justify-center">
-                            <p className="text-gray-400">
-                              لا يوجد فيديو متاح
-                            </p>
+                            <p className="text-gray-400">لا يوجد فيديو متاح</p>
                           </div>
                         )
                       ) : (
