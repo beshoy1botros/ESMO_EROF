@@ -32,7 +32,7 @@ export default function Home() {
 
         {/* النص فوق الطبقة */}
         <div className="relative z-10 max-w-4xl w-full mx-auto text-center pt-15 px-4 md:px-8">
-          <h2 className="text-2xl md:text-4xl text-blue-200 mb-4 drop-shadow-lg">
+          <h2 className="text-2xl md:text-4xl text-blue-300 mb-4 drop-shadow-lg">
               كل نسمة فلتسبح الرب. (مز ٦:١٥٠)
           </h2>
           <div className="mt-8 grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
