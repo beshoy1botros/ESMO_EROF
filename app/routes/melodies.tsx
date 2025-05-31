@@ -198,7 +198,7 @@ const videoData = {
       {
         id: "fs1-4",
         title: "ذكصولوجية الاباء الرسل (كيريوس)",
-        url: "/ذكصولوجية ثانية للاباء الرسل تقال في صوم الرسل - للمُعلم ابراهيم عياد.mp4",
+        url: "/ذكصولوجية ثانية للاباء الرسل تقال في صوم الرسل - للمُعلم ابراهيم معوض.mp4",
       },
     ],
     second: [
@@ -391,7 +391,7 @@ const videoData = {
       },
       {
         id: "u2-2",
-        title: "التوزيع الفرايحي الكبير لعيد النيروز قبطيا كاملا",
+        title: "التوزيع الفرايحي الكبير لعيد النيروز قبطия كاملا",
         url: "/مزمور التوزيع الكبير - عيد النيروز - للمعلم ابراهيم عياد.mp4",
       },
       {
@@ -416,8 +416,7 @@ const videoData = {
       },
       {
         id: "s1-2",
-        title:
-          "لحن تين ثينو الكبير كامل + التكملة حتى نهاية الأرباع",
+        title: "لحن تين ثينو الكبير كامل + التكملة حتى نهاية الأرباع",
         url: "/لحن تين ثينو الكبير للمعلم ابراهيم عياد.mp4",
       },
       {
@@ -439,8 +438,7 @@ const videoData = {
       },
       {
         id: "s2-3",
-        title:
-          "لحن أوندوس",
+        title: "لحن أوندوس",
         url: "/لحن أوندوس للمعلم إبراهيم عياد واالمعلم زاهر أندراوس من كاتدرائية البابا كيرلس بدير مارمينا بمريوط.mp4",
       },
       {
@@ -515,7 +513,7 @@ export default function MelodiesPage() {
 
   return (
     <div className="min-h-screen flex flex-col font-sans relative overflow-hidden">
-      {/* خلفية ديناميكية جديدة للألحان */}
+      {/* الخلفية الديناميكية (التدرّج اللوني) */}
       <div
         aria-hidden="true"
         className="absolute inset-0 z-0"
@@ -523,31 +521,19 @@ export default function MelodiesPage() {
           backgroundImage:
             "linear-gradient(120deg,rgb(8, 30, 86) 0%,rgb(6, 26, 73) 100%)",
         }}
-      >
-        <div
-          style={{
-            position: "absolute",
-            top: 80,
-            left: 60,
-            width: 200,
-            height: 200,
-            backgroundImage: "rgba(34,197,94,0.10)",
-            borderRadius: "50%",
-          }}
-        ></div>
-        <div
-          style={{
-            position: "absolute",
-            bottom: 100,
-            right: 80,
-            width: 160,
-            height: 160,
-            background: "rgba(20,184,166,0.10)",
-            borderRadius: "50%",
-          }}
-        ></div>
-      </div>
-      <div className="relative z-10 min-h-screen bg-gray-900/70 text-white flex flex-col">
+      ></div>
+
+      {/* الصورة kemkem.jpg المعروضة فقط عندما لم يتم اختيار المرحلة والمستوى معًا */}
+      {(!stage || !level) && (
+        <img
+          src="/kemkem.jpg"
+          alt="خلفية الألحان"
+          className="absolute inset-0 w-full h-195 object-cover z-10"
+        />
+      )}
+
+      {/* المحتوى الرئيسي (Header + Main + Footer) */}
+      <div className="relative z-20 min-h-screen bg-gray-900/70 text-white flex flex-col">
         <Header />
         <main className="flex-1 p-8">
           <div className="max-w-6xl mx-auto">
@@ -599,6 +585,7 @@ export default function MelodiesPage() {
                 </select>
               </div>
             </div>
+
             <div className="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 justify-center">
               {videos.length === 0 && stage && level ? (
                 <div className="col-span-full text-center p-8 bg-gray-800 rounded-lg border border-blue-500">
