@@ -329,7 +329,7 @@ const videoData = {
       {
         id: "h2-1",
         title: "تين اويه انسوك السنوي",
-        url: "/تين اويوية انسوك .mp4",
+        url: "/تين اووية انسوك .mp4",
       },
       {
         id: "h2-2",
@@ -626,19 +626,22 @@ export default function MelodiesPage() {
                         video.url.endsWith(".mp4") ? (
                           <>
                             {/* 
-                              1) استخدم خاصية poster الخاصة بالـ<video> لإبقاء البوستر ظاهراً حتى بداية الفيديو،
-                              2) عند تشغيل الفيديو، ستزول صورة البوستر لكن عناصر التحكم الأصلية ستبقى مرئية أعلى الفيديو. 
-                              لا يمكن إبقاء صورة ثابتة تماماً فوق الفيديو أثناء تشغيله مع بقاء عناصر التحكم الأصلية ظاهرة،
-                              لأن عناصر تحكم الفيديو تُرسم داخل ظل العنصر (shadow DOM) وعادةً ما تُرسم أسفل طبقة عناصر HTML العادية. 
-                              لذلك نستخدم هنا poster=”/icon.jpg” لتظهر في الخلفية حتى يبدأ التشغيل.
+                              1) نُظهر الفيديو مع عناصر التحكم الأصلية controls 
+                              2) نضع صورة البوستر فوق الفيديو دائمًا باستخدام <img>، 
+                                 مع z-index أعلى و pointer-events: none لكي تمر النقرات إلى الفيديو أسفله 
                             */}
                             <video
                               src={video.url}
                               controls
                               preload="auto"
-                              poster="/icon.jpg" /* عدِّل هذا المسار إذا لزم */
                               className="absolute top-0 left-0 w-full h-full rounded-lg z-10"
                               style={{ backgroundColor: "#222" }}
+                            />
+
+                            <img
+                              src="/icon.jpg" /* عدِّل هذا المسار إذا لزم */
+                              alt="بوستر الفيديو"
+                              className="absolute top-0 left-0 w-full h-full object-cover rounded-lg z-20 pointer-events-none"
                             />
                           </>
                         ) : (
