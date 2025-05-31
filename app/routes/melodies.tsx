@@ -625,20 +625,20 @@ export default function MelodiesPage() {
                       {video.url ? (
                         video.url.endsWith(".mp4") ? (
                           <>
-                            {/* 1) عنصر <video> مع عناصر التحكم ظاهرة */}
+                            {/* 
+                              1) استخدم خاصية poster الخاصة بالـ<video> لإبقاء البوستر ظاهراً حتى بداية الفيديو،
+                              2) عند تشغيل الفيديو، ستزول صورة البوستر لكن عناصر التحكم الأصلية ستبقى مرئية أعلى الفيديو. 
+                              لا يمكن إبقاء صورة ثابتة تماماً فوق الفيديو أثناء تشغيله مع بقاء عناصر التحكم الأصلية ظاهرة،
+                              لأن عناصر تحكم الفيديو تُرسم داخل ظل العنصر (shadow DOM) وعادةً ما تُرسم أسفل طبقة عناصر HTML العادية. 
+                              لذلك نستخدم هنا poster=”/icon.jpg” لتظهر في الخلفية حتى يبدأ التشغيل.
+                            */}
                             <video
                               src={video.url}
                               controls
                               preload="auto"
+                              poster="/icon.jpg" /* عدِّل هذا المسار إذا لزم */
                               className="absolute top-0 left-0 w-full h-full rounded-lg z-10"
                               style={{ backgroundColor: "#222" }}
-                            />
-
-                            {/* 2) عنصر <img> فوق الفيديو مع pointer-events:none */}
-                            <img
-                              src="/icon.jpg" /* عدِّل المسار بما يناسبك */
-                              alt="Poster"
-                              className="absolute top-0 left-0 w-full h-full object-cover rounded-lg z-20 pointer-events-none"
                             />
                           </>
                         ) : (
