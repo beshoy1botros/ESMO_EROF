@@ -1,3 +1,5 @@
+// app/routes/MelodiesPage.jsx
+
 import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
@@ -14,11 +16,11 @@ const videoData = {
         url: "/مرد مزمور - عيد النيروز - للمعلم ابراهيم عياد.mp4",
       },
       {
-        title: "ختام الصلوات الاجتماعية(المياة والاهوية)", //record
+        title: "ختام الصلوات الاجتماعية(المياة والاهوية)", // record
         url: "",
       },
       {
-        title: "هيتين القداس للعذراء+الاباء الرسل", //record
+        title: "هيتين القداس للعذراء+الاباء الرسل", // record
         url: "",
       },
     ],
@@ -97,7 +99,7 @@ const videoData = {
       {
         id: "fs2-4",
         title: "المزمور 149 الهوس الرابع",
-        url: "", //record
+        url: "", // record
       },
     ],
     gifted: [
@@ -173,7 +175,7 @@ const videoData = {
       {
         id: "tfg-3",
         title:
-          "لحن بي ابنفما المقدمة فقط +المحير(الربع الاول والثاني الي خين هان ميش ان لاس)", //record
+          "لحن بي ابنفما المقدمة فقط +المحير(الربع الاول والثاني الي خين هان ميش ان لاس)", // record
         url: "",
       },
     ],
@@ -281,7 +283,7 @@ const videoData = {
       {
         id: "m2-3",
         title: "اسبسمس ادام عربي للرسل(اباؤنا الرسل)",
-        url: "", //record
+        url: "", // record
       },
       {
         id: "m2-4",
@@ -531,7 +533,7 @@ export default function MelodiesPage() {
             left: 60,
             width: 200,
             height: 200,
-            backgroundImage: "rgba(34,197,94,0.10)",
+            backgroundColor: "rgba(34,197,94,0.10)",
             borderRadius: "50%",
           }}
         ></div>
@@ -542,15 +544,18 @@ export default function MelodiesPage() {
             right: 80,
             width: 160,
             height: 160,
-            background: "rgba(20,184,166,0.10)",
+            backgroundColor: "rgba(20,184,166,0.10)",
             borderRadius: "50%",
           }}
         ></div>
       </div>
+
       <div className="relative z-10 min-h-screen bg-gray-900/70 text-white flex flex-col">
         <Header />
+
         <main className="flex-1 p-8">
           <div className="max-w-6xl mx-auto">
+            {/* اختيار المرحلة والمستوى */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
               <div>
                 <label
@@ -576,6 +581,7 @@ export default function MelodiesPage() {
                   <option value="servants">خدام و خادمات</option>
                 </select>
               </div>
+
               <div>
                 <label
                   htmlFor="level"
@@ -599,6 +605,8 @@ export default function MelodiesPage() {
                 </select>
               </div>
             </div>
+
+            {/* عرض الفيديوهات */}
             <div className="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 justify-center">
               {videos.length === 0 && stage && level ? (
                 <div className="col-span-full text-center p-8 bg-gray-800 rounded-lg border border-blue-500">
@@ -615,22 +623,26 @@ export default function MelodiesPage() {
                     <h3 className="text-xl font-semibold text-blue-500 mb-4">
                       {video.title}
                     </h3>
+
                     <div className="relative w-full pt-[56.25%] mb-4">
-                      {video.url ? (
-                        video.url.endsWith(".mp4") ? (
+                      {video.url && video.url.endsWith(".mp4") ? (
+                        <>
+                          {/* عنصر الفيديو */}
                           <video
                             src={video.url}
                             controls
                             preload="auto"
-                            poster="/icon.jpg"
-                            className="absolute top-0 left-0 w-full h-full rounded-lg"
+                            className="absolute top-0 left-0 w-full h-full rounded-lg z-10"
                             style={{ background: "#222" }}
                           />
-                        ) : (
-                          <div className="absolute top-0 left-0 w-full h-full bg-gray-700 rounded-lg flex items-center justify-center">
-                            <p className="text-gray-400">لا يوجد فيديو متاح</p>
-                          </div>
-                        )
+
+                          {/* صورة البوستر الثابتة فوق الفيديو */}
+                          <img
+                            src="/icon.jpg" /* تأكد أن icon.jpg موجود داخل مجلد public */
+                            alt="Poster"
+                            className="absolute top-0 left-0 w-full h-full object-cover rounded-lg z-20 pointer-events-none"
+                          />
+                        </>
                       ) : (
                         <div className="absolute top-0 left-0 w-full h-full bg-gray-700 rounded-lg flex items-center justify-center">
                           <p className="text-gray-400">لا يوجد فيديو متاح</p>
@@ -643,6 +655,7 @@ export default function MelodiesPage() {
             </div>
           </div>
         </main>
+
         <Footer />
       </div>
     </div>
