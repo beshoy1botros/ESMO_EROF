@@ -15,30 +15,57 @@ export function meta({}: Route.MetaArgs) {
 
 export default function Home() {
   return (
-    <div className="min-h-screen flex flex-col font-sans relative overflow-hidden">
-      <div className="relative z-10 min-h-screen text-white flex flex-col">
-        <Header />
-        <main
-          className="flex-1 p-8"
-          style={{
-            backgroundImage: "url('icon.jpg')",
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-        >
-          <div className="max-w-4xl mx-auto">
-            <div className="text-center my-12">
-              <h2 className="text-4xl text-blue-500 mb-4 drop-shadow-lg">
-                كل نسمة فلتسبح الرب. (مز ٦:١٥٠)
-              </h2>
-            </div>
-            <div className="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 justify-center">
-              {/* ... existing code ... */}
-            </div>
+    <div className="flex flex-col min-h-screen font-sans">
+      {/* الهيدر في الأعلى */}
+      <Header />
+
+      {/*
+        نستخدم flex-1 لكي يملأ <main> المساحة المتبقية بين الهيدر والفوتر.
+        ثم نضيف bg-cover و bg-center و bg-no-repeat لجعل الخلفية متجاوبة على جميع الشاشات.
+        كذلك أزلنا الـ padding الثابت p-8 من main ووضعنا padding استجابياً.
+      */}
+      <main
+        className="
+          flex-1
+          bg-[url('/icon.jpg')]
+          bg-cover
+          bg-center
+          bg-no-repeat
+          flex
+          flex-col
+          justify-center
+          px-4
+          md:px-8
+          lg:px-8
+        "
+      >
+        <div className="max-w-4xl w-full mx-auto text-white text-center">
+          <h2 className="text-3xl md:text-4xl text-blue-500 mb-4 drop-shadow-lg">
+            كل نسمة فلتسبح الرب. (مز ٦:١٥٠)
+          </h2>
+          <p className="text-base md:text-xl text-gray-100 max-w-[600px] mx-auto drop-shadow mb-2">
+            أهلاً بيك يا صديقي، يارب تكون بخير.
+          </p>
+          <p className="text-base md:text-xl text-gray-100 max-w-[600px] mx-auto drop-shadow mb-2">
+            قبل ما تبدأ اتمنى منك الالتزام، عشان نسمع صوتك الحلو في كنيستنا
+            الجميلة.
+          </p>
+          <p className="text-base md:text-xl text-gray-100 max-w-[600px] mx-auto drop-shadow">
+            وجودك منورنا.
+          </p>
+
+          {/*
+            إذا كنت تريد عرض عناصر الشبكة أسفل النص مباشرةً،
+            ضعه داخل حاوية flex flex-wrap أو grid. مثال:
+          */}
+          <div className="mt-8 grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+            {/* ... existing code ... */}
           </div>
-        </main>
-        <Footer />
-      </div>
+        </div>
+      </main>
+
+      {/* الفوتر في الأسفل */}
+      <Footer />
     </div>
   );
 }
