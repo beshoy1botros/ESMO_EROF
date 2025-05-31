@@ -16,6 +16,7 @@ export function meta({}: Route.MetaArgs) {
 export default function Home() {
   return (
     <div className="min-h-screen flex flex-col font-sans relative overflow-hidden">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <div className="relative z-10 min-h-screen text-white flex flex-col">
         <Header />
         <main
