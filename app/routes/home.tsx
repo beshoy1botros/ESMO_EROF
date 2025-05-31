@@ -31,7 +31,7 @@ export default function Home() {
         <div className="absolute inset-0 bg-black/10 z-0" />
 
         {/* النص فوق الطبقة */}
-        <div className="relative z-10 max-w-4xl w-full mx-auto text-center pt-70 px-4 md:px-8">
+        <div className="relative z-10 max-w-4xl w-full mx-auto text-center pt-110 px-4 md:px-8">
           <h2 className="text-2xl md:text-4xl text-white mb-4 drop-shadow-lg">
             كل نسمة فلتسبح الرب. (مز ٦:١٥٠)
           </h2>
