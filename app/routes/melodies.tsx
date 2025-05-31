@@ -187,7 +187,7 @@ const videoData = {
       },
       {
         id: "fs1-2",
-        title: "مرد الابركسيس لصوم الاباء الرسل (شيريه ناتشويس)",
+        title: "مرد الابركسيس لصوم الاباء الرسل (شيريه نатشويس)",
         url: "/مرد الابركسيس لصوم الاباء الرسل_ بالهزات_للمعلم ابراهيم معوض.mp4",
       },
       {
@@ -209,7 +209,7 @@ const videoData = {
       },
       {
         id: "fs2-2",
-        title: "المزمور السنوي المختصر (او اويني افشاي)",
+        title: "المزمور السنوي المختصر (او اويني افشай)",
         url: "/المزمور السنوي المختصر او اويني افشاي.mp4",
       },
       {
@@ -618,20 +618,23 @@ export default function MelodiesPage() {
                     <div className="relative w-full pt-[56.25%] mb-4">
                       {video.url && video.url.endsWith(".mp4") ? (
                         <>
-                          {/* صندوق الخلفية: البوستر كخلفية */}
+                          {/* 
+                            1) ندع البوستر كخلفية ثابتة (background-image) 
+                            2) نضع الفيديو نفسه فوق الخلفية مع جعل محتوى الفيديو شفافًا (opacity: 0)
+                            3) عناصر التحكم الأصلية للفيديو تظهر فوق البوستر
+                          */}
                           <div
                             className="absolute top-0 left-0 w-full h-full rounded-lg bg-center bg-cover"
                             style={{
                               backgroundImage: 'url("/icon.jpg")',
                             }}
                           />
-                          {/* فيديو فوق الخلفية مع ظهور عناصر التحكم الأصلية */}
                           <video
                             src={video.url}
                             controls
                             preload="auto"
                             className="absolute top-0 left-0 w-full h-full rounded-lg z-10"
-                            style={{ background: "transparent" }}
+                            style={{ opacity: 0 }}
                           />
                         </>
                       ) : (
