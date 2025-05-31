@@ -28,7 +28,7 @@ export default function Home() {
           flex
           flex-col
           justify-center
-          px-4
+          px-40
           md:px-8
           lg:px-8
         "
