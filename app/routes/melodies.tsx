@@ -187,7 +187,7 @@ const videoData = {
       },
       {
         id: "fs1-2",
-        title: "مرد الابركسيس لصوم الاباء الرسل (شيريه نатشويس)",
+        title: "مرد الابركسيس لصوم الاباء الرسل (شيريه ناتشويس)",
         url: "/مرد الابركسيس لصوم الاباء الرسل_ بالهزات_للمعلم ابراهيم معوض.mp4",
       },
       {
@@ -209,7 +209,7 @@ const videoData = {
       },
       {
         id: "fs2-2",
-        title: "المزمور السنوي المختصر (او اويني افشай)",
+        title: "المزمور السنوي المختصر (او اويني افشاي)",
         url: "/المزمور السنوي المختصر او اويني افشاي.mp4",
       },
       {
@@ -329,7 +329,7 @@ const videoData = {
       {
         id: "h2-1",
         title: "تين اويه انسوك السنوي",
-        url: "/تين اووية انسوك .mp4",
+        url: "/تين اويوية انسوك .mp4",
       },
       {
         id: "h2-2",
@@ -534,7 +534,7 @@ export default function MelodiesPage() {
             backgroundColor: "rgba(34,197,94,0.10)",
             borderRadius: "50%",
           }}
-        ></div>
+        />
         <div
           style={{
             position: "absolute",
@@ -545,12 +545,14 @@ export default function MelodiesPage() {
             backgroundColor: "rgba(20,184,166,0.10)",
             borderRadius: "50%",
           }}
-        ></div>
+        />
       </div>
+
       <div className="relative z-10 min-h-screen bg-gray-900/70 text-white flex flex-col">
         <Header />
         <main className="flex-1 p-8">
           <div className="max-w-6xl mx-auto">
+            {/* اختيار المرحلة والمستوى */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
               <div>
                 <label
@@ -599,6 +601,8 @@ export default function MelodiesPage() {
                 </select>
               </div>
             </div>
+
+            {/* عرض الفيديوهات */}
             <div className="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 justify-center">
               {videos.length === 0 && stage && level ? (
                 <div className="col-span-full text-center p-8 bg-gray-800 rounded-lg border border-blue-500">
@@ -615,28 +619,35 @@ export default function MelodiesPage() {
                     <h3 className="text-xl font-semibold text-blue-500 mb-4">
                       {video.title}
                     </h3>
+
+                    {/* حاوية بنسبة 16:9 */}
                     <div className="relative w-full pt-[56.25%] mb-4">
-                      {video.url && video.url.endsWith(".mp4") ? (
-                        <>
-                          {/* 
-                            1) ندع البوستر كخلفية ثابتة (background-image) 
-                            2) نضع الفيديو نفسه فوق الخلفية مع جعل محتوى الفيديو شفافًا (opacity: 0)
-                            3) عناصر التحكم الأصلية للفيديو تظهر فوق البوستر
-                          */}
-                          <div
-                            className="absolute top-0 left-0 w-full h-full rounded-lg bg-center bg-cover"
-                            style={{
-                              backgroundImage: 'url("/icon.jpg")',
-                            }}
-                          />
-                          <video
-                            src={video.url}
-                            controls
-                            preload="auto"
-                            className="absolute top-0 left-0 w-full h-full rounded-lg z-10"
-                            style={{ opacity: 0 }}
-                          />
-                        </>
+                      {video.url ? (
+                        video.url.endsWith(".mp4") ? (
+                          <>
+                            {/* 1) عنصر <video> مع عناصر التحكم ظاهرة */}
+                            <video
+                              src={video.url}
+                              controls
+                              preload="auto"
+                              className="absolute top-0 left-0 w-full h-full rounded-lg z-10"
+                              style={{ backgroundColor: "#222" }}
+                            />
+
+                            {/* 2) عنصر <img> فوق الفيديو مع pointer-events:none */}
+                            <img
+                              src="/icon.jpg" /* عدِّل المسار بما يناسبك */
+                              alt="Poster"
+                              className="absolute top-0 left-0 w-full h-full object-cover rounded-lg z-20 pointer-events-none"
+                            />
+                          </>
+                        ) : (
+                          <div className="absolute top-0 left-0 w-full h-full bg-gray-700 rounded-lg flex items-center justify-center">
+                            <p className="text-gray-400">
+                              لا يوجد فيديو متاح
+                            </p>
+                          </div>
+                        )
                       ) : (
                         <div className="absolute top-0 left-0 w-full h-full bg-gray-700 rounded-lg flex items-center justify-center">
                           <p className="text-gray-400">لا يوجد فيديو متاح</p>
