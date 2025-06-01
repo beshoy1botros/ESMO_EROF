@@ -455,11 +455,9 @@ const levelMap: Record<string, string> = {
   الثاني: "second",
   الموهوبين: "gifted",
 };
-
 function mapArabicToEnglishLevel(arabicLevel: string) {
   return levelMap[arabicLevel] || arabicLevel.toLowerCase();
 }
-
 function getVideos(stage: string, level: string) {
   const englishLevel = mapArabicToEnglishLevel(level);
   // @ts-ignore
@@ -512,31 +510,23 @@ export default function MelodiesPage() {
   }, [stage, level]);
 
   return (
-    <div className="min-h-screen flex flex-col font-sans relative overflow-hidden">
-      {/* الخلفية الديناميكية (التدرّج اللوني) */}
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 z-0"
+    <div className="min-h-screen flex flex-col font-sans">
+      {/* الهيدر في الأعلى */}
+      <Header />
+
+      {/* الخلفية والصورة */}
+      <main
+        className="flex-1 relative bg-cover bg-center bg-no-repeat"
         style={{
-          backgroundImage:
-            "linear-gradient(120deg,rgb(8, 30, 86) 0%,rgb(6, 26, 73) 100%)",
+          backgroundImage: "url('/kemkem.jpg')",
         }}
-      ></div>
+      >
+        {/* طبقة التعتيم */}
+        <div className="absolute inset-0 bg-black/20 z-0" />
 
-      {/* الصورة kemkem.jpg المعروضة فقط عندما لم يتم اختيار المرحلة والمستوى معًا */}
-      {(!stage || !level) && (
-        <img
-          src="/kemkem.jpg"
-          alt="خلفية الألحان"
-          className="absolute inset-0 w-full h-195 object-cover z-10"
-        />
-      )}
-
-      {/* المحتوى الرئيسي (Header + Main + Footer) */}
-      <div className="relative z-20 min-h-screen bg-gray-900/70 text-white flex flex-col">
-        <Header />
-        <main className="flex-1 p-8">
-          <div className="max-w-6xl mx-auto">
+        {/* المحتوى فوق الطبقة */}
+        <div className="relative z-10 flex flex-col min-h-full bg-gray-900/0 text-white">
+          <div className="p-8 max-w-6xl mx-auto w-full flex-1 flex flex-col">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
               <div>
                 <label
@@ -586,7 +576,7 @@ export default function MelodiesPage() {
               </div>
             </div>
 
-            <div className="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 justify-center">
+            <div className="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 justify-center flex-1">
               {videos.length === 0 && stage && level ? (
                 <div className="col-span-full text-center p-8 bg-gray-800 rounded-lg border border-blue-500">
                   <p className="text-gray-400">
@@ -629,9 +619,11 @@ export default function MelodiesPage() {
               )}
             </div>
           </div>
-        </main>
-        <Footer />
-      </div>
+        </div>
+      </main>
+
+      {/* الفوتر في الأسفل */}
+      <Footer />
     </div>
   );
 }
