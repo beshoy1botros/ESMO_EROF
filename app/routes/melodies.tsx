@@ -522,7 +522,7 @@ export default function MelodiesPage() {
         }}
       >
         {/* طبقة التعتيم */}
-        <div className="absolute inset-0 bg-black/20 z-0" />
+        <div className="absolute inset-0 bg-black/40 z-0" />
 
         {/* المحتوى فوق الطبقة */}
         <div className="relative z-10 flex flex-col min-h-full bg-gray-900/0 text-white">
