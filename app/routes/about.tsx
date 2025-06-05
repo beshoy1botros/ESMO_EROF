@@ -237,81 +237,6 @@ const textData = {
       },
     ],
   },
-  university: {
-    first: [
-      {
-        title: "اوندوس",
-        content: "",
-      },
-      {
-        title: "اطاي بارثينوس كاملا",
-        content: "",
-      },
-      {
-        title: "لحن افشوليم + ايفول هيتين الصغير",
-        content: "",
-      },
-      {
-        title: "محير التمجيد(فاي بي ابليمين)",
-        content: "",
-      },
-    ],
-    second: [
-      {
-        title: "الهوس الرابع كاملا",
-        content: "",
-      },
-      {
-        title: "التوزيع الفرايحي الكبير لعيد النيروز قبطيا كاملا",
-        content: "",
-      },
-      {
-        title: "لحن افئين بي ارشي",
-        content: "",
-      },
-      {
-        title: "لحن فاني تينه (للملاك ميخائيل)",
-        content: "",
-      },
-    ],
-  },
-  servants: {
-    first: [
-      {
-        title:
-          "لحن بي إنفما كامل + المجمع (الربع الأول والثاني في خين هان ميش إن لاس)",
-        content: "",
-      },
-      {
-        title:
-          "لحن تين ثينو الكبير كامل + التكملة حتى النهاية الأرباع (إبشويس إك إيسه أوراون إتنا إيسوتو أووه)",
-        content: "",
-      },
-      {
-        title: "لحن إسبازيسي الكبير كامل",
-        content: "",
-      },
-    ],
-    second: [
-      {
-        title: "لحن أفئين بي أرشي",
-        content: "",
-      },
-      {
-        title: "إبصالية آدم لصوم الآباء الرسل (أويك إيبشويس) كاملة",
-        content: "",
-      },
-      {
-        title:
-          "لحن أوندوس (المقدمة + أبو إخراوؤو شينيف + آري إبؤسفيقين + طوبه إيبشويس للرسل)",
-        content: "",
-      },
-      {
-        title: "لحن سينا نشو للتمجيد",
-        content: "",
-      },
-    ],
-  },
 };
 
 const levelMap: Record<string, string> = {
@@ -401,14 +326,10 @@ export default function About() {
                     className="w-full p-3 bg-gray-700 text-white border border-blue-500 rounded-lg cursor-pointer transition-all hover:border-blue-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
                   >
                     <option value="">اختر المرحلة</option>
-                    <option value="kindergarten">حضانة</option>
-                    <option value="firstSecond">أولي و تانية</option>
                     <option value="thirdFourth">ثالثة و رابعة</option>
                     <option value="fifthSixth">خامسة و سادسة</option>
                     <option value="middle">اعدادي</option>
                     <option value="high">ثانوي</option>
-                    <option value="university">جامعة</option>
-                    <option value="servants">خدام و خادمات</option>
                   </select>
                 </div>
                 <div>
