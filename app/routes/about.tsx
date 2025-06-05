@@ -6,7 +6,7 @@ const textData = {
   thirdFourth: {
     first: [
       {
-        title: "ذوكصولوجية الاباء الرسل (كيريوس)",
+        title: "ذكصولوجية الاباء الرسل (كيريوس)",
         content: "",
       },
       {
@@ -71,7 +71,7 @@ const textData = {
         content: "",
       },
       {
-        title: "ذوكصولوجية الاباء الرسل (كيريوس)",
+        title: "ذكصولوجية الاباء الرسل (كيريوس)",
         content: "",
       },
     ],
@@ -188,7 +188,7 @@ const textData = {
         content: "",
       },
       {
-        title: "ذوكصولوجية باكر",
+        title: "ذكصولوجية باكر",
         content: "",
       },
       {
