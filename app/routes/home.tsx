@@ -1,9 +1,10 @@
-import type { Route } from "./+types/home";
+// app/routes/home.tsx
+
 import { Welcome } from "../welcome/welcome";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 
-export function meta({}: Route.MetaArgs) {
+export function meta() {
   return [
     { title: "ⲥⲙⲟⲩ ⲉⲣⲟϥ" },
     {
@@ -13,13 +14,15 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
+
 export default function Home() {
   return (
     <div className="min-h-screen flex flex-col font-sans">
       {/* الهيدر في الأعلى */}
       <Header />
 
-      {/* الخلفية والصورة */}
+      {/* لتعطيل تحذير Webhint no-inline-styles على العنصر التالي: */}
+      {/* hint ignore: no-inline-styles */}
       <main
         className="flex-1 relative bg-cover bg-center bg-no-repeat"
         style={{
@@ -40,8 +43,8 @@ export default function Home() {
           </p>
           <p className="text-base md:text-lg leading-relaxed mb-4 drop-shadow-sm">
             ما أجمل التسبيح في الكنيسة بأنغام موزونة؛ فالتسبيح هو عمل الملائكة،
-            وهو الاشتراك الفعلي مع القوات السمائية في تسبيح الله الخالق،
-            والتسبيح بالألحان يزيد الكلمات جمالاً وعذوبةٍ ويشبع الإنسان في كل
+            وهو الاشتراك الفعلي مع القوات السماوية في تسبيح الله الخالق،
+            والتسبيح بالألحان يزيد الكلمات جمالاً وعذوبةً ويشبع الإنسان في كل
             نواحي حياته من خلال الصلاة ومناجاة الله؛ ففيها: الشكر والتمجيد
             والتسبيح والطلب. والمؤمن الذي يتعلم طرقها الهادئة الجميلة يصبح
             حاملاً لسرٍّ عظيم، وهو سرّ التسبيح لله كما يقول الرسول بولس:
