@@ -420,11 +420,7 @@ export default function About() {
                         {item.title}
                       </h3>
                       <p className="text-gray-300 mb-4">{item.content}</p>
-                      <div className="flex justify-between items-center">
-                        <span className="px-3 py-1 rounded-full text-sm bg-yellow-500/20 text-yellow-400">
-                          قيد التنفيذ
-                        </span>
-                      </div>
+                      <div className="flex justify-between items-center"></div>
                     </div>
                   ))
                 )}
