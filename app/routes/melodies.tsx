@@ -544,7 +544,7 @@ export default function MelodiesPage() {
                   <option value="middle">إعدادي</option>
                   <option value="high">ثانوي</option>
                   <option value="university">جامعة</option>
-                  <option value="servants">خدام</option>
+                  <option value="servants">خدام و خادمات</option>
                 </select>
               </div>
               <div>

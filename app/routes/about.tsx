@@ -330,7 +330,7 @@ export default function About() {
                     <option value="">اختر المرحلة</option>
                     <option value="thirdFourth">ثالثة و رابعة</option>
                     <option value="fifthSixth">خامسة و سادسة</option>
-                    <option value="middle">اعدادي</option>
+                    <option value="middle">إعدادي</option>
                     <option value="high">ثانوي</option>
                   </select>
                 </div>
