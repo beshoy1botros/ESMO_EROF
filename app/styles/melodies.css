@@ -24,3 +24,9 @@
   background: #000;
   margin-bottom: 1rem;
 }
+.melodies-bg {
+  background-image: url("/kemkem.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}

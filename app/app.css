@@ -16,3 +16,10 @@ body {
     color: #fff;
   }
 }
+
+.home-background {
+  background-image: url("/home.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}

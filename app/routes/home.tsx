@@ -1,5 +1,3 @@
-// app/routes/home.tsx
-
 import { Welcome } from "../welcome/welcome";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
