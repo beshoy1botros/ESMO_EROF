@@ -1,7 +1,7 @@
 /* about.css - أنماط مخصصة لصفحة طقس اللحن */
 
 .about-bg {
-  background-image: url("https://cdn.example.com/images/taks.webp");
+  background-image: url("/taks.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
