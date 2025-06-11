@@ -590,18 +590,9 @@ export default function MelodiesPage() {
                         controls
                         className="w-full rounded-lg mb-4 bg-black"
                         src={
-                          video.url.startsWith("http")
+                          video.url.startsWith("/")
                             ? video.url
-                            : `https://cdn.example.com${video.url}`
-                        }
-                        preload="none"
-                        poster={
-                          video.url
-                            ? `https://cdn.example.com/thumbnails${video.url.replace(
-                                /\.[^/.]+$/,
-                                ".webp"
-                              )}`
-                            : undefined
+                            : `/${video.url}`
                         }
                       >
                         متصفحك لا يدعم تشغيل الفيديو
