@@ -25,7 +25,7 @@
   margin-bottom: 1rem;
 }
 .melodies-bg {
-  background-image: url("/kemkem.jpg");
+  background-image: url("https://cdn.example.com/images/kemkem.webp");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;

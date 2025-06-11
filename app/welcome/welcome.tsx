@@ -8,14 +8,16 @@ export function Welcome() {
         <header className="flex flex-col items-center gap-9">
           <div className="w-[500px] max-w-[100vw] p-4">
             <img
-              src={logoLight}
+              src={`https://cdn.example.com/images/logo-light.webp`}
               alt="React Router"
               className="block w-full dark:hidden"
+              loading="lazy"
             />
             <img
-              src={logoDark}
+              src={`https://cdn.example.com/images/logo-dark.webp`}
               alt="React Router"
               className="hidden w-full dark:block"
+              loading="lazy"
             />
           </div>
         </header>
