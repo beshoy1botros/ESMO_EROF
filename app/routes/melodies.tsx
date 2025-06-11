@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import "../styles/melodies.css";
 
 const videoData = {
   kindergarten: {
@@ -514,13 +515,7 @@ export default function MelodiesPage() {
       {/* الهيدر في الأعلى */}
       <Header />
 
-      {/* الخلفية والصورة */}
-      <main
-        className="flex-1 relative bg-cover bg-center bg-no-repeat"
-        style={{
-          backgroundImage: "url('/kemkem.jpg')",
-        }}
-      >
+      <main className="flex-1 relative bg-cover bg-center bg-no-repeat melodies-bg">
         {/* طبقة التعتيم */}
         <div className="absolute inset-0 bg-black/50 z-0" />
 
@@ -543,13 +538,13 @@ export default function MelodiesPage() {
                 >
                   <option value="">اختر المرحلة</option>
                   <option value="kindergarten">حضانة</option>
-                  <option value="firstSecond">أولي و تانية</option>
+                  <option value="firstSecond">أولى و ثانية</option>
                   <option value="thirdFourth">ثالثة و رابعة</option>
                   <option value="fifthSixth">خامسة و سادسة</option>
-                  <option value="middle">اعدادي</option>
+                  <option value="middle">إعدادي</option>
                   <option value="high">ثانوي</option>
                   <option value="university">جامعة</option>
-                  <option value="servants">خدام و خادمات</option>
+                  <option value="servants">خدام</option>
                 </select>
               </div>
               <div>
@@ -578,42 +573,31 @@ export default function MelodiesPage() {
 
             <div className="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 justify-center flex-1">
               {videos.length === 0 && stage && level ? (
-                <div className="col-span-full text-center p-8 bg-gray-800 rounded-lg border border-blue-500">
-                  <p className="text-gray-400">
-                    لا يوجد فيديوهات متاحة لهذه المرحلة والمستوى
-                  </p>
+                <div className="col-span-full text-center p-8 bg-gray-700 rounded-lg border border-blue-500">
+                  <p className="text-gray-400">لا يوجد فيديوهات لهذه المرحلة</p>
                 </div>
               ) : (
                 videos.map((video) => (
                   <div
-                    key={video.title}
-                    className="bg-gray-800 p-6 rounded-lg border border-blue-500 transition-all hover:border-blue-400"
+                    key={video.id || video.title}
+                    className="bg-gray-800 p-6 rounded-lg border border-blue-500 transition-all hover:border-blue-400 flex flex-col items-center"
                   >
-                    <h3 className="text-xl font-semibold text-blue-500 mb-4">
+                    <h3 className="text-xl font-semibold text-blue-400 mb-4 text-center">
                       {video.title}
                     </h3>
-                    <div className="relative w-full pt-[56.25%] mb-4">
-                      {video.url ? (
-                        video.url.endsWith(".mp4") ? (
-                          <video
-                            src={video.url}
-                            controls
-                            preload="auto"
-                            poster=""
-                            className="absolute top-0 left-0 w-full h-full rounded-lg"
-                            style={{ background: "#222" }}
-                          />
-                        ) : (
-                          <div className="absolute top-0 left-0 w-full h-full bg-gray-700 rounded-lg flex items-center justify-center">
-                            <p className="text-gray-400">لا يوجد فيديو متاح</p>
-                          </div>
-                        )
-                      ) : (
-                        <div className="absolute top-0 left-0 w-full h-full bg-gray-700 rounded-lg flex items-center justify-center">
-                          <p className="text-gray-400">لا يوجد فيديو متاح</p>
-                        </div>
-                      )}
-                    </div>
+                    {video.url && (
+                      <video
+                        controls
+                        className="w-full rounded-lg mb-4 bg-black"
+                        src={
+                          video.url.startsWith("/")
+                            ? video.url
+                            : `/${video.url}`
+                        }
+                      >
+                        متصفحك لا يدعم تشغيل الفيديو
+                      </video>
+                    )}
                   </div>
                 ))
               )}

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import "../styles/about.css";
 
 const textData = {
   thirdFourth: {
@@ -302,13 +303,7 @@ export default function About() {
       dir="rtl"
       className="min-h-screen flex flex-col font-sans relative overflow-hidden"
     >
-      {/* الخلفية بالصورة taks.jpg */}
-      <main
-        className="flex-1 relative bg-cover bg-center bg-no-repeat"
-        style={{
-          backgroundImage: "url('/taks.jpg')",
-        }}
-      >
+      <main className="flex-1 relative bg-cover bg-center bg-no-repeat about-bg">
         {/* طبقة التعتيم */}
         <div className="absolute inset-0 bg-black/50 z-0" />
 

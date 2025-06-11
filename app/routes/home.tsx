@@ -22,13 +22,7 @@ export default function Home() {
 
       {/* لتعطيل تحذير Webhint no-inline-styles على العنصر التالي: */}
       {/* hint ignore: no-inline-styles */}
-      <main
-        className="flex-1 relative bg-cover bg-center bg-no-repeat"
-        style={{
-          backgroundImage:
-            "url('https://images.unsplash.com/photo-1636228492762-a942c24b19fd?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3')",
-        }}
-      >
+      <main className="flex-1 relative bg-cover bg-center bg-no-repeat home-background">
         {/* طبقة التعتيم */}
         <div className="absolute inset-0 bg-black/20 z-0" />
 
