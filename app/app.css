@@ -1,23 +1,105 @@
 @import "tailwindcss";
 
+:root {
+  --primary-color: #f44250;
+  --secondary-color: #121212;
+  --accent-color: #4f46e5;
+  --background-light: #ffffff;
+  --background-dark: #0f172a;
+  --text-light: #111111;
+  --text-dark: #ffffff;
+  --transition-speed: 0.3s;
+}
+
+@property --angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
 html,
 body {
-  background-color: #fff;
-  color: #111;
-  font-family: "Noto Sans Coptic", "Inter", ui-sans-serif, system-ui, sans-serif,
-    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  background-color: var(--background-light);
+  color: var(--text-light);
+  font-family: "Noto Sans Coptic", "Inter", ui-sans-serif, system-ui, sans-serif;
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+/* Smooth scrolling for the entire page */
+* {
+  scroll-margin-top: 5rem;
+  transition: background-color var(--transition-speed),
+    color var(--transition-speed), transform var(--transition-speed);
+}
+
+/* Modern container with responsive padding */
+.container {
+  margin: 0 auto;
+  padding: 0 1rem;
+  max-width: 80rem;
+}
+
+/* Glass effect for cards */
+.glass-card {
+  backdrop-filter: blur(16px);
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+}
+
+/* Gradient text effect */
+.gradient-text {
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  background-image: linear-gradient(
+    90deg,
+    var(--primary-color),
+    var(--accent-color)
+  );
+  animation: gradient 8s ease infinite;
+}
+
+/* Animated border */
+.animated-border {
+  --angle: 0deg;
+  border: 2px solid;
+  border-image: linear-gradient(
+      var(--angle),
+      var(--primary-color),
+      var(--accent-color)
+    )
+    1;
+  animation: rotate-border 8s linear infinite;
+}
+
+@keyframes rotate-border {
+  to {
+    --angle: 360deg;
+  }
+}
+
+/* Modern grid layout */
+.modern-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+  gap: 2rem;
 }
 
 @media (prefers-color-scheme: dark) {
   html,
   body {
-    background-color: #0f172a;
+    background-color: var(--background-dark);
     color-scheme: dark;
-    color: #fff;
+    color: var(--text-dark);
   }
 }
 
+/* Improved background with overlay */
 .home-background {
+  position: relative;
   background-image: url("/home.jpg");
   background-size: cover;
   background-position: center;
