@@ -1,10 +1,13 @@
 import React from "react";
 import { Link, useLocation } from "react-router";
+// استيراد الأيقونات من React Icons
+import { FaHome, FaMusic, FaBook } from "react-icons/fa";
 
+// أضفنا حقل icon إلى كل كائن في navLinks
 const navLinks = [
-  { to: "/", label: "الرئيسية" },
-  { to: "/melodies", label: "الألحان" },
-  { to: "/about", label: "طقس اللحن" },
+  { to: "/", label: "الرئيسية", icon: FaHome },
+  { to: "/melodies", label: "الألحان", icon: FaMusic },
+  { to: "/about", label: "طقس اللحن", icon: FaBook },
 ];
 
 export default function Header() {
@@ -13,16 +16,17 @@ export default function Header() {
     <header className="bg-blue-950 p-6 text-center shadow-md">
       <h1 className="text-3xl font-bold text-blue-500 mb-4">ⲥⲙⲟⲩ ⲉⲣⲟϥ</h1>
       <nav className="flex justify-center gap-4">
-        {navLinks.map((link) => {
+        {navLinks.map(({ to, label, icon: Icon }) => {
           const isActive =
-            link.to === "/"
+            to === "/"
               ? location.pathname === "/"
-              : location.pathname.startsWith(link.to);
+              : location.pathname.startsWith(to);
           return (
             <Link
-              key={link.to}
-              to={link.to}
-              className={`no-underline px-4 py-2 transition-all font-medium
+              key={to}
+              to={to}
+              className={`
+                flex items-center gap-1 no-underline px-4 py-2 transition-all font-medium
                 ${
                   isActive
                     ? "text-blue-400 border-b-2 border-blue-500"
@@ -31,7 +35,15 @@ export default function Header() {
               `}
               style={{ borderRadius: 0, background: "none" }}
             >
-              {link.label}
+              {/* أيقونة مع تلوين متغير بناء على حالة الـactive */}
+              <Icon
+                className={`
+                  ${isActive ? "text-blue-400" : "text-white"} 
+                  ${isActive ? "" : "hover:text-blue-400"}
+                `}
+                size={18}
+              />
+              <span>{label}</span>
             </Link>
           );
         })}
