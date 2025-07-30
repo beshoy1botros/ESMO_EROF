@@ -5,7 +5,8 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
-} from "react-router";
+  Link, // أضف Link لاستخدامه في ErrorBoundary
+} from "react-router"; // أو "react-router-dom" إذا كنت تستخدمه
 
 import type { Route } from "./+types/root";
 import "./app.css";
@@ -23,14 +24,16 @@ export const links: Route.LinksFunction = () => [
   },
   {
     rel: "shortcut icon",
-    href: "/العذراء مريم.ico",
-    type: "icon",
+    href: "/العذراء مريم.ico", // تم تغيير اسم الملف
+    type: "image/x-icon", // تم تغيير النوع إلى النوع القياسي
   },
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en , ar">
+    <html lang="ar">
+      {" "}
+      {/* تم تغيير قيمة سمة lang */}
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -57,15 +60,15 @@ export default function App() {
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
-  let message = "Oops!";
-  let details = "An unexpected error occurred.";
+  let message = "عذرًا!"; // تم توطين الرسالة
+  let details = "حدث خطأ غير متوقع."; // تم توطين الرسالة
   let stack: string | undefined;
 
   if (isRouteErrorResponse(error)) {
-    message = error.status === 404 ? "404" : "Error";
+    message = error.status === 404 ? "404" : "خطأ"; // تم توطين الرسالة
     details =
       error.status === 404
-        ? "The requested page could not be found."
+        ? "الصفحة المطلوبة غير موجودة." // تم توطين الرسالة
         : error.statusText || details;
   } else if (import.meta.env.DEV && error && error instanceof Error) {
     details = error.message;
@@ -73,14 +76,22 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   }
 
   return (
-    <main className="pt-16 p-4 container mx-auto">
-      <h1>{message}</h1>
-      <p>{details}</p>
+    <main className="pt-16 p-4 container mx-auto text-center">
+      {" "}
+      {/* أضفنا text-center */}
+      <h1 className="text-4xl font-bold mb-4">{message}</h1>
+      <p className="text-lg mb-8">{details}</p>
       {stack && (
-        <pre className="w-full p-4 overflow-x-auto">
+        <pre className="w-full p-4 overflow-x-auto bg-gray-100 rounded-md text-left mb-8">
           <code>{stack}</code>
         </pre>
       )}
+      <Link
+        to="/"
+        className="inline-block bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
+      >
+        العودة إلى الصفحة الرئيسية
+      </Link>
     </main>
   );
 }

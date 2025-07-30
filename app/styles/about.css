@@ -1,10 +1,22 @@
 /* about.css - أنماط مخصصة لصفحة طقس اللحن */
 
 .about-bg {
+  /*
+   * إضافة لون خلفية احتياطي.
+   * هذا اللون سيظهر إذا فشل تحميل الصورة، مما يضمن تجربة مستخدم أفضل.
+   * اختر لونًا يتناسب مع تصميم صفحتك أو لونًا محايدًا.
+   */
+  background-color: #e0e0e0; /* مثال: لون رمادي فاتح */
   background-image: url("/taks.jpg");
   background-size: cover;
   background-position: center;
-  background-repeat: no-repeat;
+  background-repeat: no-repeat; /* يمكن إزالتها في معظم الحالات مع background-size: cover */
 }
+
+/*
+ * ملاحظات إضافية:
+ * - تأكد من أن الصورة "taks.jpg" محسّنة للحجم والأداء (مثل استخدام تنسيق WebP).
+ * - إذا كانت هذه الخلفية تتغير بناءً على نقاط توقف (breakpoints)، ففكر في استخدام استعلامات الوسائط (media queries).
+ */
 
 /* يمكنك إضافة المزيد من الأنماط المخصصة هنا حسب الحاجة */

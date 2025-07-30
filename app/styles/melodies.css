@@ -1,29 +1,57 @@
 /* melodies.css - أنماط مخصصة لصفحة الألحان */
 
+/* تعريف متغيرات CSS لتوحيد الألوان والمسافات والأحجام */
+:root {
+  /* ألوان الثيم */
+  --color-primary-bg: #232946; /* لون الخلفية الأساسي */
+  --color-primary-border: #3b82f6; /* لون الحدود الأساسي */
+  --color-text-light: #fff; /* لون النص الفاتح */
+  --color-accent: #60a5fa; /* لون التمييز/اللكنة */
+  --color-dark-bg: #000; /* لون الخلفية الداكنة (للفيديو) */
+
+  /* المسافات (Spacing) */
+  --spacing-sm: 0.5rem; /* مسافة صغيرة */
+  --spacing-md: 1rem; /* مسافة متوسطة */
+  --spacing-lg: 1.5rem; /* مسافة كبيرة */
+
+  /* نصف قطر الحدود (Border Radius) */
+  --border-radius-sm: 0.5rem; /* نصف قطر صغير */
+  --border-radius-md: 1rem; /* نصف قطر متوسط */
+
+  /* أحجام الخطوط (Font Sizes) */
+  --font-size-md: 1.2rem; /* حجم خط متوسط */
+
+  /* الظلال (Shadows) */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08); /* ظل خفيف */
+}
+
+/* أنماط بطاقة الفيديو */
 .video-card {
-  background: #232946;
-  border-radius: 1rem;
-  border: 1px solid #3b82f6;
-  padding: 1.5rem;
-  color: #fff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  transition: border 0.2s;
+  background: var(--color-primary-bg);
+  border-radius: var(--border-radius-md);
+  border: 1px solid var(--color-primary-border);
+  padding: var(--spacing-lg);
+  color: var(--color-text-light);
+  box-shadow: var(--shadow-sm);
+  transition: border 0.2s; /* انتقال سلس لتغيير الحدود */
 }
 .video-card:hover {
-  border-color: #60a5fa;
+  border-color: var(--color-accent); /* تغيير لون الحدود عند التحويم */
 }
 .video-card h3 {
-  color: #60a5fa;
-  margin-bottom: 1rem;
-  font-size: 1.2rem;
+  color: var(--color-accent);
+  margin-bottom: var(--spacing-md);
+  font-size: var(--font-size-md);
   text-align: center;
 }
 .video-card video {
   width: 100%;
-  border-radius: 0.5rem;
-  background: #000;
-  margin-bottom: 1rem;
+  border-radius: var(--border-radius-sm);
+  background: var(--color-dark-bg);
+  margin-bottom: var(--spacing-md);
 }
+
+/* أنماط خلفية صفحة الألحان */
 .melodies-bg {
   background-image: url("/kemkem.jpg");
   background-size: cover;

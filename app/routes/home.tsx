@@ -1,4 +1,3 @@
-import { Welcome } from "../welcome/welcome";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 
@@ -18,14 +17,12 @@ export default function Home() {
       {/* الهيدر في الأعلى */}
       <Header />
 
-      {/* لتعطيل تحذير Webhint no-inline-styles على العنصر التالي: */}
-      {/* hint ignore: no-inline-styles */}
       <main className="flex-1 relative bg-cover bg-center bg-no-repeat home-background">
         {/* طبقة التعتيم */}
         <div className="absolute inset-0 bg-black/20 z-0" />
 
         {/* النص فوق الطبقة */}
-        <div className="relative z-10 max-w-4xl w-full mx-auto text-center pt-15 px-4 md:px-8 text-white">
+        <div className="relative z-10 max-w-4xl w-full mx-auto text-center pt-16 px-4 md:px-8 text-white">
           <h2 className="text-2xl md:text-4xl mb-6 drop-shadow-lg">
             باسم الآب والابن والروح القدس، الإله الواحد. آمين.
           </h2>

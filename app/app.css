@@ -11,12 +11,24 @@
   --transition-speed: 0.3s;
 }
 
+/* تعريف خاصية CSS مخصصة قابلة للتحريك */
 @property --angle {
   syntax: "<angle>";
   initial-value: 0deg;
   inherits: false;
 }
 
+/*
+  تأكد من تضمين خط "Noto Sans Coptic" عبر @font-face إذا لم يكن خط نظام.
+  مثال:
+  @font-face {
+    font-family: 'Noto Sans Coptic';
+    src: url('/fonts/NotoSansCoptic-Regular.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+  }
+*/
 html,
 body {
   background-color: var(--background-light);
@@ -26,11 +38,16 @@ body {
   overflow-x: hidden;
 }
 
-/* Smooth scrolling for the entire page */
-* {
-  scroll-margin-top: 5rem;
-  transition: background-color var(--transition-speed),
-    color var(--transition-speed), transform var(--transition-speed);
+/* Smooth scrolling for the entire page - apply scroll-margin-top to specific elements */
+/* تجنب استخدام المحدد الشامل (*) للانتقالات أو الهوامش التي تؤثر على الأداء */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+[id] {
+  scroll-margin-top: 5rem; /* لتعويض شريط التنقل الثابت عند التمرير إلى معرف */
 }
 
 /* Modern container with responsive padding */
@@ -47,6 +64,9 @@ body {
   border-radius: 1rem;
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  /* إضافة انتقالات للعناصر التي تحتاجها فقط */
+  transition: background-color var(--transition-speed),
+    transform var(--transition-speed);
 }
 
 /* Gradient text effect */
@@ -144,7 +164,13 @@ body {
 .responsive-image {
   width: 100%;
   height: auto;
-  aspect-ratio: attr(width) / attr(height);
+  /*
+    خاصية aspect-ratio مع attr() غير مدعومة حالياً في المتصفحات.
+    إذا كانت الصورة تحتوي على سمات width و height في HTML،
+    فإن المتصفح سيتعامل مع نسبة العرض إلى الارتفاع تلقائياً.
+    إذا كنت بحاجة لنسبة عرض إلى ارتفاع ثابتة، استخدم قيمة مباشرة مثل:
+    aspect-ratio: 16/9;
+  */
 }
 
 /* Video Optimizations */

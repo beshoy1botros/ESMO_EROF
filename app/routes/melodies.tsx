@@ -3,50 +3,125 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import "../styles/melodies.css";
 
-const videoData = {
+// 1. تعريف الأنواع (Type Definitions)
+interface Video {
+  id: string;
+  title: string;
+  url: string;
+}
+
+interface LevelVideos {
+  first: Video[];
+  second: Video[];
+  gifted?: Video[]; // gifted is optional for some stages
+}
+
+// Define specific types for stages based on their structure
+interface KindergartenStage extends LevelVideos {
+  gifted: Video[]; // Kindergarten has gifted
+}
+interface FirstSecondStage extends LevelVideos {
+  gifted: Video[];
+}
+interface ThirdFourthStage extends LevelVideos {
+  gifted: Video[];
+}
+interface FifthSixthStage extends LevelVideos {
+  gifted: Video[];
+}
+interface MiddleStage extends LevelVideos {
+  gifted: Video[];
+}
+interface HighStage extends LevelVideos {
+  gifted: Video[];
+}
+interface UniversityStage extends Omit<LevelVideos, "gifted"> {} // University does not have gifted
+interface ServantsStage extends Omit<LevelVideos, "gifted"> {} // Servants does not have gifted
+
+interface VideoData {
+  kindergarten: KindergartenStage;
+  firstSecond: FirstSecondStage;
+  thirdFourth: ThirdFourthStage;
+  fifthSixth: FifthSixthStage;
+  middle: MiddleStage;
+  high: HighStage;
+  university: UniversityStage;
+  servants: ServantsStage;
+}
+
+// 5. استخدام الثوابت/Enums للمراحل والمستويات
+enum StageKey {
+  Kindergarten = "kindergarten",
+  FirstSecond = "firstSecond",
+  ThirdFourth = "thirdFourth",
+  FifthSixth = "fifthSixth",
+  Middle = "middle",
+  High = "high",
+  University = "university",
+  Servants = "servants",
+}
+
+enum LevelKey {
+  First = "first",
+  Second = "second",
+  Gifted = "gifted",
+}
+
+// 3. توحيد معرفات الفيديو (Video IDs) و 4. توحيد مسارات الفيديو (URL Paths)
+const videoData: VideoData = {
   kindergarten: {
     first: [
       {
+        id: "k1-1",
         title: "سوتيس امين دمج",
         url: "/الحان مهرجان الكرازة 2022 مرحلة الحضانة - المستوى الاول _ لحن سوتيس أمين دمجاً.mp4",
       },
       {
+        id: "k1-2",
         title: "مرد مزمور عشية وباكر وقداس عيد النيروز",
         url: "/مرد مزمور - عيد النيروز - للمعلم ابراهيم عياد.mp4",
       },
       {
+        id: "k1-3",
         title: "ختام الصلوات الاجتماعية(المياة والاهوية والزروع)",
-        url: "ختام الصلوات الاجتماعية السنوى - حضانة.mp4",
+        url: "/ختام الصلوات الاجتماعية السنوى - حضانة.mp4",
       },
       {
+        id: "k1-4",
         title: "هيتين القداس للعذراء+الاباء الرسل",
         url: "/الهيتينيات.mp4",
       },
     ],
     second: [
       {
+        id: "k2-1",
         title: "ذكصولوجية العذراء عشية (ايريه ابصول سيل)",
         url: "/ذكصولوجية السيدة العذراء في رفع بخور عشية للايبيذياكون اسامه لطفي.mp4",
       },
       {
+        id: "k2-2",
         title: "مرد المجمع الباسيلي (ايريه بو اسمو)",
         url: "/الحان مهرجان الكرازة 2024 مرحلة الحضانة - المستوى الثاني _ مرد المجمع الباسيلي إيريه بو إسمو.mp4",
       },
       {
+        id: "k2-3",
         title: "المزمور 150 الهوس الرابع بالطريقة السنوي",
         url: "/الحان مهرجان الكرازة 2022 مرحلة 3 ، 4 ابتدائي - المستوى الثاني _ المزمور 150 من الهوس الرابع السنوي .mp4",
       },
       {
+        id: "k2-4",
         title: "مرد انجيل القداس السنوي أوأونياتو",
         url: "/الحان مهرجان الكرازة 2022 مرحلة الحضانة - المستوى الثاني _ مرد انجيل القداس السنوي أوأونياتو.mp4",
       },
     ],
     gifted: [
       {
+        id: "kg-1",
         title: "تي شوري السنوي",
         url: "/لحن تى شورى السنوى_ قبطى كاملا بالهزات_للمعلم ابراهيم معوض.mp4",
       },
       {
+        id: "kg-2",
         title: "لحن البركة (بدون البرلكس)",
         url: "/لحن البركة تين اواوشت بالهزات _ مهرجان الكرازة المرقسية 2023 -مرحلة اعدادى.mp4",
       },
@@ -301,16 +376,8 @@ const videoData = {
   },
   high: {
     first: [
-      {
-        id: "h1-1",
-        title: "الهوس الاول كاملا",
-        url: "/الهوس الاول.mp4",
-      },
-      {
-        id: "h1-2",
-        title: "اطاي بارثينوس كاملا",
-        url: "/اطاي بارثينوس.mp4",
-      },
+      { id: "h1-1", title: "الهوس الاول كاملا", url: "/الهوس الاول.mp4" },
+      { id: "h1-2", title: "اطاي بارثينوس كاملا", url: "/اطاي بارثينوس.mp4" },
       {
         id: "h1-3",
         title: "اسبسمس واطس للعذراء(ماريا تي تشرومبي)",
@@ -333,11 +400,7 @@ const videoData = {
         title: "محير(افناف امبي اسمو) للعذراء",
         url: "/افناف امبي اسمو.mp4",
       },
-      {
-        id: "h2-3",
-        title: "ذكصولوجية باكر",
-        url: "/ذكصولوجية باكر.mp4",
-      },
+      { id: "h2-3", title: "ذكصولوجية باكر", url: "/ذكصولوجية باكر.mp4" },
       {
         id: "h2-4",
         title: "اوندوس",
@@ -345,11 +408,7 @@ const videoData = {
       },
     ],
     gifted: [
-      {
-        id: "hg-1",
-        title: "اسبازيستي الكبير",
-        url: "/اسبازيستي.mp4",
-      },
+      { id: "hg-1", title: "اسبازيستي الكبير", url: "/اسبازيستي.mp4" },
       {
         id: "hg-2",
         title: "مزمور عشية (جي افساجي)",
@@ -364,11 +423,7 @@ const videoData = {
         title: "اوندوس",
         url: "/لحن أوندوس للمعلم إبراهيم عياد واالمعلم زاهر أندراوس من كاتدرائية البابا كيرلس بدير مارمينا بمريوط.mp4",
       },
-      {
-        id: "u1-2",
-        title: "اطاي بارثينوس كاملا",
-        url: "/اطاي بارثينوس.mp4",
-      },
+      { id: "u1-2", title: "اطاي بارثينوس كاملا", url: "/اطاي بارثينوس.mp4" },
       {
         id: "u1-3",
         title: "لحن افشوليم + ايفول هيتين الصغير",
@@ -416,11 +471,7 @@ const videoData = {
         title: "لحن تين ثينو الكبير كامل + التكملة حتى نهاية الأرباع",
         url: "/لحن تين ثينو الكبير للمعلم ابراهيم عياد.mp4",
       },
-      {
-        id: "s1-3",
-        title: "لحن اسبازيستي الكبير كامل",
-        url: "/اسبازيستي.mp4",
-      },
+      { id: "s1-3", title: "لحن اسبازيستي الكبير كامل", url: "/اسبازيستي.mp4" },
     ],
     second: [
       {
@@ -447,18 +498,47 @@ const videoData = {
   },
 };
 
-const levelMap: Record<string, string> = {
-  الأول: "first",
-  الثاني: "second",
-  الموهوبين: "gifted",
+const levelMap: Record<string, LevelKey> = {
+  الأول: LevelKey.First,
+  الثاني: LevelKey.Second,
+  الموهوبين: LevelKey.Gifted,
 };
-function mapArabicToEnglishLevel(arabicLevel: string) {
+
+function mapArabicToEnglishLevel(arabicLevel: string): LevelKey | string {
   return levelMap[arabicLevel] || arabicLevel.toLowerCase();
 }
-function getVideos(stage: string, level: string) {
+
+// 2. تحسين دالة getVideos
+function getVideos(stage: StageKey, level: string): Video[] {
   const englishLevel = mapArabicToEnglishLevel(level);
-  // @ts-ignore
-  return videoData[stage]?.[englishLevel] || [];
+  const stageData = videoData[stage];
+
+  if (!stageData) {
+    return [];
+  }
+
+  // Type assertion to access properties safely based on LevelKey
+  if (englishLevel === LevelKey.First) {
+    return stageData.first;
+  }
+  if (englishLevel === LevelKey.Second) {
+    return stageData.second;
+  }
+  if (englishLevel === LevelKey.Gifted && "gifted" in stageData) {
+    return (
+      (
+        stageData as
+          | KindergartenStage
+          | FirstSecondStage
+          | ThirdFourthStage
+          | FifthSixthStage
+          | MiddleStage
+          | HighStage
+      ).gifted || []
+    );
+  }
+
+  return [];
 }
 
 export function meta() {
@@ -472,24 +552,26 @@ export function meta() {
 }
 
 export default function MelodiesPage() {
-  const [stage, setStage] = useState("");
-  const [level, setLevel] = useState("");
+  const [stage, setStage] = useState<StageKey | "">("");
+  const [level, setLevel] = useState<string>("");
   const [levels, setLevels] = useState<string[]>([]);
-  const [videos, setVideos] = useState<any[]>([]);
+  const [videos, setVideos] = useState<Video[]>([]); // استخدام النوع Video[]
 
   useEffect(() => {
     if (
       [
-        "kindergarten",
-        "firstSecond",
-        "thirdFourth",
-        "fifthSixth",
-        "middle",
-        "high",
-      ].includes(stage)
+        StageKey.Kindergarten,
+        StageKey.FirstSecond,
+        StageKey.ThirdFourth,
+        StageKey.FifthSixth,
+        StageKey.Middle,
+        StageKey.High,
+      ].includes(stage as StageKey)
     ) {
       setLevels(["الأول", "الثاني", "الموهوبين"]);
-    } else if (["university", "servants"].includes(stage)) {
+    } else if (
+      [StageKey.University, StageKey.Servants].includes(stage as StageKey)
+    ) {
       setLevels(["الأول", "الثاني"]);
     } else {
       setLevels([]);
@@ -529,18 +611,18 @@ export default function MelodiesPage() {
                 <select
                   id="stage"
                   value={stage}
-                  onChange={(e) => setStage(e.target.value)}
+                  onChange={(e) => setStage(e.target.value as StageKey)}
                   className="w-full p-3 bg-gray-700 text-white border border-blue-500 rounded-lg cursor-pointer transition-all hover:border-blue-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
                 >
                   <option value="">اختر المرحلة</option>
-                  <option value="kindergarten">حضانة</option>
-                  <option value="firstSecond">أولى و ثانية</option>
-                  <option value="thirdFourth">ثالثة و رابعة</option>
-                  <option value="fifthSixth">خامسة و سادسة</option>
-                  <option value="middle">إعدادي</option>
-                  <option value="high">ثانوي</option>
-                  <option value="university">جامعة</option>
-                  <option value="servants">خدام و خادمات</option>
+                  <option value={StageKey.Kindergarten}>حضانة</option>
+                  <option value={StageKey.FirstSecond}>أولى و ثانية</option>
+                  <option value={StageKey.ThirdFourth}>ثالثة و رابعة</option>
+                  <option value={StageKey.FifthSixth}>خامسة و سادسة</option>
+                  <option value={StageKey.Middle}>إعدادي</option>
+                  <option value={StageKey.High}>ثانوي</option>
+                  <option value={StageKey.University}>جامعة</option>
+                  <option value={StageKey.Servants}>خدام و خادمات</option>
                 </select>
               </div>
               <div>
@@ -568,14 +650,23 @@ export default function MelodiesPage() {
             </div>
 
             <div className="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 justify-center flex-1">
+              {/* 6. تحسين رسالة "لا يوجد فيديوهات" */}
               {videos.length === 0 && stage && level ? (
                 <div className="col-span-full text-center p-8 bg-gray-700 rounded-lg border border-blue-500">
-                  <p className="text-gray-400">لا يوجد فيديوهات لهذه المرحلة</p>
+                  <p className="text-gray-400">
+                    لا توجد ألحان متاحة للمرحلة "{stage}" والمستوى "{level}".
+                  </p>
+                </div>
+              ) : videos.length === 0 && stage && !level ? (
+                <div className="col-span-full text-center p-8 bg-gray-700 rounded-lg border border-blue-500">
+                  <p className="text-gray-400">
+                    الرجاء اختيار مستوى لعرض الألحان.
+                  </p>
                 </div>
               ) : (
                 videos.map((video) => (
                   <div
-                    key={video.id || video.title}
+                    key={video.id} // استخدام video.id الموحد
                     className="bg-gray-800 p-6 rounded-lg border border-blue-500 transition-all hover:border-blue-400 flex flex-col items-center"
                   >
                     <h3 className="text-xl font-semibold text-blue-400 mb-4 text-center">
@@ -585,11 +676,7 @@ export default function MelodiesPage() {
                       <video
                         controls
                         className="w-full rounded-lg mb-4 bg-black"
-                        src={
-                          video.url.startsWith("/")
-                            ? video.url
-                            : `/${video.url}`
-                        }
+                        src={video.url} // لا حاجة للتحقق الشرطي بعد توحيد المسارات
                       >
                         متصفحك لا يدعم تشغيل الفيديو
                       </video>
