@@ -500,7 +500,25 @@ const videoData: VideoData = {
     ],
   },
   weddingOfCana: {
-    first: [],
+    first: [
+      {
+        id: "wc-1",
+        title: "ذكصولوجية الاباء الرسل (كيريوس)",
+        url: "/ذكصولوجية ثانية للاباء الرسل تقال في صوم الرسل - للمُعلم ابراهيم عياد.mp4",
+      },
+      {
+        id: "wc-2",
+        title:
+          "قطعة توزيع عيد العنصرة وصوم الاباء الرسل (اسومين) كاملا يوناني+قبطي+عربي",
+        url: "/اسومين توزيع عيد العنصرة و صوم الاباء الرسل المعلم ابراهيم عياد.mp4",
+      },
+      {
+        id: "wc-3",
+        title:
+          "لحن بي ابنفما المقدمة فقط +المحير(الربع الاول والثاني الي خين هان ميش ان لاس)",
+        url: "/بي بنفما.mp4",
+      },
+    ],
     second: [],
   },
 };
@@ -632,7 +650,9 @@ export default function MelodiesPage() {
                   <option value={StageKey.High}>ثانوي</option>
                   <option value={StageKey.University}>جامعة</option>
                   <option value={StageKey.Servants}>خدام و خادمات</option>
-                  <option value={StageKey.WeddingOfCana}>عرس قانا الجليل</option>
+                  <option value={StageKey.WeddingOfCana}>
+                    عرس قانا الجليل
+                  </option>
                 </select>
               </div>
               <div>
