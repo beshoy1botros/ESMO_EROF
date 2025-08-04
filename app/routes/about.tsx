@@ -247,6 +247,9 @@ const textData = {
       },
     ],
   },
+  weddingOfCana: {
+    first: [],
+  },
 };
 
 const levelMap: Record<string, string> = {
@@ -285,6 +288,8 @@ export default function About() {
       setLevels(["الأول", "الثاني", "الموهوبين"]);
     } else if (["university", "servants"].includes(stage)) {
       setLevels(["الأول", "الثاني"]);
+    } else if (stage === "weddingOfCana") {
+      setLevels(["الأول"]);
     } else {
       setLevels([]);
     }
@@ -334,6 +339,7 @@ export default function About() {
                     <option value="fifthSixth">خامسة و سادسة</option>
                     <option value="middle">إعدادي</option>
                     <option value="high">ثانوي</option>
+                    <option value="weddingOfCana">عرس قانا الجليل</option>
                   </select>
                 </div>
                 <div>

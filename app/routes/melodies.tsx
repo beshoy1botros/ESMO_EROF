@@ -37,6 +37,7 @@ interface HighStage extends LevelVideos {
 }
 interface UniversityStage extends Omit<LevelVideos, "gifted"> {} // University does not have gifted
 interface ServantsStage extends Omit<LevelVideos, "gifted"> {} // Servants does not have gifted
+interface WeddingOfCanaStage extends Omit<LevelVideos, "gifted"> {}
 
 interface VideoData {
   kindergarten: KindergartenStage;
@@ -47,6 +48,7 @@ interface VideoData {
   high: HighStage;
   university: UniversityStage;
   servants: ServantsStage;
+  weddingOfCana: WeddingOfCanaStage;
 }
 
 // 5. استخدام الثوابت/Enums للمراحل والمستويات
@@ -59,6 +61,7 @@ enum StageKey {
   High = "high",
   University = "university",
   Servants = "servants",
+  WeddingOfCana = "weddingOfCana",
 }
 
 enum LevelKey {
@@ -496,6 +499,10 @@ const videoData: VideoData = {
       },
     ],
   },
+  weddingOfCana: {
+    first: [],
+    second: [],
+  },
 };
 
 const levelMap: Record<string, LevelKey> = {
@@ -573,6 +580,8 @@ export default function MelodiesPage() {
       [StageKey.University, StageKey.Servants].includes(stage as StageKey)
     ) {
       setLevels(["الأول", "الثاني"]);
+    } else if (stage === StageKey.WeddingOfCana) {
+      setLevels(["الأول"]);
     } else {
       setLevels([]);
     }
@@ -623,6 +632,7 @@ export default function MelodiesPage() {
                   <option value={StageKey.High}>ثانوي</option>
                   <option value={StageKey.University}>جامعة</option>
                   <option value={StageKey.Servants}>خدام و خادمات</option>
+                  <option value={StageKey.WeddingOfCana}>عرس قانا الجليل</option>
                 </select>
               </div>
               <div>
