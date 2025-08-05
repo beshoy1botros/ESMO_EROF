@@ -1,5 +1,7 @@
 {
-  "name": "my-react-router-app",
+  "name": "esmo-erof-app",
+  "description": "تطبيق الألحان القبطية - ⲥⲙⲟⲩ ⲉⲣⲟϥ",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "scripts": {

@@ -1,18 +1,15 @@
-# Welcome to React Router!
+# ⲥⲙⲟⲩ ⲉⲣⲟϥ - تطبيق الألحان القبطية
 
-A modern, production-ready template for building full-stack React applications using React Router.
+تطبيق ويب تفاعلي لتعليم الألحان القبطية وطقس اللحن للمراحل التعليمية المختلفة.
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/remix-run/react-router-templates/tree/main/default)
+## ✨ المميزات
 
-## Features
-
-- 🚀 Server-side rendering
-- ⚡️ Hot Module Replacement (HMR)
-- 📦 Asset bundling and optimization
-- 🔄 Data loading and mutations
-- 🔒 TypeScript by default
-- 🎉 TailwindCSS for styling
-- 📖 [React Router docs](https://reactrouter.com/)
+- 🎵 **الألحان القبطية**: مجموعة شاملة من الألحان لجميع المراحل التعليمية
+- 📖 **طقس اللحن**: شرح مفصل لطقوس الألحان القبطية
+- 🎓 **التمهيدي**: محتوى تعليمي خاص للمراحل التمهيدية
+- 📱 **متجاوب**: يعمل على جميع الأجهزة (هواتف، أجهزة لوحية، كمبيوتر)
+- 🎨 **تصميم حديث**: واجهة مستخدم جميلة وسهلة الاستخدام
+- 🚀 **أداء عالي**: بناء على React Router v7 و TypeScript
 
 ## Getting Started
 

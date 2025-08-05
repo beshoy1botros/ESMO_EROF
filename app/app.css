@@ -142,6 +142,29 @@ h6,
   object-fit: cover;
 }
 
+/* تحسينات الأداء */
+.performance-optimized {
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+/* تحسين التمرير */
+.smooth-scroll {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* تحسين الانتقالات */
+.transition-optimized {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* تحسين الخطوط العربية */
+.arabic-text {
+  font-feature-settings: "liga" 1, "kern" 1;
+  text-rendering: optimizeLegibility;
+}
+
 @media (prefers-color-scheme: dark) {
   html,
   body {
