@@ -36,6 +36,11 @@ body {
   font-family: "Noto Sans Coptic", "Inter", ui-sans-serif, system-ui, sans-serif;
   scroll-behavior: smooth;
   overflow-x: hidden;
+  /* تحسين الخط للشاشات عالية الدقة */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* تحسين الأداء على الأجهزة المحمولة */
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* Smooth scrolling for the entire page - apply scroll-margin-top to specific elements */
@@ -106,6 +111,35 @@ h6,
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
   gap: 2rem;
+}
+
+/* تحسينات للتجاوب */
+.responsive-text {
+  font-size: clamp(0.875rem, 2.5vw, 1.125rem);
+}
+
+.responsive-heading {
+  font-size: clamp(1.5rem, 4vw, 3rem);
+}
+
+/* تحسين الأزرار للمس */
+.touch-target {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* تحسين الفيديو للأجهزة المختلفة */
+.responsive-video {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16/9;
+}
+
+/* تحسين الصور للأجهزة المختلفة */
+.responsive-image {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
 }
 
 @media (prefers-color-scheme: dark) {

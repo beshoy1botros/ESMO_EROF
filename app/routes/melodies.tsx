@@ -626,12 +626,15 @@ export default function MelodiesPage() {
 
         {/* المحتوى فوق الطبقة */}
         <div className="relative z-10 flex flex-col min-h-full bg-gray-900/0 text-white">
-          <div className="p-8 max-w-6xl mx-auto w-full flex-1 flex flex-col">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-              <div>
+          <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full flex-1 flex flex-col">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-blue-400 mb-6 sm:mb-8 text-center">
+              الألحان القبطية
+            </h1>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 mb-6 sm:mb-8">
+              <div className="space-y-4">
                 <label
                   htmlFor="stage"
-                  className="block mb-3 text-lg font-medium"
+                  className="block mb-2 sm:mb-3 text-base sm:text-lg font-medium"
                 >
                   المرحلة:
                 </label>
@@ -639,7 +642,7 @@ export default function MelodiesPage() {
                   id="stage"
                   value={stage}
                   onChange={(e) => setStage(e.target.value as StageKey)}
-                  className="w-full p-3 bg-gray-700 text-white border border-blue-500 rounded-lg cursor-pointer transition-all hover:border-blue-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                  className="w-full p-3 sm:p-4 bg-gray-700 text-white border border-blue-500 rounded-lg cursor-pointer transition-all hover:border-blue-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 text-sm sm:text-base"
                 >
                   <option value="">اختر المرحلة</option>
                   <option value={StageKey.Kindergarten}>حضانة</option>
@@ -655,10 +658,10 @@ export default function MelodiesPage() {
                   </option>
                 </select>
               </div>
-              <div>
+              <div className="space-y-4">
                 <label
                   htmlFor="level"
-                  className="block mb-3 text-lg font-medium"
+                  className="block mb-2 sm:mb-3 text-base sm:text-lg font-medium"
                 >
                   المستوى:
                 </label>
@@ -666,7 +669,7 @@ export default function MelodiesPage() {
                   id="level"
                   value={level}
                   onChange={(e) => setLevel(e.target.value)}
-                  className="w-full p-3 bg-gray-700 text-white border border-blue-500 rounded-lg cursor-pointer transition-all hover:border-blue-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                  className="w-full p-3 sm:p-4 bg-gray-700 text-white border border-blue-500 rounded-lg cursor-pointer transition-all hover:border-blue-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 text-sm sm:text-base disabled:opacity-50 disabled:cursor-not-allowed"
                   disabled={levels.length === 0}
                 >
                   <option value="">اختر المستوى</option>
@@ -679,17 +682,19 @@ export default function MelodiesPage() {
               </div>
             </div>
 
-            <div className="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 justify-center flex-1">
+            <div className="grid gap-4 sm:gap-6 lg:gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-center flex-1">
               {/* 6. تحسين رسالة "لا يوجد فيديوهات" */}
               {videos.length === 0 && stage && level ? (
-                <div className="col-span-full text-center p-8 bg-gray-700 rounded-lg border border-blue-500">
-                  <p className="text-gray-400">
+                <div className="col-span-full text-center p-6 sm:p-8 bg-gray-700 rounded-lg border border-blue-500">
+                  <div className="text-4xl sm:text-5xl mb-4">🎵</div>
+                  <p className="text-gray-400 text-sm sm:text-base">
                     لا توجد ألحان متاحة للمرحلة "{stage}" والمستوى "{level}".
                   </p>
                 </div>
               ) : videos.length === 0 && stage && !level ? (
-                <div className="col-span-full text-center p-8 bg-gray-700 rounded-lg border border-blue-500">
-                  <p className="text-gray-400">
+                <div className="col-span-full text-center p-6 sm:p-8 bg-gray-700 rounded-lg border border-blue-500">
+                  <div className="text-4xl sm:text-5xl mb-4">📋</div>
+                  <p className="text-gray-400 text-sm sm:text-base">
                     الرجاء اختيار مستوى لعرض الألحان.
                   </p>
                 </div>
@@ -697,15 +702,15 @@ export default function MelodiesPage() {
                 videos.map((video) => (
                   <div
                     key={video.id} // استخدام video.id الموحد
-                    className="bg-gray-800 p-6 rounded-lg border border-blue-500 transition-all hover:border-blue-400 flex flex-col items-center"
+                    className="bg-gray-800 p-4 sm:p-6 rounded-lg border border-blue-500 transition-all hover:border-blue-400 hover:scale-105 flex flex-col"
                   >
-                    <h3 className="text-xl font-semibold text-blue-400 mb-4 text-center">
+                    <h3 className="text-lg sm:text-xl font-semibold text-blue-400 mb-3 sm:mb-4 text-center">
                       {video.title}
                     </h3>
                     {video.url && (
                       <video
                         controls
-                        className="w-full rounded-lg mb-4 bg-black"
+                        className="w-full rounded-lg bg-black aspect-video"
                         src={video.url} // لا حاجة للتحقق الشرطي بعد توحيد المسارات
                       >
                         متصفحك لا يدعم تشغيل الفيديو
