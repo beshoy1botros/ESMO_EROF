@@ -367,3 +367,12 @@ export default function PreparatoryPage() {
     </div>
   );
 }
+export function meta() {
+  return [
+    { title: "ⲥⲙⲟⲩ ⲉⲣⲟϥ - تمهيدي" },
+    {
+      name: "description",
+      content: "موقع متخصص في تعليم الألحان القبطية للطلاب في مختلف المراحل",
+    },
+  ];
+}
