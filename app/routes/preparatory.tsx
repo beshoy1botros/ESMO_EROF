@@ -202,9 +202,6 @@ export default function PreparatoryPage() {
             {!selectedStage ? (
               // عرض المراحل
               <div>
-                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-blue-400 mb-6 sm:mb-8 text-center">
-                  اختر المرحلة التعليمية
-                </h1>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
                   {Object.keys(preparatoryVideos).map((stage) => (
                     <button

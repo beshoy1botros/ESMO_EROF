@@ -627,9 +627,6 @@ export default function MelodiesPage() {
         {/* المحتوى فوق الطبقة */}
         <div className="relative z-10 flex flex-col min-h-full bg-gray-900/0 text-white">
           <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full flex-1 flex flex-col">
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-blue-400 mb-6 sm:mb-8 text-center">
-              الألحان القبطية
-            </h1>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 mb-6 sm:mb-8">
               <div className="space-y-4">
                 <label
