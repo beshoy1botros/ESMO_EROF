@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 import "../styles/melodies.css";
 
 // 1. تعريف الأنواع (Type Definitions)
@@ -615,6 +617,8 @@ export default function MelodiesPage() {
 
   return (
     <div className="min-h-screen flex flex-col font-sans">
+      {/* الهيدر في الأعلى */}
+      <Header />
       <main className="flex-1 relative bg-cover bg-center bg-no-repeat melodies-bg">
         {/* طبقة التعتيم */}
         <div className="absolute inset-0 bg-black/50 z-0" />
@@ -702,7 +706,6 @@ export default function MelodiesPage() {
                     {video.url && (
                       <video
                         controls
-                        preload="metadata"
                         className="w-full rounded-lg bg-black aspect-video"
                         src={video.url}
                       >
@@ -716,6 +719,8 @@ export default function MelodiesPage() {
           </div>
         </div>
       </main>
+      {/* الفوتر في الأسفل */}
+      <Footer />
     </div>
   );
 }

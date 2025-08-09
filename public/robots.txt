@@ -1,6 +1,0 @@
-# robots.txt for ⲥⲙⲟⲩ ⲉⲣⲟϥ
-User-agent: *
-Allow: /
-
-Sitemap: https://example.com/sitemap.xml
-

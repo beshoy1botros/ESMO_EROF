@@ -9,8 +9,6 @@ import {
 } from "react-router"; // أو "react-router-dom" إذا كنت تستخدمه
 
 import type { Route } from "./+types/root";
-import Header from "./components/Header";
-import Footer from "./components/Footer";
 import "./app.css";
 
 export const links: Route.LinksFunction = () => [
@@ -24,9 +22,6 @@ export const links: Route.LinksFunction = () => [
     rel: "stylesheet",
     href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Noto+Sans+Coptic&display=swap",
   },
-  { rel: "preload", as: "image", href: "/home.jpg" },
-  { rel: "preload", as: "image", href: "/taks.jpg" },
-  { rel: "preload", as: "image", href: "/kemkem.jpg" },
   {
     rel: "shortcut icon",
     href: "/العذراء مريم.ico", // تم تغيير اسم الملف
@@ -67,13 +62,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
+  // فقط Outlet هنا
   return (
-    <div dir="rtl" className="min-h-screen flex flex-col font-sans">
-      <Header />
-      <div className="flex-1">
-        <Outlet />
-      </div>
-      <Footer />
+    <div dir="rtl">
+      <Outlet />
     </div>
   );
 }

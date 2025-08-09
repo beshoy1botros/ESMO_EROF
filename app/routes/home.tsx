@@ -1,3 +1,6 @@
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+
 export function meta() {
   return [
     { title: "ⲥⲙⲟⲩ ⲉⲣⲟϥ" },
@@ -11,6 +14,8 @@ export function meta() {
 export default function Home() {
   return (
     <div className="min-h-screen flex flex-col font-sans">
+      {/* الهيدر في الأعلى */}
+      <Header />
       <main className="flex-1 relative bg-cover bg-center bg-no-repeat home-background">
         {/* طبقة التعتيم */}
         <div className="absolute inset-0 bg-black/30 z-0" />
@@ -37,6 +42,8 @@ export default function Home() {
           </p>
         </div>
       </main>
+      {/* الفوتر في الأسفل */}
+      <Footer />
     </div>
   );
 }

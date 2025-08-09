@@ -13,8 +13,7 @@
       "routes/home": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
       "routes/melodies": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
       "routes/about": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
-      "routes/preparatory": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
-      "routes/not-found": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0"
+      "routes/preparatory": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0"
     },
     "routes": {
       "root": {
@@ -55,15 +54,6 @@
         "parentId": "root",
         "file": "app/routes/preparatory.tsx",
         "path": "preparatory",
-        "config": {
-          "runtime": "nodejs"
-        }
-      },
-      "routes/not-found": {
-        "id": "routes/not-found",
-        "parentId": "root",
-        "file": "app/routes/not-found.tsx",
-        "path": "*",
         "config": {
           "runtime": "nodejs"
         }
@@ -110,12 +100,6 @@
         "parentId": "root",
         "file": "routes/preparatory.tsx",
         "path": "preparatory"
-      },
-      "routes/not-found": {
-        "id": "routes/not-found",
-        "parentId": "root",
-        "file": "routes/not-found.tsx",
-        "path": "*"
       }
     },
     "routeDiscovery": {
