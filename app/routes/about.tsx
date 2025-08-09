@@ -1,6 +1,4 @@
 import { useEffect, useState } from "react";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
 import "../styles/about.css";
 
 const textData = {
@@ -337,10 +335,8 @@ export default function About() {
 
         {/* المحتوى فوق الطبقة */}
         <div className="relative z-10 flex flex-col min-h-full bg-gray-900/0 text-white">
-          <Header />
-
           <div className="flex-1 p-4 sm:p-6 lg:p-8">
-            <div className="max-w-6xl mx-auto">           
+            <div className="max-w-6xl mx-auto">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 mb-6 sm:mb-8">
                 <div className="space-y-4">
                   <label
@@ -415,7 +411,6 @@ export default function About() {
           </div>
         </div>
       </main>
-      <Footer />
     </div>
   );
 }

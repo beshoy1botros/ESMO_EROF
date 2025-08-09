@@ -1,6 +1,4 @@
 import { useState } from "react";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
 import "../styles/melodies.css";
 
 interface Video {
@@ -194,7 +192,6 @@ export default function PreparatoryPage() {
 
   return (
     <div className="min-h-screen flex flex-col font-sans">
-      <Header />
       <main className="flex-1 relative bg-cover bg-center bg-no-repeat melodies-bg">
         <div className="absolute inset-0 bg-black/50 z-0" />
         <div className="relative z-10 flex flex-col min-h-full bg-gray-900/0 text-white">
@@ -283,11 +280,12 @@ export default function PreparatoryPage() {
                       className="bg-gray-800 p-4 sm:p-6 rounded-lg border border-blue-500 transition-all hover:border-blue-400 hover:scale-105 flex flex-col"
                     >
                       <h3 className="text-lg sm:text-xl font-semibold text-blue-400 mb-3 sm:mb-4 text-center">
-                        {video.title ||""}
+                        {video.title || ""}
                       </h3>
                       {video.url ? (
                         <video
                           controls
+                          preload="metadata"
                           className="w-full rounded-lg bg-black aspect-video"
                           src={video.url}
                         >
@@ -347,7 +345,6 @@ export default function PreparatoryPage() {
           </div>
         </div>
       </main>
-      <Footer />
     </div>
   );
 }
