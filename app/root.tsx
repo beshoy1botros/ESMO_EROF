@@ -27,6 +27,10 @@ export const links: Route.LinksFunction = () => [
     href: "/العذراء مريم.ico", // تم تغيير اسم الملف
     type: "image/x-icon", // تم تغيير النوع إلى النوع القياسي
   },
+  {
+    rel: "manifest",
+    href: "/manifest.json",
+  },
 ];
 
 export function meta() {
@@ -56,6 +60,24 @@ export function Layout({ children }: { children: React.ReactNode }) {
         {children}
         <ScrollRestoration />
         <Scripts />
+        {/* تسجيل Service Worker */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              if ('serviceWorker' in navigator) {
+                window.addEventListener('load', function() {
+                  navigator.serviceWorker.register('/sw.js')
+                    .then(function(registration) {
+                      console.log('Service Worker registered successfully:', registration.scope);
+                    })
+                    .catch(function(error) {
+                      console.log('Service Worker registration failed:', error);
+                    });
+                });
+              }
+            `,
+          }}
+        />
       </body>
     </html>
   );

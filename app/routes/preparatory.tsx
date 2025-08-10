@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import LazyVideo from "../components/LazyVideo";
 import "../styles/melodies.css";
 
 interface Video {
@@ -286,13 +287,11 @@ export default function PreparatoryPage() {
                         {video.title || ""}
                       </h3>
                       {video.url ? (
-                        <video
-                          controls
-                          className="w-full rounded-lg bg-black aspect-video"
+                        <LazyVideo
                           src={video.url}
-                        >
-                          متصفحك لا يدعم تشغيل الفيديو
-                        </video>
+                          title={video.title || "فيديو تمهيدي"}
+                          className="w-full"
+                        />
                       ) : (
                         <div className="w-full aspect-video bg-gray-600 rounded-lg flex items-center justify-center">
                           <div className="text-center">

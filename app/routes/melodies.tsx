@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import LazyVideo from "../components/LazyVideo";
 import "../styles/melodies.css";
 
 // 1. تعريف الأنواع (Type Definitions)
@@ -705,13 +706,11 @@ export default function MelodiesPage() {
                       {video.title}
                     </h3>
                     {video.url && (
-                      <video
-                        controls
-                        className="w-full rounded-lg bg-black aspect-video"
+                      <LazyVideo
                         src={video.url}
-                      >
-                        متصفحك لا يدعم تشغيل الفيديو
-                      </video>
+                        title={video.title}
+                        className="w-full"
+                      />
                     )}
                   </div>
                 ))

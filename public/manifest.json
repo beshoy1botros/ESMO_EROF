@@ -1,0 +1,58 @@
+{
+  "name": "ⲥⲙⲟⲩ ⲉⲣⲟϥ - تطبيق الألحان القبطية",
+  "short_name": "ⲥⲙⲟⲩ ⲉⲣⲟϥ",
+  "description": "تطبيق متخصص في تعليم الألحان القبطية للطلاب في مختلف المراحل",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#1e3a8a",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "ar",
+  "dir": "rtl",
+  "icons": [
+    {
+      "src": "/العذراء مريم.ico",
+      "sizes": "16x16 32x32 48x48",
+      "type": "image/x-icon",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["education", "music", "religion"],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "الألحان",
+      "short_name": "الألحان",
+      "description": "تصفح الألحان القبطية",
+      "url": "/melodies",
+      "icons": [
+        {
+          "src": "/العذراء مريم.ico",
+          "sizes": "32x32",
+          "type": "image/x-icon"
+        }
+      ]
+    },
+    {
+      "name": "طقس اللحن",
+      "short_name": "طقس اللحن",
+      "description": "تعلم طقوس الألحان القبطية",
+      "url": "/about",
+      "icons": [
+        {
+          "src": "/العذراء مريم.ico",
+          "sizes": "32x32",
+          "type": "image/x-icon"
+        }
+      ]
+    }
+  ],
+  "prefer_related_applications": false,
+  "related_applications": [],
+  "features": [
+    "offline-support",
+    "video-streaming",
+    "progressive-web-app"
+  ]
+}
