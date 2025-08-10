@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import type { AnalyticsEvent } from "../utils/analytics";
-import { getEvents, clearEvents } from "../utils/analytics";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 
@@ -28,9 +27,74 @@ export default function ManagementDashboard() {
   const [events, setEvents] = useState<AnalyticsEvent[]>([]);
   const [query, setQuery] = useState("");
 
+  const [autoRefresh, setAutoRefresh] = useState(false);
+
   useEffect(() => {
-    setEvents(getEvents());
+    // Fetch from server API (centralized), exclude this device if available
+    const controller = new AbortController();
+
+    async function refetch() {
+      try {
+        const excludeDeviceId =
+          (typeof window !== "undefined" &&
+            localStorage.getItem("app_analytics_device_id")) ||
+          undefined;
+        const qs = new URLSearchParams();
+        if (excludeDeviceId) qs.set("excludeDeviceId", excludeDeviceId);
+        const res = await fetch(`/api/events?${qs.toString()}`, {
+          signal: controller.signal,
+          headers: { "x-mgmt-secret": (window as any).MGMT_SECRET || "" },
+        });
+        if (!res.ok) throw new Error(await res.text());
+        const data = (await res.json()) as AnalyticsEvent[];
+        setEvents(data);
+      } catch (e) {
+        console.warn("Failed to fetch events", e);
+      }
+    }
+
+    refetch();
+    return () => controller.abort();
   }, []);
+
+  // Auto refresh every 10s if enabled
+  useEffect(() => {
+    if (!autoRefresh) return;
+    const id = setInterval(() => {
+      (async () => {
+        try {
+          const excludeDeviceId =
+            (typeof window !== "undefined" &&
+              localStorage.getItem("app_analytics_device_id")) ||
+            undefined;
+          const qs = new URLSearchParams();
+          if (excludeDeviceId) qs.set("excludeDeviceId", excludeDeviceId);
+          const res = await fetch(`/api/events?${qs.toString()}`, {
+            headers: { "x-mgmt-secret": (window as any).MGMT_SECRET || "" },
+          });
+          if (res.ok) {
+            setEvents((await res.json()) as AnalyticsEvent[]);
+          }
+        } catch {}
+      })();
+    }, 10000);
+    return () => clearInterval(id);
+  }, [autoRefresh]);
+
+  async function manualRefresh(secret: string) {
+    try {
+      const excludeDeviceId =
+        (typeof window !== "undefined" &&
+          localStorage.getItem("app_analytics_device_id")) ||
+        undefined;
+      const qs = new URLSearchParams();
+      if (excludeDeviceId) qs.set("excludeDeviceId", excludeDeviceId);
+      const res = await fetch(`/api/events?${qs.toString()}`, {
+        headers: { "x-mgmt-secret": secret },
+      });
+      if (res.ok) setEvents((await res.json()) as AnalyticsEvent[]);
+    } catch {}
+  }
 
   const filtered = useMemo(() => {
     if (!query) return events;
@@ -87,22 +151,17 @@ export default function ManagementDashboard() {
               />
               <button
                 type="button"
-                onClick={() => setEvents(getEvents())}
+                onClick={() => manualRefresh((window as any).MGMT_SECRET || "")}
                 className="px-3 py-2 rounded bg-blue-600 hover:bg-blue-500"
               >
                 تحديث
               </button>
               <button
                 type="button"
-                onClick={() => {
-                  if (confirm("مسح جميع السجلات؟")) {
-                    clearEvents();
-                    setEvents([]);
-                  }
-                }}
+                onClick={() => setEvents([])}
                 className="px-3 py-2 rounded bg-red-600 hover:bg-red-500"
               >
-                مسح الكل
+                مسح المعروض
               </button>
             </div>
           </div>

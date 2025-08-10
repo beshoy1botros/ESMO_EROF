@@ -89,6 +89,10 @@ export function trackEvent(partial: Omit<AnalyticsEvent, "id" | "sessionId" | "t
     ...partial,
   } as AnalyticsEvent;
 
+  // send to server (central store)
+  sendEventToServer({ ...event });
+
+  // keep legacy local copy (optional for debugging)
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     const arr: AnalyticsEvent[] = raw ? JSON.parse(raw) : [];
@@ -101,6 +105,7 @@ export function trackEvent(partial: Omit<AnalyticsEvent, "id" | "sessionId" | "t
 }
 
 export function getEvents(): AnalyticsEvent[] {
+  // deprecated: local-only; retained for backward compatibility
   if (typeof window === "undefined") return [];
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -113,6 +118,22 @@ export function getEvents(): AnalyticsEvent[] {
 export function clearEvents() {
   if (typeof window === "undefined") return;
   localStorage.removeItem(STORAGE_KEY);
+}
+
+// send event to server API (centralized storage)
+export async function sendEventToServer(event: Omit<AnalyticsEvent, "id" | "timestamp">) {
+  const payload = { ...event, timestamp: Date.now(), id: crypto.randomUUID?.() || Math.random().toString(36).slice(2) };
+  try {
+    await fetch("/api/analytics", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+      keepalive: true,
+    });
+  } catch (e) {
+    // ignore network failures
+    console.warn("sendEventToServer failed", e);
+  }
 }
 
 export function trackAppOpenOnce() {

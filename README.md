@@ -33,6 +33,55 @@ Your application will be available at `http://localhost:5173`.
 
 ## Building for Production
 
+## Centralized Analytics (Supabase)
+
+Set these environment variables on Vercel:
+- SUPABASE_URL
+- SUPABASE_SERVICE_ROLE_KEY
+- MGMT_SECRET (a random long string used by management UI when calling /api/events)
+
+Run the SQL below in Supabase SQL Editor to create the table and policies.
+
+```sql
+-- 1) Table
+create table if not exists public.events (
+  id uuid primary key,
+  timestamp bigint not null,
+  path text,
+  action text not null,
+  sessionId text,
+  deviceId text,
+  userAgent text,
+  deviceType text,
+  deviceVendor text,
+  stage text,
+  level text,
+  videoId text,
+  videoTitle text,
+  currentTime numeric,
+  watchedSeconds numeric
+);
+
+-- Helpful indexes
+create index if not exists idx_events_timestamp on public.events (timestamp desc);
+create index if not exists idx_events_device on public.events (deviceId);
+create index if not exists idx_events_session on public.events (sessionId);
+
+-- 2) RLS
+alter table public.events enable row level security;
+
+-- Insert allowed for anon (optional). If you prefer to route inserts via server only, skip this policy.
+create policy if not exists events_insert_anon on public.events
+for insert to anon using (true) with check (true);
+
+-- Deny select to anon by not creating a select policy for anon
+-- Select is allowed only via Service Role key from the server (api/events).
+```
+
+## Management UI protection
+Set MGMT_SECRET in Vercel env. The dashboard fetches `/api/events` with header `x-mgmt-secret: MGMT_SECRET`.
+
+
 Create a production build:
 
 ```bash
