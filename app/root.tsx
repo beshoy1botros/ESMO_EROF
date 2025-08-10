@@ -62,7 +62,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  // فقط Outlet هنا
   return (
     <div dir="rtl">
       <Outlet />
