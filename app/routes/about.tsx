@@ -1,9 +1,5 @@
-import { useEffect, useState } from "react";
-import {
-  trackEvent,
-  trackAppOpenOnce,
-  trackPageView,
-} from "../utils/analytics";
+import { useState, useEffect } from "react";
+
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import "../styles/about.css";
@@ -300,12 +296,6 @@ export default function About() {
   const [levels, setLevels] = useState<string[]>([]);
   const [content, setContent] = useState<any[]>([]);
 
-  // Track page view and app open (once per session) for About only
-  useEffect(() => {
-    trackAppOpenOnce();
-    trackPageView();
-  }, []);
-
   useEffect(() => {
     if (
       [
@@ -325,16 +315,13 @@ export default function About() {
     } else {
       setLevels([]);
     }
-    if (stage) {
-      trackEvent({ action: "select_stage", stage });
-    }
+
     setLevel("");
     setContent([]);
   }, [stage]);
 
   useEffect(() => {
     if (stage && level) {
-      trackEvent({ action: "select_level", stage, level });
       setContent(getContent(stage, level));
     } else {
       setContent([]);

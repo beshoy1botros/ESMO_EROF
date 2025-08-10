@@ -1,12 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import "../styles/melodies.css";
-import {
-  trackEvent,
-  trackAppOpenOnce,
-  trackPageView,
-} from "../utils/analytics";
 
 interface Video {
   id: string;
@@ -179,23 +174,13 @@ export default function PreparatoryPage() {
     null
   );
 
-  // Track page view and app open (once per session) for Preparatory only
-  useEffect(() => {
-    trackAppOpenOnce();
-    trackPageView();
-  }, []);
-
   const handleStageClick = (stage: string) => {
     setSelectedStage(stage);
     setContentType(null); // إعادة تعيين نوع المحتوى عند اختيار مرحلة جديدة
-    trackEvent({ action: "select_stage", stage });
   };
 
   const handleContentTypeClick = (type: "videos" | "text") => {
     setContentType(type);
-    const payload: any = { action: "select_content_type", level: type };
-    if (selectedStage) payload.stage = selectedStage;
-    trackEvent(payload);
   };
 
   const handleBackToStages = () => {
@@ -301,10 +286,13 @@ export default function PreparatoryPage() {
                         {video.title || ""}
                       </h3>
                       {video.url ? (
-                        <VideoWithAnalytics
-                          video={video}
-                          stage={selectedStage ?? null}
-                        />
+                        <video
+                          controls
+                          className="w-full rounded-lg bg-black aspect-video"
+                          src={video.url}
+                        >
+                          متصفحك لا يدعم تشغيل الفيديو
+                        </video>
                       ) : (
                         <div className="w-full aspect-video bg-gray-600 rounded-lg flex items-center justify-center">
                           <div className="text-center">
@@ -371,78 +359,4 @@ export function meta() {
       content: "موقع متخصص في تعليم الألحان القبطية للطلاب في مختلف المراحل",
     },
   ];
-}
-
-// Component to track video interactions in Preparatory
-function VideoWithAnalytics({
-  video,
-  stage,
-}: {
-  video: Video;
-  stage?: string | null;
-}) {
-  const ref = useRef<HTMLVideoElement | null>(null);
-  const [lastPlayTs, setLastPlayTs] = useState<number | null>(null);
-  const watchedRef = useRef(0);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-
-    const onPlay = () => {
-      setLastPlayTs(Date.now());
-      trackEvent({
-        action: "video_play",
-        videoId: video.id,
-        videoTitle: video.title,
-        ...(stage ? { stage } : {}),
-        currentTime: el.currentTime,
-      });
-    };
-    const onPause = () => {
-      if (lastPlayTs) watchedRef.current += (Date.now() - lastPlayTs) / 1000;
-      setLastPlayTs(null);
-      trackEvent({
-        action: "video_pause",
-        videoId: video.id,
-        videoTitle: video.title,
-        ...(stage ? { stage } : {}),
-        currentTime: el.currentTime,
-        watchedSeconds: watchedRef.current,
-      });
-    };
-    const onEnded = () => {
-      if (lastPlayTs) watchedRef.current += (Date.now() - lastPlayTs) / 1000;
-      setLastPlayTs(null);
-      trackEvent({
-        action: "video_end",
-        videoId: video.id,
-        videoTitle: video.title,
-        ...(stage ? { stage } : {}),
-        currentTime: el.currentTime,
-        watchedSeconds: watchedRef.current,
-      });
-    };
-
-    el.addEventListener("play", onPlay);
-    el.addEventListener("pause", onPause);
-    el.addEventListener("ended", onEnded);
-
-    return () => {
-      el.removeEventListener("play", onPlay);
-      el.removeEventListener("pause", onPause);
-      el.removeEventListener("ended", onEnded);
-    };
-  }, [video.id, video.title, stage, lastPlayTs]);
-
-  return (
-    <video
-      ref={ref}
-      controls
-      className="w-full rounded-lg bg-black aspect-video"
-      src={video.url}
-    >
-      متصفحك لا يدعم تشغيل الفيديو
-    </video>
-  );
 }

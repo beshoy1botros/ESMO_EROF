@@ -1,12 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import "../styles/melodies.css";
-import {
-  trackEvent,
-  trackAppOpenOnce,
-  trackPageView,
-} from "../utils/analytics";
 
 // 1. تعريف الأنواع (Type Definitions)
 interface Video {
@@ -587,12 +582,6 @@ export default function MelodiesPage() {
   const [levels, setLevels] = useState<string[]>([]);
   const [videos, setVideos] = useState<Video[]>([]); // استخدام النوع Video[]
 
-  // Track page view and app open (once per session)
-  useEffect(() => {
-    trackAppOpenOnce();
-    trackPageView();
-  }, []);
-
   useEffect(() => {
     if (
       [
@@ -614,16 +603,13 @@ export default function MelodiesPage() {
     } else {
       setLevels([]);
     }
-    if (stage) {
-      trackEvent({ action: "select_stage", stage });
-    }
+
     setLevel("");
     setVideos([]);
   }, [stage]);
 
   useEffect(() => {
     if (stage && level) {
-      trackEvent({ action: "select_level", stage, level });
       setVideos(getVideos(stage, level));
     } else {
       setVideos([]);
@@ -718,7 +704,15 @@ export default function MelodiesPage() {
                     <h3 className="text-lg sm:text-xl font-semibold text-blue-400 mb-3 sm:mb-4 text-center">
                       {video.title}
                     </h3>
-                    {video.url && <VideoWithAnalytics video={video} />}
+                    {video.url && (
+                      <video
+                        controls
+                        className="w-full rounded-lg bg-black aspect-video"
+                        src={video.url}
+                      >
+                        متصفحك لا يدعم تشغيل الفيديو
+                      </video>
+                    )}
                   </div>
                 ))
               )}
@@ -729,74 +723,5 @@ export default function MelodiesPage() {
       {/* الفوتر في الأسفل */}
       <Footer />
     </div>
-  );
-}
-
-// Component to track video interactions
-function VideoWithAnalytics({ video }: { video: Video }) {
-  const ref = useRef<HTMLVideoElement | null>(null);
-  const [lastPlayTs, setLastPlayTs] = useState<number | null>(null);
-  const watchedRef = useRef(0);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-
-    const onPlay = () => {
-      setLastPlayTs(Date.now());
-      trackEvent({
-        action: "video_play",
-        videoId: video.id,
-        videoTitle: video.title,
-        currentTime: el.currentTime,
-      });
-    };
-    const onPause = () => {
-      if (lastPlayTs) {
-        watchedRef.current += (Date.now() - lastPlayTs) / 1000;
-      }
-      setLastPlayTs(null);
-      trackEvent({
-        action: "video_pause",
-        videoId: video.id,
-        videoTitle: video.title,
-        currentTime: el.currentTime,
-        watchedSeconds: watchedRef.current,
-      });
-    };
-    const onEnded = () => {
-      if (lastPlayTs) {
-        watchedRef.current += (Date.now() - lastPlayTs) / 1000;
-      }
-      setLastPlayTs(null);
-      trackEvent({
-        action: "video_end",
-        videoId: video.id,
-        videoTitle: video.title,
-        currentTime: el.currentTime,
-        watchedSeconds: watchedRef.current,
-      });
-    };
-
-    el.addEventListener("play", onPlay);
-    el.addEventListener("pause", onPause);
-    el.addEventListener("ended", onEnded);
-
-    return () => {
-      el.removeEventListener("play", onPlay);
-      el.removeEventListener("pause", onPause);
-      el.removeEventListener("ended", onEnded);
-    };
-  }, [video.id, video.title, lastPlayTs]);
-
-  return (
-    <video
-      ref={ref}
-      controls
-      className="w-full rounded-lg bg-black aspect-video"
-      src={video.url}
-    >
-      متصفحك لا يدعم تشغيل الفيديو
-    </video>
   );
 }
