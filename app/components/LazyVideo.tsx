@@ -83,6 +83,9 @@ export default function LazyVideo({
         video.removeEventListener("error", handleError);
       };
     }
+
+    // Return undefined when condition is not met
+    return undefined;
   }, [isInView, isLoaded]);
 
   return (

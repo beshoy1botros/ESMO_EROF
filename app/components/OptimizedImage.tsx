@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import styles from "./OptimizedImage.module.css";
 
 interface OptimizedImageProps {
   src: string;
@@ -51,8 +52,7 @@ export default function OptimizedImage({
   // دالة لتوليد مصادر الصور المحسنة
   const generateSources = (originalSrc: string) => {
     const baseName = originalSrc.replace(/\.[^/.]+$/, "");
-    const extension = originalSrc.split('.').pop();
-    
+
     return {
       webp: `${baseName}.webp`,
       original: originalSrc,
@@ -71,26 +71,20 @@ export default function OptimizedImage({
   };
 
   return (
-    <div ref={containerRef} className={`relative overflow-hidden ${className}`}>
+    <div ref={containerRef} className={`${styles.container} ${className}`}>
       {/* Placeholder أثناء التحميل */}
       {!isLoaded && !error && (
-        <div 
-          className="absolute inset-0 bg-gray-200 animate-pulse flex items-center justify-center"
-          style={{ aspectRatio: width && height ? `${width}/${height}` : undefined }}
-        >
-          <div className="text-gray-400 text-sm">جاري التحميل...</div>
+        <div className={styles.placeholderContainer}>
+          <div className={styles.loadingText}>جاري التحميل...</div>
         </div>
       )}
 
       {/* رسالة الخطأ */}
       {error && (
-        <div 
-          className="absolute inset-0 bg-gray-100 flex items-center justify-center"
-          style={{ aspectRatio: width && height ? `${width}/${height}` : undefined }}
-        >
-          <div className="text-center text-gray-500">
-            <div className="text-2xl mb-2">🖼️</div>
-            <div className="text-sm">فشل في تحميل الصورة</div>
+        <div className={styles.errorContainer}>
+          <div className={styles.errorContent}>
+            <div className={styles.errorIcon}>🖼️</div>
+            <div className={styles.errorText}>فشل في تحميل الصورة</div>
           </div>
         </div>
       )}
@@ -100,7 +94,7 @@ export default function OptimizedImage({
         <picture>
           {/* WebP للمتصفحات التي تدعمه */}
           <source srcSet={sources.webp} type="image/webp" />
-          
+
           {/* الصورة الأصلية كـ fallback */}
           <img
             ref={imgRef}
@@ -113,13 +107,9 @@ export default function OptimizedImage({
             onLoad={handleLoad}
             onError={handleError}
             className={`
-              transition-opacity duration-300 
-              ${isLoaded ? "opacity-100" : "opacity-0"}
-              ${className}
+              ${styles.imageElement}
+              ${isLoaded ? styles.imageLoaded : styles.imageLoading}
             `}
-            style={{
-              aspectRatio: width && height ? `${width}/${height}` : undefined,
-            }}
           />
         </picture>
       )}
