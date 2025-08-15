@@ -335,8 +335,18 @@ function getContent(stage: string, level: string) {
   return textData[stage]?.[englishLevel] || [];
 }
 
+// تعريف الثوابت للمراحل
+enum StageKey {
+  ThirdFourth = "thirdFourth",
+  FifthSixth = "fifthSixth",
+  Middle = "middle",
+  High = "high",
+  University = "university",
+  WeddingOfCana = "weddingOfCana",
+}
+
 export default function About() {
-  const [stage, setStage] = useState("");
+  const [stage, setStage] = useState<StageKey | "">(""); // تحديث نوع البيانات
   const [level, setLevel] = useState("");
   const [levels, setLevels] = useState<string[]>([]);
   const [content, setContent] = useState<any[]>([]);
@@ -344,11 +354,18 @@ export default function About() {
   useEffect(() => {
     // تحديث المستويات المتاحة بناءً على المرحلة المحددة
     if (stage) {
-      if (["thirdFourth", "fifthSixth", "middle", "high"].includes(stage)) {
+      if (
+        [
+          StageKey.ThirdFourth,
+          StageKey.FifthSixth,
+          StageKey.Middle,
+          StageKey.High,
+        ].includes(stage as StageKey)
+      ) {
         setLevels(["الأول", "الثاني", "الموهوبين"]);
-      } else if (["university"].includes(stage)) {
+      } else if (stage === StageKey.University) {
         setLevels(["الأول", "الثاني"]);
-      } else if (stage === "weddingOfCana") {
+      } else if (stage === StageKey.WeddingOfCana) {
         setLevels(["الأول"]);
       } else {
         setLevels([]);
@@ -396,16 +413,18 @@ export default function About() {
                   <select
                     id="stage"
                     value={stage}
-                    onChange={(e) => setStage(e.target.value)}
+                    onChange={(e) => setStage(e.target.value as StageKey)}
                     className="w-full p-3 sm:p-4 bg-gray-700 text-white border border-blue-500 rounded-lg cursor-pointer transition-all hover:border-blue-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 text-sm sm:text-base"
                   >
                     <option value="">اختر المرحلة</option>
-                    <option value="thirdFourth">ثالثة و رابعة</option>
-                    <option value="fifthSixth">خامسة و سادسة</option>
-                    <option value="middle">إعدادي</option>
-                    <option value="high">ثانوي</option>
-                    <option value="university">جامعة</option>
-                    <option value="weddingOfCana">عرس قانا الجليل</option>
+                    <option value={StageKey.ThirdFourth}>ثالثة و رابعة</option>
+                    <option value={StageKey.FifthSixth}>خامسة و سادسة</option>
+                    <option value={StageKey.Middle}>إعدادي</option>
+                    <option value={StageKey.High}>ثانوي</option>
+                    <option value={StageKey.University}>جامعة</option>
+                    <option value={StageKey.WeddingOfCana}>
+                      عرس قانا الجليل
+                    </option>
                   </select>
                 </div>
                 <div className="space-y-4">
