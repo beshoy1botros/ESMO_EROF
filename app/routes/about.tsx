@@ -4,16 +4,6 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import "../styles/about.css";
 
-// تعريف الثوابت للمراحل
-enum StageKey {
-  ThirdFourth = "thirdFourth",
-  FifthSixth = "fifthSixth",
-  Middle = "middle",
-  High = "high",
-  University = "university",
-  WeddingOfCana = "weddingOfCana"
-}
-
 const textData = {
   thirdFourth: {
     first: [
@@ -258,51 +248,6 @@ const textData = {
       },
     ],
   },
-  university: {
-    first: [
-      {
-        title: "اوندوس",
-        content: "يقال في صوم الآباء الرسل بعد قراءة البولس مباشرة.",
-      },
-      {
-        title: "اطاي بارثينوس كاملا",
-        content:
-          "يقال في تمجيد السيدة العذراء مريم/ ويقال أيضا في قداسات صوم وأعياد السيدة العذراء مريم بعد المزمور 150",
-      },
-      {
-        title: "لحن افشوليم + ايفول هيتين الصغير",
-        content:
-          'لحن افشوليم هو الربعين 15 ، 16 من القطعة الخامسة عشر من ثيؤطوكية الأحد ويُقال قبله لحن "آفئين بي آرشي" وبعده لحن "إيفول هيتين". ولحن إيفول هيتين يُصلّى في نهاية ثيؤطوكية الأحد بعد لحن "آفئين بي أرشى" ولحن "أفشوليم" في تسبحة نصف الليل وهو عبارة عن الربعين الآخرين من القطعة الخامسة عشرة من ثيؤطوكية الأحد ويُقال بعده قطعة "نيم غار" في فترة الخمسين، وبعد الخمسين في الأحاد فقط إلى الأحد الأخير من شهر هاتور.',
-      },
-      {
-        title: "محير التمجيد(فاي بي ابليمين)",
-        content:
-          "يقال بعد قراءة السنكسار أو في التوزيع في أعياد رئيس الملائكة ميخائيل.",
-      },
-    ],
-    second: [
-      {
-        title: "الهوس الرابع كاملا",
-        content:
-          "يقال في تسبحة عشية بعد لحن ني اثنوس تيرو(مز : 117) ويقال أيضا في تسبحة نصف الليل بعد مجمع القديسين.",
-      },
-      {
-        title: "التوزيع الفرايحي الكبير لعيد النيروز قبطي كاملا",
-        content:
-          "يقال في عيد النيروز وهي الفترة ما بين 1 توت إلي عيد الصليب 17 توت (11 سبتمبر إلي 27 سبتمبر).",
-      },
-      {
-        title: "لحن افئين بي ارشي",
-        content:
-          'هو الربعان 13 ، 14 من القطعة الخامسة عشر من ثيؤطوكية الأحد ويقال بعده لحن "أفشوليم" و "إيفول هيتين".',
-      },
-      {
-        title: "لحن فاني تينه (للملاك ميخائيل)",
-        content:
-          "مرد يُستخدم في أعياد الملاك ميخائيل والتجمعات ذات الطابع الاحتفالي.",
-      },
-    ],
-  },
   weddingOfCana: {
     first: [
       {
@@ -346,35 +291,31 @@ function getContent(stage: string, level: string) {
 }
 
 export default function About() {
-  const [stage, setStage] = useState<StageKey | "">(""); // تحديث نوع البيانات
+  const [stage, setStage] = useState("");
   const [level, setLevel] = useState("");
   const [levels, setLevels] = useState<string[]>([]);
   const [content, setContent] = useState<any[]>([]);
 
   useEffect(() => {
-    // تحديث المستويات المتاحة بناءً على المرحلة المحددة
-    if (stage) {
-      if (
-        [
-          StageKey.ThirdFourth,
-          StageKey.FifthSixth,
-          StageKey.Middle,
-          StageKey.High,
-        ].includes(stage as StageKey)
-      ) {
-        setLevels(["الأول", "الثاني", "الموهوبين"]);
-      } else if (stage === StageKey.University) {
-        setLevels(["الأول", "الثاني"]);
-      } else if (stage === StageKey.WeddingOfCana) {
-        setLevels(["الأول"]);
-      } else {
-        setLevels([]);
-      }
+    if (
+      [
+        "kindergarten",
+        "firstSecond",
+        "thirdFourth",
+        "fifthSixth",
+        "middle",
+        "high",
+      ].includes(stage)
+    ) {
+      setLevels(["الأول", "الثاني", "الموهوبين"]);
+    } else if (["university", "servants"].includes(stage)) {
+      setLevels(["الأول", "الثاني"]);
+    } else if (stage === "weddingOfCana") {
+      setLevels(["الأول"]);
     } else {
       setLevels([]);
     }
 
-    // إعادة تعيين المستوى المحدد والمحتوى
     setLevel("");
     setContent([]);
   }, [stage]);
@@ -413,18 +354,15 @@ export default function About() {
                   <select
                     id="stage"
                     value={stage}
-                    onChange={(e) => setStage(e.target.value as StageKey)}
+                    onChange={(e) => setStage(e.target.value)}
                     className="w-full p-3 sm:p-4 bg-gray-700 text-white border border-blue-500 rounded-lg cursor-pointer transition-all hover:border-blue-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 text-sm sm:text-base"
                   >
                     <option value="">اختر المرحلة</option>
-                    <option value={StageKey.ThirdFourth}>ثالثة و رابعة</option>
-                    <option value={StageKey.FifthSixth}>خامسة و سادسة</option>
-                    <option value={StageKey.Middle}>إعدادي</option>
-                    <option value={StageKey.High}>ثانوي</option>
-                    <option value={StageKey.University}>جامعة</option>
-                    <option value={StageKey.WeddingOfCana}>
-                      عرس قانا الجليل
-                    </option>
+                    <option value="thirdFourth">ثالثة و رابعة</option>
+                    <option value="fifthSixth">خامسة و سادسة</option>
+                    <option value="middle">إعدادي</option>
+                    <option value="high">ثانوي</option>
+                    <option value="weddingOfCana">عرس قانا الجليل</option>
                   </select>
                 </div>
                 <div className="space-y-4">
