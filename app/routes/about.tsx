@@ -342,25 +342,22 @@ export default function About() {
   const [content, setContent] = useState<any[]>([]);
 
   useEffect(() => {
-    if (
-      [
-        "kindergarten",
-        "firstSecond",
-        "thirdFourth",
-        "fifthSixth",
-        "middle",
-        "high",
-      ].includes(stage)
-    ) {
-      setLevels(["الأول", "الثاني", "الموهوبين"]);
-    } else if (["university", "servants"].includes(stage)) {
-      setLevels(["الأول", "الثاني"]);
-    } else if (stage === "weddingOfCana") {
-      setLevels(["الأول"]);
+    // تحديث المستويات المتاحة بناءً على المرحلة المحددة
+    if (stage) {
+      if (["thirdFourth", "fifthSixth", "middle", "high"].includes(stage)) {
+        setLevels(["الأول", "الثاني", "الموهوبين"]);
+      } else if (["university"].includes(stage)) {
+        setLevels(["الأول", "الثاني"]);
+      } else if (stage === "weddingOfCana") {
+        setLevels(["الأول"]);
+      } else {
+        setLevels([]);
+      }
     } else {
       setLevels([]);
     }
 
+    // إعادة تعيين المستوى المحدد والمحتوى
     setLevel("");
     setContent([]);
   }, [stage]);

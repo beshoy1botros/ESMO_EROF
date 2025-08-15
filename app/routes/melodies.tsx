@@ -584,27 +584,33 @@ export default function MelodiesPage() {
   const [videos, setVideos] = useState<Video[]>([]); // استخدام النوع Video[]
 
   useEffect(() => {
-    if (
-      [
-        StageKey.Kindergarten,
-        StageKey.FirstSecond,
-        StageKey.ThirdFourth,
-        StageKey.FifthSixth,
-        StageKey.Middle,
-        StageKey.High,
-      ].includes(stage as StageKey)
-    ) {
-      setLevels(["الأول", "الثاني", "الموهوبين"]);
-    } else if (
-      [StageKey.University, StageKey.Servants].includes(stage as StageKey)
-    ) {
-      setLevels(["الأول", "الثاني"]);
-    } else if (stage === StageKey.WeddingOfCana) {
-      setLevels(["الأول"]);
+    // تحديث المستويات المتاحة بناءً على المرحلة المحددة
+    if (stage) {
+      if (
+        [
+          StageKey.Kindergarten,
+          StageKey.FirstSecond,
+          StageKey.ThirdFourth,
+          StageKey.FifthSixth,
+          StageKey.Middle,
+          StageKey.High,
+        ].includes(stage as StageKey)
+      ) {
+        setLevels(["الأول", "الثاني", "الموهوبين"]);
+      } else if (
+        [StageKey.University, StageKey.Servants].includes(stage as StageKey)
+      ) {
+        setLevels(["الأول", "الثاني"]);
+      } else if (stage === StageKey.WeddingOfCana) {
+        setLevels(["الأول"]);
+      } else {
+        setLevels([]);
+      }
     } else {
       setLevels([]);
     }
 
+    // إعادة تعيين المستوى المحدد والفيديوهات
     setLevel("");
     setVideos([]);
   }, [stage]);
