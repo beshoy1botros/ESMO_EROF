@@ -14,18 +14,10 @@ export default defineConfig({
     // تقسيم الكود لتحسين التحميل
     rollupOptions: {
       output: {
-        manualChunks(id) {
-          if (id.includes('node_modules')) {
-            if (id.includes('react-icons')) {
-              return 'icons';
-            }
-            if (id.includes('react-router') && !id.includes('react-router-dom')) {
-              return 'router';
-            }
-            if (!id.includes('react') && !id.includes('react-dom')) {
-              return 'vendor';
-            }
-          }
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+          router: ['react-router'],
+          icons: ['react-icons'],
         },
       },
     },

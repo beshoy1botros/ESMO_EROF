@@ -5,9 +5,8 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
-  Link,
-  useRouteError,
-} from "react-router-dom";
+  Link, // أضف Link لاستخدامه في ErrorBoundary
+} from "react-router"; // أو "react-router-dom" إذا كنت تستخدمه
 
 import type { Route } from "./+types/root";
 import "./app.css";
@@ -85,9 +84,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 export default function App() {
   return (
     <div dir="rtl">
-      <div className="font-sans">
-        <Outlet />
-      </div>
+      <Outlet />
     </div>
   );
 }
