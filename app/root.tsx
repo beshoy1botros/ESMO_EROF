@@ -5,8 +5,9 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
-  Link, // أضف Link لاستخدامه في ErrorBoundary
-} from "react-router-dom"; // أو "react-router-dom" إذا كنت تستخدمه
+  Link,
+  useRouteError,
+} from "react-router-dom";
 
 import type { Route } from "./+types/root";
 import "./app.css";
