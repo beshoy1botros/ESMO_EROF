@@ -4,6 +4,16 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import "../styles/about.css";
 
+// تعريف الثوابت للمراحل
+enum StageKey {
+  ThirdFourth = "thirdFourth",
+  FifthSixth = "fifthSixth",
+  Middle = "middle",
+  High = "high",
+  University = "university",
+  WeddingOfCana = "weddingOfCana"
+}
+
 const textData = {
   thirdFourth: {
     first: [
@@ -333,16 +343,6 @@ function getContent(stage: string, level: string) {
   const englishLevel = mapArabicToEnglishLevel(level);
   // @ts-ignore
   return textData[stage]?.[englishLevel] || [];
-}
-
-// تعريف الثوابت للمراحل
-enum StageKey {
-  ThirdFourth = "thirdFourth",
-  FifthSixth = "fifthSixth",
-  Middle = "middle",
-  High = "high",
-  University = "university",
-  WeddingOfCana = "weddingOfCana",
 }
 
 export default function About() {
