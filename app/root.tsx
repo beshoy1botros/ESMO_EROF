@@ -85,7 +85,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
 export default function App() {
   return (
     <div dir="rtl">
-      <Outlet />
+      <div className="font-sans">
+        <Outlet />
+      </div>
     </div>
   );
 }
