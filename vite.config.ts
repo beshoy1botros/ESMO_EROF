@@ -1,6 +1,6 @@
 import { reactRouter } from "@react-router/dev/vite";
 import tailwindcss from "@tailwindcss/vite";
-import { defineConfig } from "vite";
+import { defineConfig, type UserConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
@@ -9,23 +9,27 @@ export default defineConfig({
     reactRouter(),
     tsconfigPaths(),
   ],
-  // تحسينات إضافية للبناء
   build: {
-    // تقسيم الكود لتحسين التحميل
     rollupOptions: {
       output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom'],
-          router: ['react-router'],
-          icons: ['react-icons'],
-        },
+        manualChunks(id: string) {
+          if (id.includes('node_modules/react-router')) {
+            return 'router';
+          }
+          if (id.includes('node_modules/react-icons')) {
+            return 'icons';
+          }
+          if (id.includes('node_modules/react') || id.includes('node_modules/react-dom')) {
+            return 'vendor';
+          }
+          return null;
+        }
       },
     },
-    // ضغط إضافي
     minify: 'terser',
     terserOptions: {
       compress: {
-        drop_console: true, // إزالة console.log في الإنتاج
+        drop_console: true,
         drop_debugger: true,
       },
     },
