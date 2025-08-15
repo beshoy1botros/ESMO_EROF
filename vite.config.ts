@@ -9,27 +9,23 @@ export default defineConfig({
     reactRouter(),
     tsconfigPaths(),
   ],
+  // تحسينات إضافية للبناء
   build: {
+    // تقسيم الكود لتحسين التحميل
     rollupOptions: {
       output: {
-        manualChunks(id: string) {
-          if (id.includes('node_modules/react-router')) {
-            return 'router';
-          }
-          if (id.includes('node_modules/react-icons')) {
-            return 'icons';
-          }
-          if (id.includes('node_modules/react') || id.includes('node_modules/react-dom')) {
-            return 'vendor';
-          }
-          return null;
-        }
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+          router: ['react-router'],
+          icons: ['react-icons'],
+        },
       },
     },
+    // ضغط إضافي
     minify: 'terser',
     terserOptions: {
       compress: {
-        drop_console: true,
+        drop_console: true, // إزالة console.log في الإنتاج
         drop_debugger: true,
       },
     },
