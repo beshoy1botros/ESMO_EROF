@@ -12,22 +12,19 @@ export default defineConfig({
   // تحسينات إضافية للبناء
   build: {
     // تقسيم الكود لتحسين التحميل
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom'],
-          router: ['react-router'],
-          icons: ['react-icons'],
-        },
-      },
-    },
-    // ضغط إضافي
-    minify: 'terser',
-    terserOptions: {
-      compress: {
-        drop_console: true, // إزالة console.log في الإنتاج
-        drop_debugger: true,
-      },
+rollupOptions: {
+  output: {
+    manualChunks(id) {
+      if (id.includes('node_modules')) {
+        if (id.includes('react-router')) {
+          return 'router';
+        }
+        if (id.includes('react-icons')) {
+          return 'icons';
+        }
+        return 'vendor';
+      }
     },
   },
-});
+},
+
