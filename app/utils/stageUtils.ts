@@ -1,12 +1,24 @@
 // ملف مساعد لإدارة المراحل والمستويات
-import { StageKey } from "~/types/stage";
+
+// تعريف الـ enum محلياً لتجنب مشاكل الاستيراد
+enum StageKey {
+  Kindergarten = "kindergarten",
+  FirstSecond = "firstSecond",
+  ThirdFourth = "thirdFourth",
+  FifthSixth = "fifthSixth",
+  Middle = "middle",
+  High = "high",
+  University = "university",
+  Servants = "servants",
+  WeddingOfCana = "weddingOfCana",
+}
 
 /**
  * دالة للحصول على المستويات المتاحة لمرحلة معينة
  * @param stageKey - مفتاح المرحلة
  * @returns مصفوفة من المستويات المتاحة
  */
-export const getLevelsForStage = (stageKey: StageKey | ""): string[] => {
+export const getLevelsForStage = (stageKey: string): string[] => {
   // التحقق من صحة المدخل
   if (!stageKey || typeof stageKey !== 'string') {
     return [];
@@ -45,7 +57,7 @@ export const getLevelsForStage = (stageKey: StageKey | ""): string[] => {
  * @param level - المستوى المختار
  * @returns true إذا كان الاختيار صحيحاً
  */
-export const isValidStageLevel = (stage: StageKey | "", level: string): boolean => {
+export const isValidStageLevel = (stage: string, level: string): boolean => {
   if (!stage || !level) {
     return false;
   }
@@ -59,8 +71,8 @@ export const isValidStageLevel = (stage: StageKey | "", level: string): boolean 
  * @param stageKey - مفتاح المرحلة
  * @returns اسم المرحلة باللغة العربية
  */
-export const getStageDisplayName = (stageKey: StageKey): string => {
-  const stageNames: Record<StageKey, string> = {
+export const getStageDisplayName = (stageKey: string): string => {
+  const stageNames: Record<string, string> = {
     [StageKey.Kindergarten]: "حضانة",
     [StageKey.FirstSecond]: "أولى و ثانية",
     [StageKey.ThirdFourth]: "ثالثة و رابعة",

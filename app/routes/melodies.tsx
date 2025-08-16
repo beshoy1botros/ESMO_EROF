@@ -584,7 +584,7 @@ export default function MelodiesPage() {
   const [videos, setVideos] = useState<Video[]>([]); // استخدام النوع Video[]
 
   // حساب المستويات بناءً على المرحلة المختارة
-  const levels = getLevelsForStage(stage);
+  const levels = getLevelsForStage(stage as string);
 
   // دالة لتغيير المرحلة
   const handleStageChange = (newStage: StageKey | "") => {
