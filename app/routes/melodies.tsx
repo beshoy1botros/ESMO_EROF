@@ -3,6 +3,7 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import LazyVideo from "../components/LazyVideo";
 import "../styles/melodies.css";
+import { getLevelsForStage, isValidStageLevel } from "../utils/stageUtils";
 
 // 1. تعريف الأنواع (Type Definitions)
 interface Video {
@@ -580,42 +581,44 @@ export function meta() {
 export default function MelodiesPage() {
   const [stage, setStage] = useState<StageKey | "">("");
   const [level, setLevel] = useState<string>("");
-  const [levels, setLevels] = useState<string[]>([]);
   const [videos, setVideos] = useState<Video[]>([]); // استخدام النوع Video[]
 
-  useEffect(() => {
-    if (
-      [
-        StageKey.Kindergarten,
-        StageKey.FirstSecond,
-        StageKey.ThirdFourth,
-        StageKey.FifthSixth,
-        StageKey.Middle,
-        StageKey.High,
-      ].includes(stage as StageKey)
-    ) {
-      setLevels(["الأول", "الثاني", "الموهوبين"]);
-    } else if (
-      [StageKey.University, StageKey.Servants].includes(stage as StageKey)
-    ) {
-      setLevels(["الأول", "الثاني"]);
-    } else if (stage === StageKey.WeddingOfCana) {
-      setLevels(["الأول"]);
-    } else {
-      setLevels([]);
-    }
+  // حساب المستويات بناءً على المرحلة المختارة
+  const levels = getLevelsForStage(stage);
 
-    setLevel("");
-    setVideos([]);
-  }, [stage]);
+  // دالة لتغيير المرحلة
+  const handleStageChange = (newStage: StageKey | "") => {
+    console.log("Stage changed to:", newStage); // للتشخيص
+    setStage(newStage);
+    setLevel(""); // إعادة تعيين المستوى
+    setVideos([]); // إعادة تعيين الفيديوهات
+  };
 
-  useEffect(() => {
-    if (stage && level) {
-      setVideos(getVideos(stage, level));
+  // دالة لتغيير المستوى
+  const handleLevelChange = (newLevel: string) => {
+    console.log("Level changed to:", newLevel, "for stage:", stage); // للتشخيص
+    setLevel(newLevel);
+    if (stage && newLevel) {
+      const newVideos = getVideos(stage, newLevel);
+      console.log("Videos loaded:", newVideos.length); // للتشخيص
+      setVideos(newVideos);
     } else {
       setVideos([]);
     }
-  }, [stage, level]);
+  };
+
+  // useEffect للتأكد من تحديث المستويات عند تغيير المرحلة
+  useEffect(() => {
+    console.log("Stage changed, updating levels:", stage, "->", levels);
+    // إذا كان المستوى المختار غير متاح في المستويات الجديدة، قم بإعادة تعيينه
+    if (level && !levels.includes(level)) {
+      setLevel("");
+      setVideos([]);
+    }
+  }, [stage, levels, level]);
+
+  // تأكد من أن المستويات محدثة
+  console.log("Current stage:", stage, "Available levels:", levels); // للتشخيص
 
   return (
     <div className="min-h-screen flex flex-col font-sans">
@@ -639,8 +642,11 @@ export default function MelodiesPage() {
                 <select
                   id="stage"
                   value={stage}
-                  onChange={(e) => setStage(e.target.value as StageKey)}
+                  onChange={(e) =>
+                    handleStageChange(e.target.value as StageKey)
+                  }
                   className="w-full p-3 sm:p-4 bg-gray-700 text-white border border-blue-500 rounded-lg cursor-pointer transition-all hover:border-blue-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 text-sm sm:text-base"
+                  key={`stage-${stage}`} // إجبار إعادة الرندر
                 >
                   <option value="">اختر المرحلة</option>
                   <option value={StageKey.Kindergarten}>حضانة</option>
@@ -666,11 +672,18 @@ export default function MelodiesPage() {
                 <select
                   id="level"
                   value={level}
-                  onChange={(e) => setLevel(e.target.value)}
+                  onChange={(e) => handleLevelChange(e.target.value)}
                   className="w-full p-3 sm:p-4 bg-gray-700 text-white border border-blue-500 rounded-lg cursor-pointer transition-all hover:border-blue-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 text-sm sm:text-base disabled:opacity-50 disabled:cursor-not-allowed"
-                  disabled={levels.length === 0}
+                  disabled={!stage || levels.length === 0}
+                  key={`level-${stage}-${levels.length}`} // إجبار إعادة الرندر
                 >
-                  <option value="">اختر المستوى</option>
+                  <option value="">
+                    {!stage
+                      ? "اختر المرحلة أولاً"
+                      : levels.length === 0
+                      ? "لا توجد مستويات متاحة"
+                      : "اختر المستوى"}
+                  </option>
                   {levels.map((lvl) => (
                     <option key={lvl} value={lvl}>
                       {lvl}
