@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useServiceWorker } from "../utils/serviceWorker";
 
 interface LazyVideoProps {
