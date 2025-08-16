@@ -1,4 +1,5 @@
 // تسجيل وإدارة Service Worker
+import { useState, useEffect } from 'react';
 
 export interface ServiceWorkerStatus {
   isSupported: boolean;
@@ -219,5 +220,4 @@ export function useServiceWorker() {
   };
 }
 
-// دالة مساعدة للاستيراد في المكونات
-import { useState, useEffect } from 'react';
+
