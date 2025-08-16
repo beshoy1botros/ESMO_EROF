@@ -592,6 +592,12 @@ export default function MelodiesPage() {
     setStage(newStage);
     setLevel(""); // إعادة تعيين المستوى
     setVideos([]); // إعادة تعيين الفيديوهات
+
+    // تحديث المستويات فوراً
+    if (newStage) {
+      const newLevels = getLevelsForStage(newStage as string);
+      console.log("Available levels for", newStage, ":", newLevels);
+    }
   };
 
   // دالة لتغيير المستوى
