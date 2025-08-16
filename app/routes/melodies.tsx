@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import LazyVideo from "../components/LazyVideo";
@@ -584,7 +584,7 @@ export default function MelodiesPage() {
   const [videos, setVideos] = useState<Video[]>([]); // استخدام النوع Video[]
 
   // حساب المستويات بناءً على المرحلة المختارة
-  const levels = getLevelsForStage(stage as string);
+  const levels = stage ? getLevelsForStage(stage as string) : [];
 
   // دالة لتغيير المرحلة
   const handleStageChange = (newStage: StageKey | "") => {
@@ -600,9 +600,10 @@ export default function MelodiesPage() {
     setLevel(newLevel);
     if (stage && newLevel && isValidStageLevel(stage, newLevel)) {
       const newVideos = getVideos(stage, newLevel);
-      console.log("Videos loaded:", newVideos.length); // للتشخيص
+      console.log("Videos loaded:", newVideos.length, "videos"); // للتشخيص
       setVideos(newVideos);
     } else {
+      console.log("No videos loaded - invalid stage/level combination"); // للتشخيص
       setVideos([]);
     }
   };
@@ -618,7 +619,14 @@ export default function MelodiesPage() {
   }, [stage, levels, level]);
 
   // تأكد من أن المستويات محدثة
-  console.log("Current stage:", stage, "Available levels:", levels); // للتشخيص
+  console.log(
+    "Current stage:",
+    stage,
+    "Available levels:",
+    levels,
+    "Current level:",
+    level
+  ); // للتشخيص
 
   return (
     <div className="min-h-screen flex flex-col font-sans">

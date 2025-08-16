@@ -1,78 +1,87 @@
 // Service Worker للتخزين المؤقت وتحسين الأداء
-const CACHE_NAME = 'esmo-erof-v1';
-const STATIC_CACHE = 'esmo-erof-static-v1';
-const VIDEO_CACHE = 'esmo-erof-videos-v1';
-const IMAGE_CACHE = 'esmo-erof-images-v1';
+const CACHE_NAME = "esmo-erof-v1";
+const STATIC_CACHE = "esmo-erof-static-v1";
+const VIDEO_CACHE = "esmo-erof-videos-v1";
+const IMAGE_CACHE = "esmo-erof-images-v1";
 
 // الملفات الأساسية التي يجب تخزينها مؤقتاً
 const STATIC_ASSETS = [
-  '/',
-  '/melodies',
-  '/about',
-  '/preparatory',
-  '/العذراء مريم.ico',
-  // إضافة الملفات الأساسية الأخرى
+  "/",
+  "/melodies",
+  "/about",
+  "/preparatory",
+  "/العذراء مريم.ico",
+  // لا نضيف manifest.json هنا لتجنب أخطاء 401
 ];
 
 // أحجام التخزين المؤقت (بالبايت)
 const MAX_VIDEO_CACHE_SIZE = 500 * 1024 * 1024; // 500MB للفيديوهات
 const MAX_IMAGE_CACHE_SIZE = 100 * 1024 * 1024; // 100MB للصور
-const MAX_STATIC_CACHE_SIZE = 50 * 1024 * 1024;  // 50MB للملفات الثابتة
+const MAX_STATIC_CACHE_SIZE = 50 * 1024 * 1024; // 50MB للملفات الثابتة
 
 // تثبيت Service Worker
-self.addEventListener('install', (event) => {
-  console.log('Service Worker: Installing...');
-  
+self.addEventListener("install", (event) => {
+  console.log("Service Worker: Installing...");
+
   event.waitUntil(
-    caches.open(STATIC_CACHE)
+    caches
+      .open(STATIC_CACHE)
       .then((cache) => {
-        console.log('Service Worker: Caching static assets');
+        console.log("Service Worker: Caching static assets");
         return cache.addAll(STATIC_ASSETS);
       })
       .then(() => {
-        console.log('Service Worker: Installed successfully');
+        console.log("Service Worker: Installed successfully");
         return self.skipWaiting();
       })
       .catch((error) => {
-        console.error('Service Worker: Installation failed', error);
+        console.error("Service Worker: Installation failed", error);
       })
   );
 });
 
 // تفعيل Service Worker
-self.addEventListener('activate', (event) => {
-  console.log('Service Worker: Activating...');
-  
+self.addEventListener("activate", (event) => {
+  console.log("Service Worker: Activating...");
+
   event.waitUntil(
-    caches.keys()
+    caches
+      .keys()
       .then((cacheNames) => {
         return Promise.all(
           cacheNames.map((cacheName) => {
             // حذف التخزين المؤقت القديم
-            if (cacheName !== CACHE_NAME && 
-                cacheName !== STATIC_CACHE && 
-                cacheName !== VIDEO_CACHE && 
-                cacheName !== IMAGE_CACHE) {
-              console.log('Service Worker: Deleting old cache', cacheName);
+            if (
+              cacheName !== CACHE_NAME &&
+              cacheName !== STATIC_CACHE &&
+              cacheName !== VIDEO_CACHE &&
+              cacheName !== IMAGE_CACHE
+            ) {
+              console.log("Service Worker: Deleting old cache", cacheName);
               return caches.delete(cacheName);
             }
           })
         );
       })
       .then(() => {
-        console.log('Service Worker: Activated successfully');
+        console.log("Service Worker: Activated successfully");
         return self.clients.claim();
       })
   );
 });
 
 // اعتراض الطلبات
-self.addEventListener('fetch', (event) => {
+self.addEventListener("fetch", (event) => {
   const { request } = event;
   const url = new URL(request.url);
 
   // تخطي الطلبات غير HTTP/HTTPS
-  if (!request.url.startsWith('http')) {
+  if (!request.url.startsWith("http")) {
+    return;
+  }
+
+  // تخطي manifest.json لتجنب أخطاء 401
+  if (request.url.includes("manifest.json")) {
     return;
   }
 
@@ -90,24 +99,30 @@ self.addEventListener('fetch', (event) => {
 
 // التحقق من نوع الطلب
 function isVideoRequest(request) {
-  return request.url.includes('.mp4') || 
-         request.url.includes('.webm') || 
-         request.url.includes('.ogg');
+  return (
+    request.url.includes(".mp4") ||
+    request.url.includes(".webm") ||
+    request.url.includes(".ogg")
+  );
 }
 
 function isImageRequest(request) {
-  return request.url.includes('.jpg') || 
-         request.url.includes('.jpeg') || 
-         request.url.includes('.png') || 
-         request.url.includes('.webp') || 
-         request.url.includes('.gif');
+  return (
+    request.url.includes(".jpg") ||
+    request.url.includes(".jpeg") ||
+    request.url.includes(".png") ||
+    request.url.includes(".webp") ||
+    request.url.includes(".gif")
+  );
 }
 
 function isStaticAsset(request) {
-  return request.url.includes('.css') || 
-         request.url.includes('.js') || 
-         request.url.includes('.ico') ||
-         request.url.includes('/assets/');
+  return (
+    request.url.includes(".css") ||
+    request.url.includes(".js") ||
+    request.url.includes(".ico") ||
+    request.url.includes("/assets/")
+  );
 }
 
 // معالجة طلبات الفيديو
@@ -116,29 +131,32 @@ async function handleVideoRequest(request) {
   const cachedResponse = await cache.match(request);
 
   if (cachedResponse) {
-    console.log('Service Worker: Serving video from cache', request.url);
+    console.log("Service Worker: Serving video from cache", request.url);
     return cachedResponse;
   }
 
   try {
-    console.log('Service Worker: Fetching video from network', request.url);
+    console.log("Service Worker: Fetching video from network", request.url);
     const response = await fetch(request);
-    
+
     if (response.ok) {
       // تحقق من حجم التخزين المؤقت قبل الإضافة
       const cacheSize = await getCacheSize(VIDEO_CACHE);
       if (cacheSize < MAX_VIDEO_CACHE_SIZE) {
         cache.put(request, response.clone());
-        console.log('Service Worker: Video cached', request.url);
+        console.log("Service Worker: Video cached", request.url);
       } else {
-        console.log('Service Worker: Video cache full, not caching', request.url);
+        console.log(
+          "Service Worker: Video cache full, not caching",
+          request.url
+        );
       }
     }
-    
+
     return response;
   } catch (error) {
-    console.error('Service Worker: Video fetch failed', error);
-    return new Response('Video not available offline', { status: 503 });
+    console.error("Service Worker: Video fetch failed", error);
+    return new Response("Video not available offline", { status: 503 });
   }
 }
 
@@ -153,18 +171,18 @@ async function handleImageRequest(request) {
 
   try {
     const response = await fetch(request);
-    
+
     if (response.ok) {
       const cacheSize = await getCacheSize(IMAGE_CACHE);
       if (cacheSize < MAX_IMAGE_CACHE_SIZE) {
         cache.put(request, response.clone());
       }
     }
-    
+
     return response;
   } catch (error) {
-    console.error('Service Worker: Image fetch failed', error);
-    return new Response('Image not available offline', { status: 503 });
+    console.error("Service Worker: Image fetch failed", error);
+    return new Response("Image not available offline", { status: 503 });
   }
 }
 
@@ -179,14 +197,17 @@ async function handleStaticRequest(request) {
 
   try {
     const response = await fetch(request);
-    
+
     if (response.ok) {
       cache.put(request, response.clone());
     }
-    
+
     return response;
   } catch (error) {
-    return cachedResponse || new Response('Resource not available offline', { status: 503 });
+    return (
+      cachedResponse ||
+      new Response("Resource not available offline", { status: 503 })
+    );
   }
 }
 
@@ -198,8 +219,8 @@ async function handleDynamicRequest(request) {
   } catch (error) {
     // إرجاع صفحة offline إذا كانت متاحة
     const cache = await caches.open(STATIC_CACHE);
-    const offlinePage = await cache.match('/');
-    return offlinePage || new Response('Offline', { status: 503 });
+    const offlinePage = await cache.match("/");
+    return offlinePage || new Response("Offline", { status: 503 });
   }
 }
 
@@ -224,7 +245,7 @@ async function getCacheSize(cacheName) {
 async function cleanupCache(cacheName, maxSize) {
   const cache = await caches.open(cacheName);
   const keys = await cache.keys();
-  
+
   // ترتيب حسب تاريخ الوصول (الأقدم أولاً)
   const sortedKeys = keys.sort((a, b) => {
     // يمكن تحسين هذا بحفظ timestamps
@@ -232,27 +253,27 @@ async function cleanupCache(cacheName, maxSize) {
   });
 
   let currentSize = await getCacheSize(cacheName);
-  
+
   for (const key of sortedKeys) {
     if (currentSize <= maxSize) break;
-    
+
     const response = await cache.match(key);
     if (response) {
       const blob = await response.blob();
       currentSize -= blob.size;
       await cache.delete(key);
-      console.log('Service Worker: Cleaned up cache entry', key.url);
+      console.log("Service Worker: Cleaned up cache entry", key.url);
     }
   }
 }
 
 // رسائل من الصفحة الرئيسية
-self.addEventListener('message', (event) => {
-  if (event.data && event.data.type === 'SKIP_WAITING') {
+self.addEventListener("message", (event) => {
+  if (event.data && event.data.type === "SKIP_WAITING") {
     self.skipWaiting();
   }
-  
-  if (event.data && event.data.type === 'CACHE_VIDEO') {
+
+  if (event.data && event.data.type === "CACHE_VIDEO") {
     const videoUrl = event.data.url;
     cacheVideoManually(videoUrl);
   }
@@ -263,12 +284,12 @@ async function cacheVideoManually(videoUrl) {
   try {
     const cache = await caches.open(VIDEO_CACHE);
     const response = await fetch(videoUrl);
-    
+
     if (response.ok) {
       await cache.put(videoUrl, response);
-      console.log('Service Worker: Video cached manually', videoUrl);
+      console.log("Service Worker: Video cached manually", videoUrl);
     }
   } catch (error) {
-    console.error('Service Worker: Manual video caching failed', error);
+    console.error("Service Worker: Manual video caching failed", error);
   }
 }
