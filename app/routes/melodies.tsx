@@ -598,7 +598,7 @@ export default function MelodiesPage() {
   const handleLevelChange = (newLevel: string) => {
     console.log("Level changed to:", newLevel, "for stage:", stage); // للتشخيص
     setLevel(newLevel);
-    if (stage && newLevel) {
+    if (stage && newLevel && isValidStageLevel(stage, newLevel)) {
       const newVideos = getVideos(stage, newLevel);
       console.log("Videos loaded:", newVideos.length); // للتشخيص
       setVideos(newVideos);
