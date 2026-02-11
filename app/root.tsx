@@ -8,6 +8,7 @@ import {
   ScrollRestoration,
   Link, // أضف Link لاستخدامه في ErrorBoundary
 } from "react-router"; // أو "react-router-dom" إذا كنت تستخدمه
+import { SpeedInsights } from "@vercel/speed-insights/react";
 
 import type { Route } from "./+types/root";
 import "./app.css";
@@ -59,6 +60,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         {children}
         <ScrollRestoration />
         <Scripts />
+        <SpeedInsights />
         {/* تسجيل Service Worker */}
         <script
           dangerouslySetInnerHTML={{
