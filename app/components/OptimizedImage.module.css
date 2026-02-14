@@ -1,0 +1,69 @@
+/* OptimizedImage component styles */
+
+.container {
+  position: relative;
+  overflow: hidden;
+}
+
+.placeholderContainer {
+  position: absolute;
+  inset: 0;
+  background-color: rgb(229 231 235); /* bg-gray-200 */
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.errorContainer {
+  position: absolute;
+  inset: 0;
+  background-color: rgb(243 244 246); /* bg-gray-100 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.imageElement {
+  transition-property: opacity;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.6, 1);
+  transition-duration: 300ms;
+}
+
+.imageLoaded {
+  opacity: 1;
+}
+
+.imageLoading {
+  opacity: 0;
+}
+
+.loadingText {
+  color: rgb(156 163 175); /* text-gray-400 */
+  font-size: 0.875rem; /* text-sm */
+}
+
+.errorContent {
+  text-align: center;
+  color: rgb(107 114 128); /* text-gray-500 */
+}
+
+.errorIcon {
+  font-size: 1.5rem; /* text-2xl */
+  margin-bottom: 0.5rem; /* mb-2 */
+}
+
+.errorText {
+  font-size: 0.875rem; /* text-sm */
+}
+
+/* Pulse animation for loading placeholder */
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}

@@ -1,0 +1,216 @@
+/* melodies.css - أنماط مخصصة لصفحة الألحان */
+
+/* تعريف متغيرات CSS لتوحيد الألوان والمسافات والأحجام */
+:root {
+  /* ألوان الثيم */
+  --color-primary-bg: #232946; /* لون الخلفية الأساسي */
+  --color-primary-border: #3b82f6; /* لون الحدود الأساسي */
+  --color-text-light: #fff; /* لون النص الفاتح */
+  --color-accent: #60a5fa; /* لون التمييز/اللكنة */
+  --color-dark-bg: #000; /* لون الخلفية الداكنة (للفيديو) */
+
+  /* المسافات (Spacing) */
+  --spacing-sm: 0.5rem; /* مسافة صغيرة */
+  --spacing-md: 1rem; /* مسافة متوسطة */
+  --spacing-lg: 1.5rem; /* مسافة كبيرة */
+
+  /* نصف قطر الحدود (Border Radius) */
+  --border-radius-sm: 0.5rem; /* نصف قطر صغير */
+  --border-radius-md: 1rem; /* نصف قطر متوسط */
+
+  /* أحجام الخطوط (Font Sizes) */
+  --font-size-md: 1.5rem; /* حجم خط متوسط */
+  --font-size-lg: 1.3rem; /* حجم خط كبير */
+
+  /* الظلال (Shadows) */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08); /* ظل خفيف */
+}
+
+/* أنماط بطاقة الفيديو */
+.video-card {
+  background: var(--color-primary-bg);
+  border-radius: var(--border-radius-md);
+  border: 1px solid var(--color-primary-border);
+  padding: var(--spacing-lg);
+  color: var(--color-text-light);
+  box-shadow: var(--shadow-sm);
+  transition: border 0.2s; /* انتقال سلس لتغيير الحدود */
+}
+.video-card:hover {
+  border-color: var(--color-accent); /* تغيير لون الحدود عند التحويم */
+}
+.video-card h3 {
+  color: var(--color-accent);
+  margin-bottom: var(--spacing-md);
+  font-size: var(--font-size-md);
+  text-align: center;
+  font-weight: 600;
+}
+
+.video-card p {
+  font-size: var(--font-size-lg);
+  line-height: 1.6;
+  margin-bottom: var(--spacing-md);
+}
+.video-card video {
+  width: 100%;
+  border-radius: var(--border-radius-sm);
+  background: var(--color-dark-bg);
+  margin-bottom: var(--spacing-md);
+}
+
+/* ============================================
+   Fullscreen Modal Styles - لقسم النصوص المحسّن
+   ============================================ */
+
+/* Container for the lyrics grid */
+.lyrics-grid-container {
+  width: 100%;
+  max-width: 80rem;
+  margin: 0 auto;
+}
+
+/* Header row styling */
+.lyrics-header-row {
+  display: grid;
+  grid-template-columns: repeat(var(--grid-columns, 1), 1fr);
+  gap: 0.25rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  padding-bottom: 0.75rem;
+  margin-bottom: 0.75rem;
+  position: sticky;
+  top: 0;
+  background-color: rgb(3, 7, 30);
+  z-index: 10;
+}
+
+@media (min-width: 768px) {
+  .lyrics-header-row {
+    gap: 1rem;
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+  }
+}
+
+/* Header column text styling */
+.lyrics-header-col {
+  text-align: center;
+  font-weight: 900;
+  font-size: 0.75rem;
+}
+
+@media (min-width: 768px) {
+  .lyrics-header-col {
+    font-size: 1.125rem;
+  }
+}
+
+/* Lyrics row container */
+.lyrics-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  align-items: flex-start;
+  transition: background-color 0.2s ease;
+  min-height: 4rem;
+}
+
+.lyrics-row:hover {
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+@media (min-width: 640px) {
+  .lyrics-row {
+    gap: 0.75rem;
+    padding: 1.25rem 0;
+    min-height: 4.5rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .lyrics-row {
+    gap: 1.5rem;
+    padding: 1.5rem 0;
+    min-height: 5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .lyrics-row {
+    gap: 2rem;
+    min-height: 5.5rem;
+  }
+}
+
+/* Individual lyrics column styling */
+.lyrics-col {
+  font-size: var(--font-size, 18px);
+  text-align: center;
+  line-height: 1.4;
+  padding: 0.5rem;
+  word-break: break-word;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+  text-rendering: optimizeLegibility;
+  shape-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  direction: inherit;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 0.5rem;
+  flex: 1;
+  min-width: 0;
+}
+
+@media (min-width: 640px) {
+  .lyrics-col {
+    padding: 0.75rem;
+    flex: 1;
+  }
+}
+
+@media (min-width: 768px) {
+  .lyrics-col {
+    padding: 1rem;
+    flex: 1;
+  }
+}
+
+@media (min-width: 1024px) {
+  .lyrics-col {
+    padding: 1.25rem;
+    flex: 1;
+  }
+}
+
+/* Coptic-Arabic text styling */
+.lyrics-col-coptic-arabic {
+  color: #4ade80;
+  font-family: "Arial", "Traditional Arabic", "Segoe UI", sans-serif;
+  unicode-bidi: bidi-override;
+}
+
+/* Arabic translation styling */
+.lyrics-col-arabic {
+  color: #fbbf24;
+  font-style: italic;
+  font-family: "Arabic Typesetting", "Arial", "Traditional Arabic", "Segoe UI",
+    sans-serif;
+  unicode-bidi: embed;
+}
+
+/* Coptic text styling - محسّــن للعرض الصحيح */
+.lyrics-col-coptic {
+  color: #ffffff;
+  font-family: "Coptic Old Nubian", "copt-main", "Noto Sans Coptic", "Coptic",
+    monospace, sans-serif;
+  direction: ltr;
+  unicode-bidi: bidi-override;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  flex: 1.25;
+}

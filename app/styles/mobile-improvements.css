@@ -1,0 +1,420 @@
+/* ========================================
+   تحسينات عامة للهواتف
+======================================== */
+
+/* تحسين الخطوط للشاشات الصغيرة */
+@media (max-width: 640px) {
+  html {
+    font-size: 14px;
+  }
+}
+
+/* منع التكبير غير المرغوب عند التركيز على الحقول */
+@media (max-width: 768px) {
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* تحسين التمرير - إزالة الخاصية القديمة */
+* {
+  scroll-behavior: smooth;
+}
+
+/* إزالة تأثير اللمس الافتراضي */
+button,
+a,
+.clickable {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none; /* إضافة البادئة لـ Safari */
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  cursor: pointer;
+}
+
+/* ========================================
+   تحسينات للوضع الأفقي (Landscape)
+======================================== */
+
+@media screen and (max-width: 768px) and (orientation: landscape) {
+  /* تقليل المسافات العمودية */
+  .container {
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.5rem !important;
+  }
+
+  /* تحسين العناوين */
+  h1 {
+    font-size: 1.5rem !important;
+    margin-bottom: 0.5rem !important;
+  }
+
+  h2 {
+    font-size: 1.25rem !important;
+    margin-bottom: 0.5rem !important;
+  }
+
+  h3 {
+    font-size: 1.1rem !important;
+  }
+
+  /* تحسين الفيديوهات للوضع الأفقي */
+  .video-container {
+    height: 75vh;
+    max-height: 75vh;
+  }
+
+  .aspect-video video {
+    height: 100%;
+    object-fit: contain;
+  }
+
+  /* إخفاء العناصر غير الضرورية */
+  .landscape-hidden {
+    display: none !important;
+  }
+
+  /* تقليل padding في الوضع الأفقي */
+  .p-6,
+  .p-8,
+  .p-10 {
+    padding: 1rem !important;
+  }
+
+  /* صف واحد للعناصر */
+  .grid-cols-1 {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+/* ========================================
+   تحسينات الفيديو
+======================================== */
+
+/* منع التشغيل التلقائي */
+video {
+  pointer-events: auto;
+}
+
+/* تحسين أزرار التحكم */
+video::-webkit-media-controls-panel {
+  background-color: rgba(0, 0, 0, 0);
+}
+
+video::-webkit-media-controls-play-button,
+video::-webkit-media-controls-timeline,
+video::-webkit-media-controls-current-time-display,
+video::-webkit-media-controls-time-remaining-display,
+video::-webkit-media-controls-mute-button,
+video::-webkit-media-controls-volume-slider,
+video::-webkit-media-controls-fullscreen-button {
+  filter: brightness(1.2);
+}
+
+/* دعم الوضع الكامل على iOS */
+video::-webkit-media-controls-fullscreen-button {
+  display: block;
+}
+
+/* ========================================
+   تحسينات الأداء
+======================================== */
+
+/* استخدام GPU للرسوميات */
+.gpu-accelerated {
+  transform: translateZ(0);
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+/* تحسين الرسوم المتحركة */
+@media (prefers-reduced-motion: no-preference) {
+  .smooth-transition {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+/* إيقاف الحركة للمستخدمين الذين يفضلون ذلك */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ========================================
+   تحسينات اللمس والتفاعل
+======================================== */
+
+/* زيادة منطقة اللمس للأزرار */
+.touch-target {
+  position: relative;
+}
+
+.touch-target::before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  bottom: -10px;
+  left: -10px;
+  z-index: -1;
+}
+
+/* تأثير الضغط */
+.touch-feedback:active {
+  transform: scale(0.95);
+  transition: transform 0.1s;
+}
+
+/* منع تحديد النص عند اللمس المتكرر */
+.no-select {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* ========================================
+   تحسينات البطاقات والعناصر
+======================================== */
+
+/* تحسين الظلال للشاشات الصغيرة */
+@media (max-width: 640px) {
+  .shadow-xl,
+  .shadow-2xl {
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3),
+      0 8px 10px -6px rgba(0, 0, 0, 0.2);
+  }
+}
+
+/* تحسين الحدود والزوايا */
+.card-mobile {
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+@media (min-width: 768px) {
+  .card-mobile {
+    border-radius: 1.5rem;
+  }
+}
+
+/* ========================================
+   تحسينات الشبكة (Grid)
+======================================== */
+
+/* شبكة متجاوبة محسّنة */
+.responsive-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 640px) {
+  .responsive-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .responsive-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+}
+
+/* ========================================
+   تحسينات التحميل
+======================================== */
+
+/* مؤشر التحميل */
+.loading-spinner {
+  border: 3px solid rgba(59, 130, 246, 0.3);
+  border-radius: 50%;
+  border-top-color: #3b82f6;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* شريط التقدم */
+.progress-bar {
+  position: relative;
+  overflow: hidden;
+  background: rgba(75, 85, 99, 0.5);
+  height: 4px;
+  border-radius: 2px;
+}
+
+.progress-bar::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+  animation: progress 1.5s ease-in-out infinite;
+}
+
+@keyframes progress {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* ========================================
+   تحسينات إمكانية الوصول
+======================================== */
+
+/* التركيز المرئي */
+*:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* إخفاء المحتوى من القارئات الشاشية فقط */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* ========================================
+   تحسينات الطباعة
+======================================== */
+
+@media print {
+  /* إخفاء عناصر التنقل */
+  header,
+  footer,
+  nav,
+  .no-print {
+    display: none !important;
+  }
+
+  /* تحسين الألوان للطباعة */
+  * {
+    background: white !important;
+    color: black !important;
+  }
+
+  /* منع كسر الصفحات داخل العناصر */
+  .card-mobile,
+  .video-container {
+    page-break-inside: avoid;
+  }
+}
+
+/* ========================================
+   تحسينات خاصة بالمتصفحات
+======================================== */
+
+/* Safari iOS - منع التكبير عند التركيز */
+@supports (-webkit-touch-callout: none) {
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+  }
+}
+
+/* Chrome Android - تحسين شريط العنوان */
+@media (max-width: 768px) {
+  meta[name="theme-color"] {
+    content: #1e293b;
+  }
+}
+
+/* ========================================
+   متغيرات CSS مخصصة
+======================================== */
+
+:root {
+  /* الألوان */
+  --color-primary: #3b82f6;
+  --color-secondary: #8b5cf6;
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+
+  /* المسافات */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+
+  /* الظلال */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+
+  /* الانتقالات */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 500ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* الوضع الداكن */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: #0f172a;
+    --color-text: #f1f5f9;
+  }
+}
+
+/* ========================================
+   تحسينات إضافية للأداء
+======================================== */
+
+/* تحسين التمرير السلس */
+html {
+  scroll-behavior: smooth;
+}
+
+/* تحسين عرض الخطوط */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* منع التحديد غير المرغوب */
+img,
+video {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* تحسين الأداء للعناصر المتحركة */
+.will-change-transform {
+  will-change: transform;
+}
+
+.will-change-opacity {
+  will-change: opacity;
+}

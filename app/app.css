@@ -1,0 +1,250 @@
+@import "tailwindcss";
+
+/* ============================================
+   Root Variables
+============================================ */
+:root {
+  --primary-color: #f44250;
+  --secondary-color: #121212;
+  --accent-color: #4f46e5;
+  --background-light: #ffffff;
+  --background-dark: #0f172a;
+  --text-light: #111111;
+  --text-dark: #ffffff;
+  --transition-speed: 0.3s;
+}
+
+/* ============================================
+   Fonts
+============================================ */
+
+/* NEWATH - Header/Footer */
+@font-face {
+  font-family: "NEWATH";
+  src: url("/fonts/NEWATH.ttf") format("truetype");
+  font-display: swap;
+}
+
+/* Coptic Main */
+@font-face {
+  font-family: "copt-main";
+  src: url("/fonts/StGeorgeSamanFont.woff") format("truetype");
+  font-display: swap;
+}
+
+/* Arabic Naskh (يفضل تحميله من Google Fonts لو متاح) */
+@font-face {
+  font-family: "Naskh-Custom";
+  src: local("Noto Naskh Arabic");
+  font-display: swap;
+}
+
+/* ============================================
+   Tailwind Utilities
+============================================ */
+
+@layer utilities {
+  .font-newath {
+    font-family: "NEWATH", serif;
+  }
+
+  .font-copt {
+    font-family: "copt-main", "Noto Sans Coptic", sans-serif;
+    direction: ltr;
+    unicode-bidi: embed;
+  }
+
+  .home-background {
+    position: relative;
+    background-image: url("/home.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+
+  .coptic-base {
+    font-family: "copt-main", sans-serif;
+    font-size: 1.1rem;
+    line-height: 1.6;
+  }
+
+  .coptic-xl {
+    font-family: "copt-main", sans-serif;
+    font-size: 1.5rem;
+    line-height: 1.8;
+  }
+}
+
+/* ============================================
+   Base HTML Styling
+============================================ */
+
+html,
+body {
+  background-color: var(--background-light);
+  color: var(--text-light);
+  font-family: "copt-main", "Inter", system-ui, sans-serif;
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Dark Mode */
+@media (prefers-color-scheme: dark) {
+  html,
+  body {
+    background-color: var(--background-dark);
+    color: var(--text-dark);
+  }
+}
+
+/* ============================================
+   Layout Helpers
+============================================ */
+
+.container {
+  margin: 0 auto;
+  padding: 0 1rem;
+  max-width: 80rem;
+}
+
+.page-bg-setup {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  position: relative;
+}
+
+.bg-about {
+  background-image: url("/photos/taks.jpg");
+}
+.bg-melodies {
+  background-image: url("/photos/kemkem.jpg");
+}
+.bg-preparatory {
+  background-image: url("/photos/home.jpg");
+}
+
+.bg-overlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+  z-index: 0;
+}
+
+/* ============================================
+   Visual Effects
+============================================ */
+
+.glass-card {
+  -webkit-backdrop-filter: blur(16px); /* Safari */
+  backdrop-filter: blur(16px);
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+}
+
+.gradient-text {
+  background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ============================================
+   Lyrics Text Styling (Balanced Version)
+============================================ */
+
+/* قبطي */
+.text-coptic-raw {
+  font-family: "copt-main", sans-serif;
+  font-size: clamp(1.4rem, 4vw, 2.1rem);
+  line-height: 1.6;
+  text-align: center;
+}
+
+/* قبطي عربي */
+.text-coptic-arabic {
+  font-family: "copt-main", sans-serif;
+  font-size: clamp(1.6rem, 4.5vw, 2.3rem);
+  line-height: 1.65;
+  text-align: center;
+}
+
+/* عربي ترجمة - خط نسخ واضح */
+.text-arabic-translation {
+  font-family: "Naskh-Custom", "Noto Naskh Arabic", "Traditional Arabic",
+    "Segoe UI", sans-serif;
+  font-style: normal; /* إزالة italic */
+  font-weight: 500;
+  font-size: clamp(1.8rem, 5vw, 2.6rem);
+  line-height: 1.75;
+  text-align: center;
+}
+
+/* ============================================
+   Mobile Optimization
+============================================ */
+
+@media (max-width: 640px) {
+  .text-coptic-raw {
+    font-size: clamp(1.5rem, 4.5vw, 2rem);
+  }
+
+  .text-coptic-arabic {
+    font-size: clamp(1.7rem, 5vw, 2.2rem);
+  }
+
+  .text-arabic-translation {
+    font-size: clamp(2rem, 5vw, 2.8rem);
+  }
+}
+
+/* ============================================
+   Accessibility & Interaction
+============================================ */
+
+.font-control-button {
+  -webkit-user-select: none; /* Safari */
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.lyrics-modal-text {
+  -webkit-user-select: text; /* Safari */
+  user-select: text;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+@media (hover: none) and (pointer: coarse) {
+  button {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* ============================================
+   Scrollbar
+============================================ */
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}

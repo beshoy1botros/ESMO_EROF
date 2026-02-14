@@ -1,0 +1,389 @@
+/* about.css - أنماط مخصصة لصفحة طقس اللحن */
+
+/* تعريف متغيرات CSS */
+:root {
+  --color-primary-bg: #1e293b;
+  --color-secondary-bg: #0f172a;
+  --color-primary-border: #3b82f6;
+  --color-text-light: #f1f5f9;
+  --color-accent: #60a5fa;
+  --color-accent-purple: #a78bfa;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --border-radius-md: 1rem;
+  --border-radius-lg: 1.5rem;
+  --font-size-md: 1.5rem;
+  --font-size-lg: 1.75rem;
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* أنماط بطاقة المحتوى النصي */
+.text-content-card {
+  background: linear-gradient(
+    135deg,
+    var(--color-primary-bg),
+    var(--color-secondary-bg)
+  );
+  border-radius: var(--border-radius-lg);
+  border: 1px solid var(--color-primary-border);
+  padding: var(--spacing-lg);
+  color: var(--color-text-light);
+  box-shadow: var(--shadow-md);
+  transition: all 0.3s ease;
+  margin-bottom: var(--spacing-lg);
+}
+
+.text-content-card:hover {
+  border-color: var(--color-accent);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.2);
+}
+
+.text-content-card h3 {
+  color: var(--color-accent-purple);
+  margin-bottom: var(--spacing-md);
+  font-size: var(--font-size-md);
+  font-weight: 600;
+  text-align: center;
+}
+
+.text-content-card p {
+  font-size: var(--font-size-lg);
+  line-height: 1.8;
+  margin-bottom: var(--spacing-md);
+  text-align: right;
+  direction: rtl;
+}
+
+/* أنماط للقوائم */
+.text-content-card ul {
+  list-style: none;
+  padding: 0;
+  margin: var(--spacing-md) 0;
+}
+
+.text-content-card ul li {
+  padding: 0.5rem 1rem;
+  margin-bottom: 0.5rem;
+  background: rgba(59, 130, 246, 0.1);
+  border-radius: 0.5rem;
+  border-right: 3px solid var(--color-accent);
+  direction: rtl;
+}
+
+.text-content-card ul li:hover {
+  background: rgba(59, 130, 246, 0.2);
+  transform: translateX(-4px);
+  transition: all 0.2s ease;
+}
+
+/* أنماط للعناوين الفرعية */
+.text-content-card h4 {
+  color: var(--color-accent);
+  font-size: 1.25rem;
+  margin-top: var(--spacing-lg);
+  margin-bottom: var(--spacing-md);
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid rgba(59, 130, 246, 0.3);
+}
+
+/* أنماط خاصة للنصوص القبطية */
+.coptic-text {
+  font-family: "copt-main", "Noto Sans Coptic", sans-serif;
+  font-size: 1.8rem;
+  line-height: 2;
+  text-align: center;
+  color: var(--color-accent-purple);
+  padding: var(--spacing-md);
+  background: rgba(167, 139, 250, 0.1);
+  border-radius: var(--border-radius-md);
+  margin: var(--spacing-md) 0;
+}
+
+/* أنماط للنصوص العربية المترجمة */
+.arabic-translation {
+  font-size: 1.6rem;
+  line-height: 1.9;
+  text-align: right;
+  direction: rtl;
+  color: #cbd5e1;
+  padding: var(--spacing-md);
+  background: rgba(148, 163, 184, 0.1);
+  border-radius: var(--border-radius-md);
+  margin: var(--spacing-md) 0;
+  border-right: 4px solid var(--color-accent);
+}
+
+/* تحسينات للأجهزة المحمولة */
+@media (max-width: 768px) {
+  .text-content-card {
+    padding: 1rem;
+    border-radius: var(--border-radius-md);
+  }
+
+  .text-content-card h3 {
+    font-size: 1.25rem;
+  }
+
+  .text-content-card p {
+    font-size: 1.1rem;
+    line-height: 1.7;
+  }
+
+  .coptic-text {
+    font-size: 1.5rem;
+    padding: 0.75rem;
+  }
+
+  .arabic-translation {
+    font-size: 1.3rem;
+    padding: 0.75rem;
+  }
+
+  .text-content-card h4 {
+    font-size: 1.1rem;
+  }
+}
+
+/* أنماط الشبكة للمحتوى */
+.content-grid {
+  display: grid;
+  gap: var(--spacing-lg);
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 768px) {
+  .content-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .content-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* أنماط الزر الرجوع */
+.back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: var(--color-primary-bg);
+  border: 1px solid var(--color-primary-border);
+  border-radius: 0.5rem;
+  color: var(--color-text-light);
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.back-button:hover {
+  border-color: var(--color-accent);
+  background: rgba(59, 130, 246, 0.1);
+  transform: translateX(4px);
+}
+
+.back-button:active {
+  transform: scale(0.98);
+}
+
+/* أنماط أزرار المراحل */
+.stage-button {
+  position: relative;
+  overflow: hidden;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #1e293b, #0f172a);
+  border: 2px solid #334155;
+  border-radius: var(--border-radius-lg);
+  color: var(--color-text-light);
+  font-size: 1.25rem;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.stage-button:hover {
+  border-color: var(--color-accent);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(59, 130, 246, 0.3);
+}
+
+.stage-button:active {
+  transform: scale(0.98);
+}
+
+.stage-button::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(59, 130, 246, 0.2),
+    transparent
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.stage-button:hover::before {
+  opacity: 1;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* أنماط للمستويات */
+.level-button {
+  padding: 1rem 1.5rem;
+  background: rgba(59, 130, 246, 0.1);
+  border: 2px solid rgba(59, 130, 246, 0.3);
+  border-radius: 0.75rem;
+  color: var(--color-accent);
+  font-size: 1.1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.level-button:hover {
+  background: rgba(59, 130, 246, 0.2);
+  border-color: var(--color-accent);
+  transform: scale(1.05);
+}
+
+.level-button.active {
+  background: var(--color-accent);
+  color: white;
+  border-color: var(--color-accent);
+}
+
+/* أنماط الرسوم المتحركة */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* أنماط التحميل */
+.loading-spinner {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(59, 130, 246, 0.3);
+  border-top-color: var(--color-accent);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* أنماط الإشعارات */
+.notification {
+  padding: 1rem 1.5rem;
+  border-radius: var(--border-radius-md);
+  margin-bottom: var(--spacing-md);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.notification.info {
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  color: var(--color-accent);
+}
+
+.notification.success {
+  background: rgba(34, 197, 94, 0.1);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  color: #4ade80;
+}
+
+.notification.warning {
+  background: rgba(251, 191, 36, 0.1);
+  border: 1px solid rgba(251, 191, 36, 0.3);
+  color: #fbbf24;
+}
+
+/* أنماط الفواصل */
+.divider {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--color-primary-border),
+    transparent
+  );
+  margin: var(--spacing-lg) 0;
+}
+
+/* أنماط الشارات */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  background: rgba(59, 130, 246, 0.2);
+  border: 1px solid var(--color-accent);
+  border-radius: 9999px;
+  color: var(--color-accent);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+/* تحسينات إمكانية الوصول */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* أنماط التركيز */
+*:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: 0.25rem;
+}
+
+/* تحسين التمرير */
+* {
+  scroll-behavior: smooth;
+}
+
+/* تحسين عرض الخطوط */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
