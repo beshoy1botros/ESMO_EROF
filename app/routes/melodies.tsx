@@ -1188,7 +1188,7 @@ const stageVideoUrls = {
       `${BASE_URL}/High-2-3_xa9ltr.mp4`,
       `${BASE_URL}/High-2-4_c1gsas.mp4`,
     ],
-    gifted: [`${BASE_URL}/High-3-1_hyh2jz.mp4`, "", ""],
+    gifted: [`${BASE_URL}/High-3-1_hyh2jz.mp4`, "", `${BASE_URL}/High-3-3_nojczl.mp4`],
   },
   [StageKey.University]: {
     first: [
@@ -1196,7 +1196,7 @@ const stageVideoUrls = {
       `${BASE_URL}/Middle-2-1_wd3yvy.mp4`,
       "",
     ],
-    second: ["", "", ""],
+    second: [`${BASE_URL}/University-2-1_rqqiiy.mp4`, "", `${BASE_URL}/University-2-3_dinsks.mp4`],
     gifted: ["", "", ""],
   },
   [StageKey.Servants]: {
@@ -1208,7 +1208,7 @@ const stageVideoUrls = {
     second: [
       `${BASE_URL}/Servants-2-1_etdtp4.mp4`,
       `${BASE_URL}/Middle-3-1_xixkl3.mp4`,
-      "",
+      `${BASE_URL}/Servants-2-3_ckqgj4.mp4`,
     ],
     gifted: [""],
   },
