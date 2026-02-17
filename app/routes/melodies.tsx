@@ -426,7 +426,8 @@ const videoData: VideoData = {
         hazzatImage: "/photos/تين اوويه انسوك.jpg",
         hazzatImage2: "/photos/تين اوويه انسوك (2).jpg",
         hazzatImage3: "/photos/تين اوويه انسوك(3).jpg",
-        hazzatImage4: "/photos/تين اوويه انسوك4.png",
+        hazzatImage4: "/photos/تين اوويه انسوك4.jpg",
+        hazzatImage5: "/photos/تين اوويه انسوك5.jpg",
       },
       {
         id: "tfg-2",
