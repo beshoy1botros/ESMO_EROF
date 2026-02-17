@@ -9,6 +9,7 @@ import {
 } from "react-router";
 
 import type { Route } from "./+types/root";
+import { useEffect, useState } from "react";
 import "./app.css";
 
 export const links: Route.LinksFunction = () => [
@@ -18,6 +19,7 @@ export const links: Route.LinksFunction = () => [
     href: "https://fonts.gstatic.com",
     crossOrigin: "anonymous",
   },
+  { rel: "preconnect", href: "https://res.cloudinary.com" },
   {
     rel: "stylesheet",
     href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Noto+Sans+Coptic&display=swap",
@@ -82,9 +84,63 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
+  const [landscapeEnabled, setLandscapeEnabled] = useState(false);
+
+  useEffect(() => {
+    if (landscapeEnabled) {
+      document.body.classList.add("landscape-enabled");
+    } else {
+      document.body.classList.remove("landscape-enabled");
+    }
+    return () => {
+      document.body.classList.remove("landscape-enabled");
+    };
+  }, [landscapeEnabled]);
+
+  async function enableLandscape() {
+    try {
+      const docEl: any = document.documentElement as any;
+      if (docEl.requestFullscreen) {
+        await docEl.requestFullscreen();
+      } else if (docEl.webkitRequestFullscreen) {
+        await docEl.webkitRequestFullscreen();
+      }
+      if (screen.orientation && (screen.orientation as any).lock) {
+        await (screen.orientation as any).lock("landscape");
+      }
+      setLandscapeEnabled(true);
+    } catch (e) {
+      // في حال الفشل، فعّل فقط نمط CSS
+      setLandscapeEnabled(true);
+    }
+  }
+
+  async function disableLandscape() {
+    try {
+      if (screen.orientation && (screen.orientation as any).unlock) {
+        (screen.orientation as any).unlock();
+      }
+      if (document.fullscreenElement) {
+        await document.exitFullscreen();
+      }
+    } catch {}
+    setLandscapeEnabled(false);
+  }
+
+  const toggleLandscape = () => {
+    if (landscapeEnabled) disableLandscape();
+    else enableLandscape();
+  };
+
   return (
     <div dir="rtl">
       <Outlet />
+      <button
+        onClick={toggleLandscape}
+        className="fixed bottom-4 left-4 z-[1000] px-4 py-2 rounded-lg font-bold bg-gray-900/80 border border-white/10 backdrop-blur hover:bg-gray-800 text-white"
+      >
+        {landscapeEnabled ? "إيقاف الوضع الأفقي" : "الوضع الأفقي"}
+      </button>
     </div>
   );
 }

@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import LazyVideo from "../components/LazyVideo";
 import { getLevelsForStage, isValidStageLevel } from "../utils/stageUtils";
 import "../styles/melodies.css";
 import "../styles/mobile-improvements.css";
+import { prewarmVideos } from "../utils/swClient";
 
 // --- 1. التعريفات البرمجية (Types & Enums) ---
 
@@ -1188,15 +1189,23 @@ const stageVideoUrls = {
       `${BASE_URL}/High-2-3_xa9ltr.mp4`,
       `${BASE_URL}/High-2-4_c1gsas.mp4`,
     ],
-    gifted: [`${BASE_URL}/High-3-1_hyh2jz.mp4`, "", `${BASE_URL}/High-3-3_nojczl.mp4`],
+    gifted: [
+      `${BASE_URL}/High-3-1_hyh2jz.mp4`,
+      "",
+      `${BASE_URL}/High-3-3_nojczl.mp4`,
+    ],
   },
   [StageKey.University]: {
     first: [
       `${BASE_URL}/Middle-3-1_xixkl3.mp4`,
       `${BASE_URL}/Middle-2-1_wd3yvy.mp4`,
-      "",
+      `${BASE_URL}/University-1-3_xkeaxx.mp4`,
     ],
-    second: [`${BASE_URL}/University-2-1_rqqiiy.mp4`, "", `${BASE_URL}/University-2-3_dinsks.mp4`],
+    second: [
+      `${BASE_URL}/University-2-1_rqqiiy.mp4`,
+      `${BASE_URL}/University-2-2_scs9ub.mp4`,
+      `${BASE_URL}/University-2-3_dinsks.mp4`,
+    ],
     gifted: ["", "", ""],
   },
   [StageKey.Servants]: {
@@ -1324,6 +1333,14 @@ export default function MelodiesPage() {
         fullscreenLyrics.hazzatImage3,
       ].filter(Boolean).length
     : 0;
+
+  // سخّن روابط الفيديوهات بمجرد تحديد المرحلة/المستوى
+  useEffect(() => {
+    if (Array.isArray(videos) && videos.length > 0) {
+      const urls = videos.map((v) => v.url).filter(Boolean);
+      prewarmVideos(urls);
+    }
+  }, [videos]);
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-950 text-white font-sans">

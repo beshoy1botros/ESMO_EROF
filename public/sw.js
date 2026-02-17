@@ -166,26 +166,52 @@ async function handlePageRequest(request) {
   return homeResponse || new Response("الصفحة غير متاحة", { status: 503 });
 }
 
-// معالجة الفيديوهات - خزّن عند التحميل بسرعة
+// معالجة الفيديوهات مع دعم Range وتجنّب تخزين الاستجابات الجزئية
 async function handleVideoRequest(request) {
+  const hasRange = request.headers && request.headers.get("range");
   const cache = await caches.open(VIDEO_CACHE);
-  const cachedResponse = await cache.match(request);
+
+  // عند وجود Range: مرّر الطلب مباشرة للشبكة ولا تخزّنه
+  if (hasRange) {
+    try {
+      return await fetch(request);
+    } catch (error) {
+      console.error("Service Worker: فشل تحميل الفيديو (Range):", error);
+      return new Response("فيديو غير متاح", { status: 503 });
+    }
+  }
+
+  // ابحث في الكاش بطلب URL فقط حتى نتجنّب مشاكل رؤوس المطابقة
+  const urlOnlyReq = new Request(request.url, { method: "GET" });
+  const cachedResponse = await cache.match(urlOnlyReq);
 
   if (cachedResponse) {
-    console.log("Service Worker: تشغيل الفيديو من الذاكرة:", request.url);
-    return cachedResponse;
+    // لا نستخدم استجابة جزئية 206، احذفها ثم واصل للشبكة
+    if (
+      cachedResponse.status === 206 ||
+      cachedResponse.headers.get("content-range")
+    ) {
+      await cache.delete(urlOnlyReq).catch(() => {});
+    } else {
+      console.log("Service Worker: تشغيل الفيديو من الذاكرة:", request.url);
+      return cachedResponse;
+    }
   }
 
   try {
     console.log("Service Worker: تحميل الفيديو من الإنترنت:", request.url);
     const response = await fetch(request);
 
-    if (response.ok) {
-      // تحقق من حجم التخزين المؤقت قبل الإضافة
+    // خزّن فقط الاستجابة الكاملة 200 بدون Content-Range
+    if (
+      response &&
+      response.ok &&
+      response.status === 200 &&
+      !response.headers.get("content-range")
+    ) {
       const cacheSize = await getCacheSize(VIDEO_CACHE);
       if (cacheSize < MAX_VIDEO_CACHE_SIZE) {
-        // خزّن الفيديو للاستخدام لاحقاً بدون انتظار
-        cache.put(request, response.clone());
+        await cache.put(urlOnlyReq, response.clone());
         console.log("Service Worker: تم تخزين الفيديو:", request.url);
       } else {
         console.warn("Service Worker: ذاكرة الفيديو امتلأت:", request.url);
@@ -374,6 +400,59 @@ async function getCacheSize(cacheName) {
   }
 }
 
+// تقليم الذاكرة المؤقتة للحفاظ على حد الحجم
+async function enforceCacheLimit(cacheName, maxBytes) {
+  try {
+    let size = await getCacheSize(cacheName);
+    if (size <= maxBytes) return;
+    const cache = await caches.open(cacheName);
+    const keys = await cache.keys();
+    // احذف الأقدم أولاً حتى نصبح تحت الحد
+    for (const key of keys) {
+      await cache.delete(key);
+      size = await getCacheSize(cacheName);
+      if (size <= maxBytes) break;
+    }
+  } catch (e) {
+    // no-op
+  }
+}
+
+// حالة تسخين الفيديوهات: طابور متسلسل لتفادي الضغط على السيرفر
+const PREWARM_STATE = {
+  queue: [], // قائمة عناوين الفيديو المطلوب تسخينها
+  running: false,
+};
+
+async function processPrewarmQueue() {
+  if (PREWARM_STATE.running) return;
+  PREWARM_STATE.running = true;
+  try {
+    const cache = await caches.open(VIDEO_CACHE);
+    while (PREWARM_STATE.queue.length > 0) {
+      const url = PREWARM_STATE.queue.shift();
+      if (!url) continue;
+      try {
+        const req = new Request(url, { mode: "cors", credentials: "omit" });
+        const exists = await cache.match(req);
+        if (!exists) {
+          const resp = await fetch(req);
+          if (resp && resp.ok) {
+            await cache.put(req, resp.clone());
+            await enforceCacheLimit(VIDEO_CACHE, MAX_VIDEO_CACHE_SIZE);
+          }
+        }
+      } catch (_) {
+        // تجاهل أخطاء الطلب الفردي وتابع
+      }
+      // مهلة قصيرة بين كل عنصر لتخفيف الحمل
+      await new Promise((r) => setTimeout(r, 300));
+    }
+  } finally {
+    PREWARM_STATE.running = false;
+  }
+}
+
 // رسائل من التطبيق
 self.addEventListener("message", (event) => {
   if (event.data && event.data.type === "SKIP_WAITING") {
@@ -382,6 +461,51 @@ self.addEventListener("message", (event) => {
 
   if (event.data && event.data.type === "CLEAR_CACHES") {
     clearAllCaches();
+  }
+
+  if (event.data && event.data.type === "PREWARM_VIDEOS" && event.data.urls) {
+    const urls = Array.isArray(event.data.urls)
+      ? event.data.urls.filter((u) => typeof u === "string")
+      : [];
+    if (urls.length) {
+      event.waitUntil(
+        (async () => {
+          try {
+            // أدخل العناوين في طابور التسخين بالترتيب، مع إزالة التكرارات البسيطة
+            for (const u of urls) {
+              if (!PREWARM_STATE.queue.includes(u)) {
+                PREWARM_STATE.queue.push(u);
+              }
+            }
+            await processPrewarmQueue();
+          } catch (_) {}
+        })()
+      );
+    }
+  }
+
+  // حذف فيديو محدد من كاش الفيديوهات
+  if (event.data && event.data.type === "EVICT_VIDEO" && event.data.url) {
+    const urlToEvict = event.data.url;
+    event.waitUntil(
+      (async () => {
+        try {
+          const cache = await caches.open(VIDEO_CACHE);
+          const keys = await cache.keys();
+          const target = new URL(urlToEvict, self.location.origin);
+          await Promise.all(
+            keys.map(async (req) => {
+              try {
+                const rUrl = new URL(req.url);
+                if (rUrl.origin === target.origin && rUrl.pathname === target.pathname) {
+                  await cache.delete(req);
+                }
+              } catch {}
+            })
+          );
+        } catch {}
+      })()
+    );
   }
 
   if (event.data && event.data.type === "GET_CACHE_SIZE") {

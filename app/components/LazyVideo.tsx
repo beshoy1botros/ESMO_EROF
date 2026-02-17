@@ -1,4 +1,5 @@
 import { useRef, useEffect, useState } from "react";
+import { evictVideo } from "../utils/swClient";
 
 /**
  * LazyVideo
@@ -79,6 +80,7 @@ export default function LazyVideo({ src, title, poster }: LazyVideoProps) {
         preload="metadata"
         poster={poster}
         playsInline
+        crossOrigin="anonymous"
         disablePictureInPicture={false}
         onError={() => setHasError(true)}
         aria-label={title}
@@ -94,6 +96,30 @@ export default function LazyVideo({ src, title, poster }: LazyVideoProps) {
           <div className="text-center">
             <p>تعذّر تحميل الفيديو من المصدر البعيد.</p>
             <p className="opacity-80 mt-1">تحقق من اتصالك أو جرّب لاحقًا.</p>
+            <button
+              className="mt-2 inline-block bg-white text-black rounded px-3 py-1 mr-2"
+              onClick={async () => {
+                const video = videoRef.current;
+                if (!video) return;
+                try {
+                  evictVideo(src);
+                } catch {}
+                setHasError(false);
+                // أعد التحميل بعنوان فريد لتجاوز أي كاش وسيط
+                const newSrc =
+                  src + (src.includes("?") ? "&" : "?") + "retry=" + Date.now();
+                const sourceEl = video.querySelector("source");
+                if (sourceEl) {
+                  sourceEl.setAttribute("src", newSrc);
+                }
+                video.load();
+                try {
+                  await video.play();
+                } catch {}
+              }}
+            >
+              إعادة المحاولة
+            </button>
             {src && (
               <a
                 className="inline-block mt-2 underline"

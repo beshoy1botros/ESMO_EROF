@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import LazyVideo from "../components/LazyVideo";
 import "../styles/melodies.css";
 import "../styles/mobile-improvements.css";
+import { prewarmVideos } from "../utils/swClient";
 
 // --- تعريفات الأنواع ---
 interface Video {
@@ -271,6 +272,15 @@ export default function PreparatoryPage() {
   // ====== خاصية التحكم في هزات اللحن ======
   const [showHazzat, setShowHazzat] = useState(false);
   // أُلغي عرض الفول-سكرين حسب طلب المستخدم
+
+  // سخّن الفيديوهات بمجرد اختيار المرحلة وتفعيل نوع "فيديوهات"
+  useEffect(() => {
+    if (contentType === "videos" && selectedStage) {
+      const list = preparatoryVideos[selectedStage] || [];
+      const urls = list.map((v) => v.url).filter(Boolean);
+      prewarmVideos(urls);
+    }
+  }, [selectedStage, contentType]);
 
   const handleStageChange = (stage: string) => {
     setSelectedStage(stage);
