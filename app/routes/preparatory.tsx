@@ -3,6 +3,7 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import LazyVideo from "../components/LazyVideo";
 import "../styles/melodies.css";
+import "../styles/mobile-improvements.css";
 
 // --- تعريفات الأنواع ---
 interface Video {
@@ -145,7 +146,7 @@ const preparatoryVideos: StageVideos = {
     {
       id: "hs1",
       title: "طاي شوري",
-      url: `${BASE_URL}/Talta_rabaa_1_2_whwht7.mp4`,
+      url: `${BASE_URL}/Talta_rabaa-2-2_pfz3l0.mp4`,
       copticArabic:
         "طاى شورى إن نوب إن كاثاروس إت فاى خا بى أروماطا إت خين نين ﭼيج إن آآرون بى أوويب إفطالى أو إستوى نوفى إى إبشوى إيجين بى ما إن إرشوؤوشى",
       copticcoptic:
@@ -269,7 +270,7 @@ export default function PreparatoryPage() {
 
   // ====== خاصية التحكم في هزات اللحن ======
   const [showHazzat, setShowHazzat] = useState(false);
-  const [showHazzatMenu, setShowHazzatMenu] = useState(false);
+  // أُلغي عرض الفول-سكرين حسب طلب المستخدم
 
   const handleStageChange = (stage: string) => {
     setSelectedStage(stage);
@@ -296,7 +297,7 @@ export default function PreparatoryPage() {
 
   // حساب عدد الأعمدة المرئية
   const visibleColumns = [showCopticArabic, showArabic, showCoptic].filter(
-    Boolean,
+    Boolean
   ).length;
 
   // التحقق من وجود صور هزات
@@ -309,7 +310,7 @@ export default function PreparatoryPage() {
   return (
     <div className="min-h-screen flex flex-col bg-gray-950 text-white font-sans">
       <Header />
-      <main className="flex-1 page-bg-setup bg-about relative">
+      <main className="flex-1 page-bg-setup bg-melodies relative">
         <div className="bg-overlay" />
         <div className="relative z-10 pb-10">
           <div className="bg-gradient-to-b from-blue-900/30 to-transparent py-10 px-4 text-center">
@@ -324,12 +325,12 @@ export default function PreparatoryPage() {
           <div className="max-w-6xl mx-auto px-4">
             {!selectedStage ? (
               // اختيار المرحلة
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 mb-10">
                 {STAGES.map((stage) => (
                   <button
                     key={stage.key}
                     onClick={() => handleStageChange(stage.key)}
-                    className="p-6 rounded-xl border-2 bg-gray-900 border-gray-800 hover:border-gray-600 transition-all font-bold text-lg"
+                    className="p-4 rounded-xl border-2 transition-all font-bold bg-gray-900 border-gray-800 hover:border-gray-600"
                   >
                     {stage.label}
                   </button>
@@ -486,42 +487,38 @@ export default function PreparatoryPage() {
               </button>
             </div>
 
-            {/* ====== زر هزات اللحن ====== */}
-            {hasHazzatImages && (
-              <div className="relative flex-shrink-0">
-                <button
-                  onClick={() => setShowHazzatMenu(!showHazzatMenu)}
-                  className="px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded-lg font-bold text-sm md:text-base transition-all"
-                >
-                  هزات
-                </button>
-
-                {showHazzatMenu && (
-                  <div className="absolute left-0 mt-2 bg-gray-800 border border-gray-700 rounded-lg shadow-2xl p-4 min-w-[180px] z-[51]">
-                    <div className="flex flex-col gap-3">
-                      <label className="flex items-center gap-2 cursor-pointer hover:bg-gray-700 p-2 rounded transition-all">
-                        <input
-                          type="checkbox"
-                          checked={showHazzat}
-                          onChange={(e) => setShowHazzat(e.target.checked)}
-                          className="w-5 h-5 accent-purple-600"
-                        />
-                        <span className="text-sm md:text-base">
-                          إظهار الهزات
-                        </span>
-                      </label>
-                    </div>
-
-                    <button
-                      onClick={() => setShowHazzatMenu(false)}
-                      className="w-full mt-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm transition-all"
-                    >
-                      إغلاق
-                    </button>
-                  </div>
-                )}
-              </div>
-            )}
+            {/* ====== زر هزات اللحن (تصميم مطابق لصفحة melodies) ====== */}
+            {(() => {
+              const count = fullscreenLyrics
+                ? [
+                    fullscreenLyrics.hazzatImage,
+                    fullscreenLyrics.hazzatImage2,
+                    fullscreenLyrics.hazzatImage3,
+                  ].filter(Boolean).length
+                : 0;
+              return (
+                count > 0 && (
+                  <button
+                    onClick={() => setShowHazzat(!showHazzat)}
+                    className={`px-4 py-2 rounded-lg font-bold text-sm md:text-base transition-all flex items-center gap-2 flex-shrink-0 ${
+                      showHazzat
+                        ? "bg-yellow-600 hover:bg-yellow-700"
+                        : "bg-purple-600 hover:bg-purple-700"
+                    }`}
+                  >
+                    <span className="text-lg">🎵</span>
+                    <span className="hidden md:inline">
+                      {showHazzat ? "إخفاء الهزات" : "هزات اللحن"}
+                    </span>
+                    {count > 1 && (
+                      <span className="bg-white/20 px-2 py-0.5 rounded-full text-xs">
+                        {count}
+                      </span>
+                    )}
+                  </button>
+                )
+              );
+            })()}
 
             {/* ====== زر اللغة ====== */}
             <div className="relative flex-shrink-0">
@@ -577,7 +574,10 @@ export default function PreparatoryPage() {
             </div>
 
             <button
-              onClick={() => setFullscreenLyrics(null)}
+              onClick={() => {
+                setFullscreenLyrics(null);
+                setShowHazzat(false);
+              }}
               className="text-2xl md:text-3xl p-2 hover:bg-white/10 rounded-lg transition-colors flex-shrink-0"
               aria-label="إغلاق"
             >
@@ -587,80 +587,50 @@ export default function PreparatoryPage() {
 
           <div className="flex-1 overflow-y-auto bg-gray-950 p-2 md:p-6">
             <div className="w-full max-w-7xl mx-auto">
-              {/* Header Row */}
-              {visibleColumns > 0 && (
-                <div
-                  className="grid gap-1 md:gap-4 border-b border-white/20 pb-4 mb-4 sticky top-0 bg-gray-950 z-10"
-                  style={{
-                    gridTemplateColumns: `repeat(${visibleColumns}, 1fr)`,
-                  }}
-                >
-                  {showCopticArabic && (
-                    <div className="text-center text-green-500 font-black text-xs md:text-lg">
-                      قبطي معرب
-                    </div>
-                  )}
-                  {showArabic && (
-                    <div className="text-center text-amber-500 font-black text-xs md:text-lg">
-                      عربي
-                    </div>
-                  )}
-                  {showCoptic && (
-                    <div className="text-center text-white font-black text-xs md:text-lg">
-                      قبطي
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {/* Lyrics Content */}
+              {/* Lyrics Content (مطابق لصفحة melodies باستخدام lyrics-row/lyrics-col) */}
               {(() => {
                 const coptic = (fullscreenLyrics.copticcoptic || "").split(
-                  "\n\n",
+                  "\n\n"
                 );
                 const copticAr = (fullscreenLyrics.copticArabic || "").split(
-                  "\n\n",
+                  "\n\n"
                 );
                 const arabic = (fullscreenLyrics.arabicTranslation || "").split(
-                  "\n\n",
+                  "\n\n"
                 );
                 const maxParts = Math.max(
                   coptic.length,
                   copticAr.length,
-                  arabic.length,
+                  arabic.length
                 );
 
                 return Array.from({ length: maxParts }).map((_, i) => (
                   <div
                     key={i}
-                    className="grid gap-1 md:gap-6 py-6 border-b border-white/5 items-center hover:bg-white/[0.02]"
-                    style={{
-                      gridTemplateColumns: `repeat(${visibleColumns}, 1fr)`,
-                    }}
+                    className="lyrics-row"
+                    style={{ ["--grid-columns" as any]: visibleColumns }}
                   >
                     {showCopticArabic && (
                       <div
-                        className="text-center leading-relaxed px-1"
-                        style={{
-                          fontSize: `${fontSize}px`,
-                          lineHeight: "1.6",
-                          color: "#4ade80",
-                          wordBreak: "break-word",
-                          hyphens: "auto",
-                        }}
+                        dir="rtl"
+                        lang="ar-EG"
+                        className="lyrics-col lyrics-col-coptic-arabic"
+                        style={{ ["--font-size" as any]: `${fontSize}px` }}
                       >
                         {copticAr[i] || "-"}
                       </div>
                     )}
                     {showArabic && (
                       <div
-                        className="text-center leading-relaxed italic px-1"
+                        dir="rtl"
+                        lang="ar"
+                        className="lyrics-col lyrics-col-arabic"
                         style={{
-                          fontSize: `${fontSize + 3}px`,
-                          lineHeight: "1.6",
-                          color: "#fbbf24",
-                          wordBreak: "break-word",
-                          hyphens: "auto",
+                          ["--font-size" as any]: `${fontSize + 3}px`,
+                          fontStyle: "normal",
+                          fontWeight: "normal",
+                          fontFamily:
+                            "'Amiri', 'Traditional Arabic', 'Simplified Arabic', serif",
                         }}
                       >
                         {arabic[i] || "-"}
@@ -668,13 +638,10 @@ export default function PreparatoryPage() {
                     )}
                     {showCoptic && (
                       <div
-                        className="text-center font-copt leading-relaxed px-1"
-                        style={{
-                          fontSize: `${fontSize + 2}px`,
-                          lineHeight: "1.7",
-                          color: "#ffffff",
-                          wordBreak: "break-word",
-                        }}
+                        dir="ltr"
+                        lang="cop"
+                        className="lyrics-col lyrics-col-coptic"
+                        style={{ ["--font-size" as any]: `${fontSize}px` }}
                       >
                         {coptic[i] || "-"}
                       </div>
@@ -683,40 +650,56 @@ export default function PreparatoryPage() {
                 ));
               })()}
 
-              {/* قسم صور هزات اللحن */}
-              {showHazzat && hasHazzatImages && (
-                <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-0 w-full auto-rows-max">
-                  {fullscreenLyrics.hazzatImage && (
-                    <div className="relative overflow-hidden w-full m-0 p-0 border-2 border-purple-500/30 rounded-lg">
-                      <img
-                        src={fullscreenLyrics.hazzatImage}
-                        alt="هزات اللحن"
-                        className="w-full h-auto object-contain m-0 p-0 block cursor-pointer hover:opacity-90 transition-opacity"
-                      />
-                    </div>
-                  )}
+              {/* قسم صور هزات اللحن (مطابق لتصميم melodies) */}
+              {showHazzat &&
+                (() => {
+                  const has =
+                    !!fullscreenLyrics?.hazzatImage ||
+                    !!fullscreenLyrics?.hazzatImage2 ||
+                    !!fullscreenLyrics?.hazzatImage3;
+                  return (
+                    has && (
+                      <div className="mt-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                        <div className="bg-gradient-to-r from-purple-900/30 to-yellow-900/30 border border-purple-500/30 rounded-xl p-4 mb-6">
+                          <h3 className="text-2xl font-bold text-center text-yellow-400 flex items-center justify-center gap-3">
+                            <span className="text-3xl">🎵</span>
+                            هزات اللحن
+                            <span className="text-3xl">🎵</span>
+                          </h3>
+                        </div>
 
-                  {fullscreenLyrics.hazzatImage2 && (
-                    <div className="relative overflow-hidden w-full m-0 p-0 border-2 border-purple-500/30 rounded-lg">
-                      <img
-                        src={fullscreenLyrics.hazzatImage2}
-                        alt="هزات اللحن - صورة إضافية 1"
-                        className="w-full h-auto object-contain m-0 p-0 block cursor-pointer hover:opacity-90 transition-opacity"
-                      />
-                    </div>
-                  )}
-
-                  {fullscreenLyrics.hazzatImage3 && (
-                    <div className="relative overflow-hidden w-full m-0 p-0 border-2 border-purple-500/30 rounded-lg">
-                      <img
-                        src={fullscreenLyrics.hazzatImage3}
-                        alt="هزات اللحن - صورة إضافية 2"
-                        className="w-full h-auto object-contain m-0 p-0 block cursor-pointer hover:opacity-90 transition-opacity"
-                      />
-                    </div>
-                  )}
-                </div>
-              )}
+                        <div className="w-full overflow-hidden">
+                          <div className="flex flex-col items-stretch m-0 p-0">
+                            {fullscreenLyrics?.hazzatImage && (
+                              <img
+                                src={fullscreenLyrics.hazzatImage}
+                                alt="هزات اللحن - الصورة الأولى"
+                                className="block w-full m-0 p-0 rounded-none shadow-none"
+                                draggable={false}
+                              />
+                            )}
+                            {fullscreenLyrics?.hazzatImage2 && (
+                              <img
+                                src={fullscreenLyrics.hazzatImage2}
+                                alt="هزات اللحن - الصورة الثانية"
+                                className="block w-full m-0 p-0 rounded-none shadow-none"
+                                draggable={false}
+                              />
+                            )}
+                            {fullscreenLyrics?.hazzatImage3 && (
+                              <img
+                                src={fullscreenLyrics.hazzatImage3}
+                                alt="هزات اللحن - الصورة الثالثة"
+                                className="block w-full m-0 p-0 rounded-none shadow-none"
+                                draggable={false}
+                              />
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    )
+                  );
+                })()}
             </div>
           </div>
         </div>

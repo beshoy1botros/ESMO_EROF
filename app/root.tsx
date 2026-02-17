@@ -5,8 +5,8 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
-  Link, // أضف Link لاستخدامه في ErrorBoundary
-} from "react-router"; // أو "react-router-dom" إذا كنت تستخدمه
+  Link,
+} from "react-router";
 
 import type { Route } from "./+types/root";
 import "./app.css";
@@ -90,6 +90,7 @@ export default function App() {
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
+  // معالج الأخطاء العام لمسارات React Router
   let message = "عذرًا!"; // تم توطين الرسالة
   let details = "حدث خطأ غير متوقع."; // تم توطين الرسالة
   let stack: string | undefined;

@@ -5,6 +5,9 @@
     "**/.client/**/*",
     ".react-router/types/**/*"
   ],
+  "exclude": [
+    "__backup__/**/*"
+  ],
   "compilerOptions": {
     "lib": [
       "DOM",
@@ -13,7 +16,8 @@
     ],
     "types": [
       "node",
-      "vite/client"
+      "vite/client",
+      "vitest"
     ],
     "target": "ES2022",
     "module": "ES2022",

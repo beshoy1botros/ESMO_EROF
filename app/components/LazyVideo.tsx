@@ -1,5 +1,13 @@
 import { useRef, useEffect, useState } from "react";
 
+/**
+ * LazyVideo
+ * — مكون فيديو بسيط يعتمد على عناصر الفيديو الأصلية مع ميزة:
+ *   1) إيقاف بقية مقاطع الفيديو تلقائيًا عند تشغيل واحد منها.
+ *   2) الحفاظ على واجهة استخدام نظيفة دون منيو مخصصة (مهيأة للتوسعة لاحقًا).
+ * المكون لا يفعّل التحميل الكسول تلقائيًا، لكنه يستخدم preload=metadata لتقليل الحجم.
+ */
+
 interface LazyVideoProps {
   src: string;
   title: string;
@@ -12,6 +20,7 @@ const videoInstances: HTMLVideoElement[] = [];
 export default function LazyVideo({ src, title, poster }: LazyVideoProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [showMenu, setShowMenu] = useState(false);
+  const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -41,10 +50,7 @@ export default function LazyVideo({ src, title, poster }: LazyVideoProps) {
     };
   }, []);
 
-  // Handle download
-
-  // Handle menu toggle
- 
+  // يمكن إضافة وظائف إضافية لاحقًا (تحميل/قائمة) إن لزم
 
   // Close menu when clicking outside
   useEffect(() => {
@@ -74,6 +80,7 @@ export default function LazyVideo({ src, title, poster }: LazyVideoProps) {
         poster={poster}
         playsInline
         disablePictureInPicture={false}
+        onError={() => setHasError(true)}
         aria-label={title}
         title={title}
       >
@@ -82,6 +89,24 @@ export default function LazyVideo({ src, title, poster }: LazyVideoProps) {
           متصفحك لا يدعم تشغيل الفيديو. الرجاء تحديث المتصفح.
         </p>
       </video>
+      {hasError && (
+        <div className="absolute inset-0 flex items-center justify-center bg-black/60 text-white text-sm sm:text-base p-4 rounded">
+          <div className="text-center">
+            <p>تعذّر تحميل الفيديو من المصدر البعيد.</p>
+            <p className="opacity-80 mt-1">تحقق من اتصالك أو جرّب لاحقًا.</p>
+            {src && (
+              <a
+                className="inline-block mt-2 underline"
+                href={src}
+                target="_blank"
+                rel="noreferrer"
+              >
+                فتح الرابط الأصلي في نافذة جديدة
+              </a>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
