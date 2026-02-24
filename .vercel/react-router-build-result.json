@@ -68,6 +68,7 @@
       "unstable_optimizeDeps": false,
       "unstable_subResourceIntegrity": false,
       "unstable_trailingSlashAwareDataRequests": false,
+      "unstable_previewServerPrerendering": false,
       "v8_middleware": false,
       "v8_splitRouteModules": false,
       "v8_viteEnvironmentApi": false
