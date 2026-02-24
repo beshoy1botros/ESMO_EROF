@@ -1596,14 +1596,14 @@ export default function MelodiesPage() {
               <div className="w-full max-w-7xl mx-auto">
                 {(() => {
                   const coptic = (fullscreenLyrics.copticcoptic || "").split(
-                    "\n\n"
+                    /\n\s*\n/
                   );
                   const copticAr = (fullscreenLyrics.copticArabic || "").split(
-                    "\n\n"
+                    /\n\s*\n/
                   );
                   const arabic = (
                     fullscreenLyrics.arabicTranslation || ""
-                  ).split("\n\n");
+                  ).split(/\n\s*\n/);
                   const maxParts = Math.max(
                     coptic.length,
                     copticAr.length,
@@ -1612,25 +1612,34 @@ export default function MelodiesPage() {
 
                   let currentQuarter = 0;
 
-                  const isPsalm150Full =
-                    fullscreenLyrics.title &&
-                    fullscreenLyrics.title.includes("المزمور ال150") &&
-                    fullscreenLyrics.title.includes("الهوس الرابع");
+                  // ✅ الكود الجديد المحسن - فائق الشمول والrobustness
+                  const allLyricsText =
+                    (fullscreenLyrics.arabicTranslation || "") +
+                    (fullscreenLyrics.copticArabic || "") +
+                    (fullscreenLyrics.copticcoptic || "");
 
-                  const disableQuarterNumbers =
-                    !isPsalm150Full && maxParts <= 3;
+                  // تعبير نمطي فائق الشمول لمرد "اف ايراناف" يتعامل مع كافة تنوعات الهمزات والمسافات
+                  const afEranavRegex =
+                    /ايراناف|إيراناف|راناف|ⲣⲁⲛⲁϥ|يليق\s*ل[اإأآ]لهنا/i;
+
+                  const hasAfEranav = afEranavRegex.test(allLyricsText);
+
+                  const disableQuarterNumbers = !hasAfEranav && maxParts <= 3;
 
                   return Array.from({ length: maxParts }).map((_, i) => {
-                    const arText = arabic[i] || "";
-                    const caText = copticAr[i] || "";
-                    const cText = coptic[i] || "";
+                    const arText = (arabic[i] || "").trim();
+                    const caText = (copticAr[i] || "").trim();
+                    const cText = (coptic[i] || "").trim();
+
+                    // تخطي الأسطر الفارغة تماماً التي قد تنتج عن تقسيم النص
+                    if (!arText && !caText && !cText) return null;
+
+                    const combinedRowText = `${arText} ${caText} ${cText}`;
+
+                    // ✅ التعرف على "اف ايراناف" بمرونة باستخدام Regex في النص المدمج لكل ربع
+                    const isAfEranav = afEranavRegex.test(combinedRowText);
+
                     const headerSource = arText || caText || cText;
-
-                    const isAfEranav =
-                      isPsalm150Full &&
-                      (headerSource.includes("اف ايراناف") ||
-                        headerSource.includes("Ⲉϥⲉ̀ⲣⲁⲛⲁϥ"));
-
                     const isSectionHeader =
                       !isAfEranav &&
                       (headerSource.includes("القطعة") ||
@@ -1663,13 +1672,13 @@ export default function MelodiesPage() {
                           }
                         }
                       >
-                        <div className="lyrics-quarter">
-                          {quarterNumber !== null && (
+                        {quarterNumber !== null && (
+                          <div className="lyrics-quarter">
                             <div className="lyrics-quarter-badge">
                               {quarterNumber}
                             </div>
-                          )}
-                        </div>
+                          </div>
+                        )}
 
                         {showCopticArabic && (
                           <div

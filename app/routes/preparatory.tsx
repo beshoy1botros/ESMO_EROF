@@ -521,13 +521,13 @@ export default function PreparatoryPage() {
                         }`}
                         style={{ ["--grid-columns" as any]: visibleColumns }}
                       >
-                        <div className="lyrics-quarter">
-                          {quarterNumber !== null && (
+                        {quarterNumber !== null && (
+                          <div className="lyrics-quarter">
                             <div className="lyrics-quarter-badge">
                               {quarterNumber}
                             </div>
-                          )}
-                        </div>
+                          </div>
+                        )}
 
                         {showCopticArabic && (
                           <div
