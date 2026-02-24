@@ -121,6 +121,39 @@
   background-color: rgba(255, 255, 255, 0.02);
 }
 
+.lyrics-quarter {
+  width: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.lyrics-quarter-badge {
+  min-width: 2rem;
+  height: 2rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(148, 163, 184, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.75rem;
+  color: #e5e7eb;
+  background: rgba(15, 23, 42, 0.9);
+}
+
+.lyrics-row-section {
+  background-color: rgba(15, 23, 42, 0.9);
+}
+
+.lyrics-section-text {
+  color: #a5b4fc;
+  font-size: 0.9rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
 @media (min-width: 640px) {
   .lyrics-row {
     gap: 0.75rem;
@@ -198,16 +231,17 @@
 .lyrics-col-arabic {
   color: #fbbf24;
   font-style: italic;
-  font-family: "Arabic Typesetting", "Arial", "Traditional Arabic", "Segoe UI",
-    sans-serif;
+  font-family:
+    "Arabic Typesetting", "Arial", "Traditional Arabic", "Segoe UI", sans-serif;
   unicode-bidi: embed;
 }
 
 /* Coptic text styling - محسّــن للعرض الصحيح */
 .lyrics-col-coptic {
   color: #ffffff;
-  font-family: "Coptic Old Nubian", "copt-main", "Noto Sans Coptic", "Coptic",
-    monospace, sans-serif;
+  font-family:
+    "Coptic Old Nubian", "copt-main", "Noto Sans Coptic", "Coptic", monospace,
+    sans-serif;
   direction: ltr;
   unicode-bidi: bidi-override;
   font-weight: 500;

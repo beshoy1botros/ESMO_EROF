@@ -136,8 +136,11 @@ export default function App() {
     <div dir="rtl">
       <Outlet />
       <button
+        id="landscape-toggle-button"
         onClick={toggleLandscape}
-        className="fixed bottom-4 left-4 z-[1000] px-4 py-2 rounded-lg font-bold bg-gray-900/80 border border-white/10 backdrop-blur hover:bg-gray-800 text-white"
+        className="hidden"
+        aria-hidden="true"
+        tabIndex={-1}
       >
         {landscapeEnabled ? "إيقاف الوضع الأفقي" : "الوضع الأفقي"}
       </button>

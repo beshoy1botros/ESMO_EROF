@@ -1179,7 +1179,7 @@ const stageVideoUrls = {
   },
   [StageKey.High]: {
     first: [
-      "",
+      `${BASE_URL}/High-1-1_zjghrp.mp4`,
       `${BASE_URL}/High-1-2_hdjp9d.mp4`,
       `${BASE_URL}/Talta_rabaa-1-1_ivpyzv.mp4`,
       `${BASE_URL}/High-1-4_rxqx8v.mp4`,
@@ -1192,7 +1192,7 @@ const stageVideoUrls = {
     ],
     gifted: [
       `${BASE_URL}/High-3-1_hyh2jz.mp4`,
-      "",
+      `${BASE_URL}/High-3-2_dduwis`,
       `${BASE_URL}/High-3-3_nojczl.mp4`,
     ],
   },
@@ -1257,7 +1257,7 @@ for (const stageKey of Object.keys(stageVideoUrls) as Array<
           video.url = "";
         }
       });
-    },
+    }
   );
 }
 
@@ -1288,7 +1288,6 @@ export default function MelodiesPage() {
   const [showCopticArabic, setShowCopticArabic] = useState(true);
   const [showArabic, setShowArabic] = useState(true);
   const [showCoptic, setShowCoptic] = useState(true);
-  const [showLanguageMenu, setShowLanguageMenu] = useState(false);
 
   // ====== خاصية التحكم في حجم الخط ======
   const [fontSize, setFontSize] = useState(16);
@@ -1296,6 +1295,9 @@ export default function MelodiesPage() {
   // ====== خاصية التحكم في صور الهزات ======
   const [showHazzat, setShowHazzat] = useState(false);
   // تم إلغاء الڤول-سكرين لصور الهزّات بناءً على طلب المستخدم
+
+  const [rotateFromSidebar, setRotateFromSidebar] = useState(false);
+  const [showControlsPanel, setShowControlsPanel] = useState(false);
 
   const levels = stage ? getLevelsForStage(stage as string) : [];
 
@@ -1312,19 +1314,25 @@ export default function MelodiesPage() {
     } else setVideos([]);
   };
 
-  // دوال التحكم في حجم الخط
+  const visibleColumns = [showCopticArabic, showArabic, showCoptic].filter(
+    Boolean
+  ).length;
+
+  const disabledColumns = 3 - visibleColumns;
+  const maxFontSize = 20 + disabledColumns * 2;
+
+  // دوال التحكم في حجم الخط مع حد أقصى ديناميكي حسب عدد اللغات
   const increaseFontSize = () => {
-    setFontSize((prev) => Math.min(prev + 1, 20));
+    setFontSize((prev) => Math.min(prev + 1, maxFontSize));
   };
 
   const decreaseFontSize = () => {
     setFontSize((prev) => Math.max(prev - 1, 14));
   };
 
-  // حساب عدد الأعمدة المرئية
-  const visibleColumns = [showCopticArabic, showArabic, showCoptic].filter(
-    Boolean,
-  ).length;
+  useEffect(() => {
+    setFontSize((prev) => Math.min(prev, maxFontSize));
+  }, [maxFontSize]);
 
   // حساب عدد صور الهزات المتوفرة
   const hazzatImagesCount = fullscreenLyrics
@@ -1441,104 +1449,140 @@ export default function MelodiesPage() {
       {/* --- مودال النصوص المحسّن للهواتف --- */}
       {fullscreenLyrics && (
         <div className="fixed inset-0 z-[100] bg-black flex flex-col overflow-hidden">
-          <header className="sticky top-0 z-50 p-3 md:p-4 bg-gray-900 border-b border-white/10 flex justify-between items-center gap-2">
-            <h2 className="text-blue-400 font-bold text-sm md:text-lg truncate flex-1">
+          <header className="sticky top-0 z-50 p-3 md:p-4 bg-gray-900 border-b border-white/10 flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-shrink-0">
+              <div className="relative">
+                <button
+                  onClick={() => setShowControlsPanel((prev) => !prev)}
+                  className="w-10 h-10 rounded-full bg-gray-900/90 border border-white/20 flex flex-col items-center justify-center gap-0.5 hover:bg-gray-800 transition-all"
+                  aria-label="إعدادات النص"
+                >
+                  <span className="w-5 h-0.5 bg-white rounded-full" />
+                  <span className="w-5 h-0.5 bg-white rounded-full" />
+                  <span className="w-5 h-0.5 bg-white rounded-full" />
+                </button>
+
+                {showControlsPanel && (
+                  <div className="absolute top-full mt-3 right-1/40 -translate-x-1/40 md:right-auto md:right-0 md:translate-x-0 w-56 md:w-64 max-w-[90vw] z-30 bg-gray-900/95 border border-white/10 rounded-2xl shadow-2xl flex flex-col gap-4 p-4 backdrop-blur">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-semibold text-gray-200">
+                        إعدادات النص
+                      </span>
+                      <button
+                        onClick={() => setShowControlsPanel(false)}
+                        className="w-7 h-7 flex items-center justify-center rounded-full bg-gray-800 hover:bg-gray-700 text-sm"
+                        aria-label="إغلاق الإعدادات"
+                      >
+                        ✕
+                      </button>
+                    </div>
+
+                    <div className="flex flex-col gap-2">
+                      <span className="text-[11px] text-gray-400">
+                        حجم الخط
+                      </span>
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={decreaseFontSize}
+                          className="w-9 h-9 bg-gray-800 hover:bg-gray-700 rounded-lg border border-gray-700 flex items-center justify-center transition-all"
+                          aria-label="تصغير الخط"
+                        >
+                          <span className="text-lg">-</span>
+                        </button>
+                        <span className="flex-1 text-center text-sm text-gray-100">
+                          {fontSize}
+                        </span>
+                        <button
+                          onClick={increaseFontSize}
+                          className="w-9 h-9 bg-gray-800 hover:bg-gray-700 rounded-lg border border-gray-700 flex items-center justify-center transition-all"
+                          aria-label="تكبير الخط"
+                        >
+                          <span className="text-lg">+</span>
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col gap-2">
+                      <span className="text-[11px] text-gray-400">اللغات</span>
+                      <div className="flex flex-col gap-2">
+                        <button
+                          onClick={() => setShowArabic(!showArabic)}
+                          className={`px-3 py-2 rounded-lg text-xs font-bold border transition-all ${
+                            showArabic
+                              ? "bg-blue-600 border-blue-400 text-white"
+                              : "bg-gray-800 border-gray-700 text-gray-300"
+                          }`}
+                        >
+                          عربي
+                        </button>
+                        <button
+                          onClick={() => setShowCopticArabic(!showCopticArabic)}
+                          className={`px-3 py-2 rounded-lg text-xs font-bold border transition-all ${
+                            showCopticArabic
+                              ? "bg-emerald-600 border-emerald-400 text-white"
+                              : "bg-gray-800 border-gray-700 text-gray-300"
+                          }`}
+                        >
+                          قبطي معرب
+                        </button>
+                        <button
+                          onClick={() => setShowCoptic(!showCoptic)}
+                          className={`px-3 py-2 rounded-lg text-xs font-bold border transition-all ${
+                            showCoptic
+                              ? "bg-indigo-600 border-indigo-400 text-white"
+                              : "bg-gray-800 border-gray-700 text-gray-300"
+                          }`}
+                        >
+                          قبطي
+                        </button>
+                      </div>
+                    </div>
+
+                    {hazzatImagesCount > 0 && (
+                      <button
+                        onClick={() => setShowHazzat(!showHazzat)}
+                        className={`w-full px-3 py-2 rounded-lg font-bold text-xs flex items-center justify-center gap-2 transition-all ${
+                          showHazzat
+                            ? "bg-yellow-600 hover:bg-yellow-700"
+                            : "bg-purple-600 hover:bg-purple-700"
+                        }`}
+                      >
+                        <span className="text-lg">🎵</span>
+                        <span>
+                          {showHazzat ? "إخفاء الهزات" : "هزات اللحن"}
+                        </span>
+                      </button>
+                    )}
+
+                    <button
+                      onClick={() => {
+                        const btn = document.getElementById(
+                          "landscape-toggle-button"
+                        ) as HTMLButtonElement | null;
+                        if (btn) {
+                          btn.click();
+                          setRotateFromSidebar((prev) => !prev);
+                        }
+                      }}
+                      className="w-full px-3 py-2 rounded-lg font-bold text-xs bg-gray-800 hover:bg-gray-700 border border-gray-700 text-gray-100 transition-all"
+                    >
+                      تدوير الشاشة
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <h2 className="text-blue-400 font-bold text-sm md:text-lg flex-1 text-center md:text-right">
               {fullscreenLyrics.title}
             </h2>
-
-            {/* ====== أزرار التحكم في حجم الخط ====== */}
-            <div className="flex items-center gap-2 flex-shrink-0">
-              <button
-                onClick={decreaseFontSize}
-                className="w-10 h-10 bg-gray-800 hover:bg-gray-700 rounded-lg border border-gray-700 flex items-center justify-center transition-all"
-                aria-label="تصغير الخط"
-              >
-                <span className="text-xl">-</span>
-              </button>
-              <span className="text-sm px-2">{fontSize}</span>
-              <button
-                onClick={increaseFontSize}
-                className="w-10 h-10 bg-gray-800 hover:bg-gray-700 rounded-lg border border-gray-700 flex items-center justify-center transition-all"
-                aria-label="تكبير الخط"
-              >
-                <span className="text-xl">+</span>
-              </button>
-            </div>
-
-            {/* ====== زر هزات اللحن - يظهر فقط إذا كانت هناك صور متوفرة ====== */}
-            {hazzatImagesCount > 0 && (
-              <button
-                onClick={() => setShowHazzat(!showHazzat)}
-                className={`px-4 py-2 rounded-lg font-bold text-sm md:text-base transition-all flex items-center gap-2 flex-shrink-0 ${
-                  showHazzat
-                    ? "bg-yellow-600 hover:bg-yellow-700"
-                    : "bg-purple-600 hover:bg-purple-700"
-                }`}
-              >
-                <span className="text-lg">🎵</span>
-                <span className="hidden md:inline">
-                  {showHazzat ? "إخفاء الهزات" : "هزات اللحن"}
-                </span>
-              </button>
-            )}
-
-            {/* ====== زر اللغة ====== */}
-            <div className="relative flex-shrink-0">
-              <button
-                onClick={() => setShowLanguageMenu(!showLanguageMenu)}
-                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg font-bold text-sm md:text-base transition-all"
-              >
-                اللغة
-              </button>
-
-              {showLanguageMenu && (
-                <div className="absolute left-0 mt-2 bg-gray-800 border border-gray-700 rounded-lg shadow-2xl p-4 min-w-[180px] z-[51]">
-                  <div className="flex flex-col gap-3">
-                    <label className="flex items-center gap-2 cursor-pointer hover:bg-gray-700 p-2 rounded transition-all">
-                      <input
-                        type="checkbox"
-                        checked={showArabic}
-                        onChange={(e) => setShowArabic(e.target.checked)}
-                        className="w-5 h-5 accent-blue-600"
-                      />
-                      <span className="text-sm md:text-base">عربي</span>
-                    </label>
-
-                    <label className="flex items-center gap-2 cursor-pointer hover:bg-gray-700 p-2 rounded transition-all">
-                      <input
-                        type="checkbox"
-                        checked={showCopticArabic}
-                        onChange={(e) => setShowCopticArabic(e.target.checked)}
-                        className="w-5 h-5 accent-blue-600"
-                      />
-                      <span className="text-sm md:text-base">قبطي معرب</span>
-                    </label>
-
-                    <label className="flex items-center gap-2 cursor-pointer hover:bg-gray-700 p-2 rounded transition-all">
-                      <input
-                        type="checkbox"
-                        checked={showCoptic}
-                        onChange={(e) => setShowCoptic(e.target.checked)}
-                        className="w-5 h-5 accent-blue-600"
-                      />
-                      <span className="text-sm md:text-base">قبطي</span>
-                    </label>
-                  </div>
-
-                  <button
-                    onClick={() => setShowLanguageMenu(false)}
-                    className="w-full mt-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm transition-all"
-                  >
-                    BACK
-                  </button>
-                </div>
-              )}
-            </div>
 
             <button
               onClick={() => {
                 setFullscreenLyrics(null);
                 setShowHazzat(false);
+                setRotateFromSidebar(false);
+                setShowControlsPanel(false);
               }}
               className="text-2xl md:text-3xl p-2 hover:bg-white/10 rounded-lg transition-colors flex-shrink-0"
               aria-label="إغلاق"
@@ -1547,187 +1591,249 @@ export default function MelodiesPage() {
             </button>
           </header>
 
-          <div className="flex-1 overflow-y-auto bg-gray-950 p-2 md:p-6">
-            <div className="w-full max-w-7xl mx-auto">
-              {/* Lyrics Content */}
-              {(() => {
-                const coptic = (fullscreenLyrics.copticcoptic || "").split(
-                  "\n\n",
-                );
-                const copticAr = (fullscreenLyrics.copticArabic || "").split(
-                  "\n\n",
-                );
-                const arabic = (fullscreenLyrics.arabicTranslation || "").split(
-                  "\n\n",
-                );
-                const maxParts = Math.max(
-                  coptic.length,
-                  copticAr.length,
-                  arabic.length,
-                );
+          <div className="relative flex flex-1 overflow-hidden">
+            <div className="flex-1 overflow-y-auto bg-gray-950 p-2 md:p-6">
+              <div className="w-full max-w-7xl mx-auto">
+                {(() => {
+                  const coptic = (fullscreenLyrics.copticcoptic || "").split(
+                    "\n\n"
+                  );
+                  const copticAr = (fullscreenLyrics.copticArabic || "").split(
+                    "\n\n"
+                  );
+                  const arabic = (
+                    fullscreenLyrics.arabicTranslation || ""
+                  ).split("\n\n");
+                  const maxParts = Math.max(
+                    coptic.length,
+                    copticAr.length,
+                    arabic.length
+                  );
 
-                return Array.from({ length: maxParts }).map((_, i) => (
-                  <div
-                    key={i}
-                    className="lyrics-row"
-                    style={
-                      {
-                        "--grid-columns": visibleColumns,
-                      } as React.CSSProperties & { "--grid-columns": number }
+                  let currentQuarter = 0;
+
+                  const isPsalm150Full =
+                    fullscreenLyrics.title &&
+                    fullscreenLyrics.title.includes("المزمور ال150") &&
+                    fullscreenLyrics.title.includes("الهوس الرابع");
+
+                  const disableQuarterNumbers =
+                    !isPsalm150Full && maxParts <= 3;
+
+                  return Array.from({ length: maxParts }).map((_, i) => {
+                    const arText = arabic[i] || "";
+                    const caText = copticAr[i] || "";
+                    const cText = coptic[i] || "";
+                    const headerSource = arText || caText || cText;
+
+                    const isAfEranav =
+                      isPsalm150Full &&
+                      (headerSource.includes("اف ايراناف") ||
+                        headerSource.includes("Ⲉϥⲉ̀ⲣⲁⲛⲁϥ"));
+
+                    const isSectionHeader =
+                      !isAfEranav &&
+                      (headerSource.includes("القطعة") ||
+                        headerSource.includes("المزمور"));
+
+                    if (!disableQuarterNumbers) {
+                      if (isSectionHeader) {
+                        currentQuarter = 0;
+                      } else if (!isAfEranav) {
+                        currentQuarter += 1;
+                      }
                     }
-                  >
-                    {showCopticArabic && (
+
+                    const quarterNumber =
+                      disableQuarterNumbers || isSectionHeader || isAfEranav
+                        ? null
+                        : currentQuarter;
+
+                    return (
                       <div
-                        dir="rtl"
-                        lang="ar-EG"
-                        className="lyrics-col lyrics-col-coptic-arabic"
+                        key={i}
+                        className={`lyrics-row ${
+                          isSectionHeader ? "lyrics-row-section" : ""
+                        }`}
                         style={
                           {
-                            "--font-size": `${fontSize}px`,
-                          } as React.CSSProperties & { "--font-size": string }
+                            "--grid-columns": visibleColumns,
+                          } as React.CSSProperties & {
+                            "--grid-columns": number;
+                          }
                         }
                       >
-                        {copticAr[i] || "-"}
+                        <div className="lyrics-quarter">
+                          {quarterNumber !== null && (
+                            <div className="lyrics-quarter-badge">
+                              {quarterNumber}
+                            </div>
+                          )}
+                        </div>
+
+                        {showCopticArabic && (
+                          <div
+                            dir="rtl"
+                            lang="ar-EG"
+                            className={`lyrics-col lyrics-col-coptic-arabic ${
+                              isSectionHeader ? "lyrics-section-text" : ""
+                            }`}
+                            style={
+                              {
+                                "--font-size": `${fontSize}px`,
+                              } as React.CSSProperties & {
+                                "--font-size": string;
+                              }
+                            }
+                          >
+                            {copticAr[i] || "-"}
+                          </div>
+                        )}
+
+                        {showArabic && (
+                          <div
+                            dir="rtl"
+                            lang="ar"
+                            className={`lyrics-col lyrics-col-arabic ${
+                              isSectionHeader ? "lyrics-section-text" : ""
+                            }`}
+                            style={
+                              {
+                                "--font-size": `${fontSize + 3}px`,
+                                fontStyle: "normal",
+                                fontWeight: "normal",
+                                fontFamily:
+                                  "'Amiri', 'Traditional Arabic', 'Simplified Arabic', serif",
+                              } as React.CSSProperties & {
+                                "--font-size": string;
+                              }
+                            }
+                          >
+                            {arabic[i] || "-"}
+                          </div>
+                        )}
+
+                        {showCoptic && (
+                          <div
+                            dir="ltr"
+                            lang="cop"
+                            className={`lyrics-col lyrics-col-coptic ${
+                              isSectionHeader ? "lyrics-section-text" : ""
+                            }`}
+                            style={
+                              {
+                                "--font-size": `${fontSize}px`,
+                              } as React.CSSProperties & {
+                                "--font-size": string;
+                              }
+                            }
+                          >
+                            {coptic[i] || "-"}
+                          </div>
+                        )}
                       </div>
-                    )}
+                    );
+                  });
+                })()}
 
-                    {showArabic && (
-                      <div
-                        dir="rtl"
-                        lang="ar"
-                        className="lyrics-col lyrics-col-arabic"
-                        style={
-                          {
-                            "--font-size": `${fontSize + 3}px`,
-                            fontStyle: "normal", // لإلغاء أي ميلان
-                            fontWeight: "normal", // اختياري: لضمان عدم وجود سماكة مفرطة
-                            fontFamily:
-                              "'Amiri', 'Traditional Arabic', 'Simplified Arabic', serif", // أفضل الخطوط لنمط النسخ
-                          } as React.CSSProperties & { "--font-size": string }
-                        }
-                      >
-                        {arabic[i] || "-"}
+                {showHazzat && hazzatImagesCount > 0 && (
+                  <div className="mt-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                    <div className="bg-gradient-to-r from-purple-900/30 to-yellow-900/30 border border-purple-500/30 rounded-xl p-4 mb-6">
+                      <h3 className="text-2xl font-bold text-center text-yellow-400 flex items-center justify-center gap-3">
+                        <span className="text-3xl">🎵</span>
+                        هزات اللحن
+                        <span className="text-3xl">🎵</span>
+                      </h3>
+                      <p className="text-center text-gray-400 text-sm mt-2"></p>
+                    </div>
+
+                    <div className="w-full overflow-hidden">
+                      <div className="flex flex-col items-stretch m-0 p-0 leading-none text-[0]">
+                        {fullscreenLyrics.hazzatImage && (
+                          <img
+                            src={fullscreenLyrics.hazzatImage}
+                            alt="هزات اللحن - الصورة الأولى"
+                            className="block w-full h-auto object-contain m-0 p-0 select-none pointer-events-none align-top -mt-px first:mt-0"
+                            draggable={false}
+                          />
+                        )}
+                        {fullscreenLyrics.hazzatImage2 && (
+                          <img
+                            src={fullscreenLyrics.hazzatImage2}
+                            alt="هزات اللحن - الصورة الثانية"
+                            className="block w-full h-auto object-contain m-0 p-0 select-none pointer-events-none align-top -mt-px first:mt-0"
+                            draggable={false}
+                          />
+                        )}
+                        {fullscreenLyrics.hazzatImage3 && (
+                          <img
+                            src={fullscreenLyrics.hazzatImage3}
+                            alt="هزات اللحن - الصورة الثالثة"
+                            className="block w-full h-auto object-contain m-0 p-0 select-none pointer-events-none align-top -mt-px first:mt-0"
+                            draggable={false}
+                          />
+                        )}
+                        {fullscreenLyrics.hazzatImage4 && (
+                          <img
+                            src={fullscreenLyrics.hazzatImage4}
+                            alt="هزات اللحن - الصورة الرابعة"
+                            className="block w-full h-auto object-contain m-0 p-0 select-none pointer-events-none align-top -mt-px first:mt-0"
+                            draggable={false}
+                          />
+                        )}
+                        {fullscreenLyrics.hazzatImage5 && (
+                          <img
+                            src={fullscreenLyrics.hazzatImage5}
+                            alt="هزات اللحن - الصورة الخامسة"
+                            className="block w-full h-auto object-contain m-0 p-0 select-none pointer-events-none align-top -mt-px first:mt-0"
+                            draggable={false}
+                          />
+                        )}
+                        {fullscreenLyrics.hazzatImage6 && (
+                          <img
+                            src={fullscreenLyrics.hazzatImage6}
+                            alt="هزات اللحن - الصورة السادسة"
+                            className="block w-full h-auto object-contain m-0 p-0 select-none pointer-events-none align-top -mt-px first:mt-0"
+                            draggable={false}
+                          />
+                        )}
+                        {fullscreenLyrics.hazzatImage7 && (
+                          <img
+                            src={fullscreenLyrics.hazzatImage7}
+                            alt="هزات اللحن - الصورة السابعة"
+                            className="block w-full h-auto object-contain m-0 p-0 select-none pointer-events-none align-top -mt-px first:mt-0"
+                            draggable={false}
+                          />
+                        )}
+                        {fullscreenLyrics.hazzatImage8 && (
+                          <img
+                            src={fullscreenLyrics.hazzatImage8}
+                            alt="هزات اللحن - الصورة الثامنة"
+                            className="block w-full h-auto object-contain m-0 p-0 select-none pointer-events-none align-top -mt-px first:mt-0"
+                            draggable={false}
+                          />
+                        )}
+                        {fullscreenLyrics.hazzatImage9 && (
+                          <img
+                            src={fullscreenLyrics.hazzatImage9}
+                            alt="هزات اللحن - الصورة التاسعة"
+                            className="block w-full h-auto object-contain m-0 p-0 select-none pointer-events-none align-top -mt-px first:mt-0"
+                            draggable={false}
+                          />
+                        )}
+                        {fullscreenLyrics.hazzatImage10 && (
+                          <img
+                            src={fullscreenLyrics.hazzatImage10}
+                            alt="هزات اللحن - الصورة العاشرة"
+                            className="block w-full h-auto object-contain m-0 p-0 select-none pointer-events-none align-top -mt-px first:mt-0"
+                            draggable={false}
+                          />
+                        )}
                       </div>
-                    )}
-
-                    {showCoptic && (
-                      <div
-                        dir="ltr"
-                        lang="cop"
-                        className="lyrics-col lyrics-col-coptic"
-                        style={
-                          {
-                            "--font-size": `${fontSize}px`,
-                          } as React.CSSProperties & { "--font-size": string }
-                        }
-                      >
-                        {coptic[i] || "-"}
-                      </div>
-                    )}
-                  </div>
-                ));
-              })()}
-
-              {/* ====== قسم صور هزات اللحن - يظهر/يخفى حسب حالة showHazzat ====== */}
-              {showHazzat && hazzatImagesCount > 0 && (
-                <div className="mt-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                  {/* عنوان القسم */}
-                  <div className="bg-gradient-to-r from-purple-900/30 to-yellow-900/30 border border-purple-500/30 rounded-xl p-4 mb-6">
-                    <h3 className="text-2xl font-bold text-center text-yellow-400 flex items-center justify-center gap-3">
-                      <span className="text-3xl">🎵</span>
-                      هزات اللحن
-                      <span className="text-3xl">🎵</span>
-                    </h3>
-                    <p className="text-center text-gray-400 text-sm mt-2"></p>
-                  </div>
-
-                  {/* عرض الصور متتالية بدون فواصل أو حدود */}
-                  <div className="w-full overflow-hidden">
-                    <div className="flex flex-col items-stretch m-0 p-0 leading-none text-[0]">
-                      {fullscreenLyrics.hazzatImage && (
-                        <img
-                          src={fullscreenLyrics.hazzatImage}
-                          alt="هزات اللحن - الصورة الأولى"
-                          className="block w-full h-auto object-contain m-0 p-0 select-none pointer-events-none align-top -mt-px first:mt-0"
-                          draggable={false}
-                        />
-                      )}
-                      {fullscreenLyrics.hazzatImage2 && (
-                        <img
-                          src={fullscreenLyrics.hazzatImage2}
-                          alt="هزات اللحن - الصورة الثانية"
-                          className="block w-full h-auto object-contain m-0 p-0 select-none pointer-events-none align-top -mt-px first:mt-0"
-                          draggable={false}
-                        />
-                      )}
-                      {fullscreenLyrics.hazzatImage3 && (
-                        <img
-                          src={fullscreenLyrics.hazzatImage3}
-                          alt="هزات اللحن - الصورة الثالثة"
-                          className="block w-full h-auto object-contain m-0 p-0 select-none pointer-events-none align-top -mt-px first:mt-0"
-                          draggable={false}
-                        />
-                      )}
-                      {fullscreenLyrics.hazzatImage4 && (
-                        <img
-                          src={fullscreenLyrics.hazzatImage4}
-                          alt="هزات اللحن - الصورة الرابعة"
-                          className="block w-full h-auto object-contain m-0 p-0 select-none pointer-events-none align-top -mt-px first:mt-0"
-                          draggable={false}
-                        />
-                      )}
-                      {fullscreenLyrics.hazzatImage5 && (
-                        <img
-                          src={fullscreenLyrics.hazzatImage5}
-                          alt="هزات اللحن - الصورة الخامسة"
-                          className="block w-full h-auto object-contain m-0 p-0 select-none pointer-events-none align-top -mt-px first:mt-0"
-                          draggable={false}
-                        />
-                      )}
-                      {fullscreenLyrics.hazzatImage6 && (
-                        <img
-                          src={fullscreenLyrics.hazzatImage6}
-                          alt="هزات اللحن - الصورة السادسة"
-                          className="block w-full h-auto object-contain m-0 p-0 select-none pointer-events-none align-top -mt-px first:mt-0"
-                          draggable={false}
-                        />
-                      )}
-                      {fullscreenLyrics.hazzatImage7 && (
-                        <img
-                          src={fullscreenLyrics.hazzatImage7}
-                          alt="هزات اللحن - الصورة السابعة"
-                          className="block w-full h-auto object-contain m-0 p-0 select-none pointer-events-none align-top -mt-px first:mt-0"
-                          draggable={false}
-                        />
-                      )}
-                      {fullscreenLyrics.hazzatImage8 && (
-                        <img
-                          src={fullscreenLyrics.hazzatImage8}
-                          alt="هزات اللحن - الصورة الثامنة"
-                          className="block w-full h-auto object-contain m-0 p-0 select-none pointer-events-none align-top -mt-px first:mt-0"
-                          draggable={false}
-                        />
-                      )}
-                      {fullscreenLyrics.hazzatImage9 && (
-                        <img
-                          src={fullscreenLyrics.hazzatImage9}
-                          alt="هزات اللحن - الصورة التاسعة"
-                          className="block w-full h-auto object-contain m-0 p-0 select-none pointer-events-none align-top -mt-px first:mt-0"
-                          draggable={false}
-                        />
-                      )}
-                      {fullscreenLyrics.hazzatImage10 && (
-                        <img
-                          src={fullscreenLyrics.hazzatImage10}
-                          alt="هزات اللحن - الصورة العاشرة"
-                          className="block w-full h-auto object-contain m-0 p-0 select-none pointer-events-none align-top -mt-px first:mt-0"
-                          draggable={false}
-                        />
-                      )}
                     </div>
                   </div>
-                </div>
-              )}
+                )}
+              </div>
             </div>
           </div>
         </div>

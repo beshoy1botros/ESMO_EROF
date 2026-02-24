@@ -50,9 +50,12 @@ const preparatoryVideos: StageVideos = {
       id: "k2",
       title: "ذكصولوجية العذراء عشية بالنغمة السنوي (إيرى إبسول سيل إمماريام)",
       url: `${BASE_URL}/T_Hadana-2_hthdv5.mp4`,
-      copticArabic: "إري إبسول سيل إم ماريام : خين ني فيؤوي إتصا إبشوي : صا أووينام إمبيس مينريت :إس طوبه إمموف إ إهري إجون\n\nكاطا إفريتي إطاف جوس :إنجيه دافيد خين بي بسالموس : جيه أس أوهي إراتس إنجيه تي أوورو :صا أووينام إمموك إب أوورو\n\nسولومون مووتي إروس :خين بي جو إنتيه ني جو :جيه طاسوني أووه طا إشفيري :طا بوليس إممي ييروساليم\n\nأفتي ميني غار إروس :خين هان ميش إنران إفتشوسي جيه أمي إفول خين بيكيبوس : أو ثي إتسوتب إن أروماطا\n\nشيري ني أو تي بارثينوس : تي أوورو إممي إن أليثيني : شيري إبشووشوو إنتيه بين جينوس : أري إجفو نان إن إممانوئيل\n\nتين تيهو أري بين ميفي : أوتي بروستاتيس إتينهوت : ناهرين بين تشويس إيسوس بي خريستوس : إنتيف كا نين نوفي نان إيفول",
-      copticcoptic: "Ⲉ̀ⲣⲉ ⲡ̀ⲥⲟⲗⲥⲉⲗ ⲙ̀Ⲙⲁⲣⲓⲁⲙ: ϧⲉⲛ ⲛⲓⲫⲏⲟⲩⲓ̀ ⲉⲧ̀ⲥⲁ̀ⲡ̀ϣⲱⲓ ⲥⲁⲟⲩⲓ̀ⲛⲁⲙ ⲙ̀ⲡⲉⲥⲙⲉⲛⲣⲓⲧ: ⲉ̀ⲥⲧⲱⲃϩ ⲙ̀ⲙⲟϥ ⲉ̀ϩ̀ⲣⲏⲓ ⲉ̀ϫⲱⲛ.\n\n+ Ⲕⲁⲧⲁ ⲫ̀ⲣⲏϯ ⲉ̀ⲧⲁϥϫⲟⲥ: ⲛ̀ϫⲉ Ⲇⲁⲩⲓⲇ ϧⲉⲛ ⲡⲓⲯ̀ⲁⲗⲟⲙⲥ: ϫⲉ ⲁⲥⲟ̀ϩⲓ ⲉ̀ⲣⲁⲧⲥ ⲛ̀ϫⲉ ϯⲟⲩⲣⲱ: ⲥⲁⲟⲩⲓ̀ⲛⲁⲙ ⲙ̀ⲙⲟⲕ ⲡ̀Ⲟⲩⲣⲟ.\n\nⲤⲟⲗⲟⲙⲱⲛ ⲙⲟⲩϯ ⲉⲣⲟⲥ: ϧⲉⲛ ⲡⲓϫⲱ ⲛ̀ⲧⲉ ⲛⲓϫⲱ: ϫⲉ ⲧⲁⲥⲱⲛⲓ ⲟⲩⲟϩ ⲧⲁϣ̀ⲫⲉⲣⲓ: ⲧⲁⲡⲟⲗⲓⲥ ⲙ̀ⲙⲏⲓ Ⲓⲉⲣⲟⲩⲥⲁⲗⲏⲙ.\n\n+ Ⲁϥϯⲙⲏⲓⲛⲓ ⲅⲁⲣ ⲉ̀ⲣⲟⲥ: ϧⲉⲛ ϩⲁⲛⲙⲏϣ ⲛ̀ⲣⲁⲛ ⲉⲩϭⲟⲥⲓ: ϫⲉ ⲁ̀ⲙⲏ ⲉ̀ⲃⲟⲗϧⲉⲛ ⲡⲉⲕⲏ̀ⲡⲟⲥ: ⲱ̀ ⲑⲏⲉ̀ⲧⲁⲥⲱⲧⲡ ⲛ̀ⲁ̀ⲣⲱⲙⲁⲧⲁ.\n\nⲬⲉⲣⲉ ⲛⲉ ⲱ̀ ϯⲠⲁⲣⲑⲉⲛⲟⲥ: ϯⲟⲩⲣⲱ ⲙ̀ⲙⲏⲓ ⲛ̀ⲁ̀ⲗⲏⲑⲓⲛⲏ: ⲭⲉⲣⲉ ⲡ̀ϣⲟⲩϣⲟⲩ ⲛ̀ⲧⲉ ⲡⲉⲛⲅⲉⲛⲟⲥ: ⲁⲣⲉϫ̀ⲫⲟ ⲛⲁⲛ ⲛ̀Ⲉⲙⲙⲁⲛⲟⲩⲏⲗ.\n\n+ Ⲧⲉⲛϯϩⲟ ⲁ̀ⲣⲉⲡⲉⲛⲙⲉⲩⲓ̀: ⲱ̀ ϯⲡ̀ⲣⲟⲥⲧⲁⲧⲏⲥ ⲉ̀ⲧⲉⲛϩⲟⲧ: ⲛⲁϩⲣⲉⲛ ⲡⲉⲛⲟ̅ⲥ̅ Ⲓⲏ̅ⲥ̅ Ⲡⲭ̅ⲥ̅: ⲛ̀ⲧⲉϥⲭⲁ ⲛⲉⲛⲛⲟⲃⲓ ⲛⲁⲛ ⲉ̀ⲃⲟⲗ.",
-      arabicTranslation: "زينة مريم في السموات العلوية عن يمين حبيبها تطلب منه عنا\n\nكما قال داود المرتل في المزمور: قامت الملكة عن يمينك أيها الملك\n\nسليمان دعاها في نشيد الأنشاد قائلاً أختي و صديقتي المدينة الحقيقية أورشليم\n\nلأنه أعطي علامة عنها بأسماء كثيرة عالية قائلاً: أخرجي من بستانك أيتها العنبر المختار\n\nالسلام لك أيتها العذراء الملكة الحقيقية. السلام لفخر جنسنا ولدت لنا عمانوئيل\n\nنسألك أذكرينا أيتها الشفيعة المؤتمنة أمام ربنا يسوع المسيح ليغفر لنا خطايانا",
+      copticArabic:
+        "إري إبسول سيل إم ماريام : خين ني فيؤوي إتصا إبشوي : صا أووينام إمبيس مينريت :إس طوبه إمموف إ إهري إجون\n\nكاطا إفريتي إطاف جوس :إنجيه دافيد خين بي بسالموس : جيه أس أوهي إراتس إنجيه تي أوورو :صا أووينام إمموك إب أوورو\n\nسولومون مووتي إروس :خين بي جو إنتيه ني جو :جيه طاسوني أووه طا إشفيري :طا بوليس إممي ييروساليم\n\nأفتي ميني غار إروس :خين هان ميش إنران إفتشوسي جيه أمي إفول خين بيكيبوس : أو ثي إتسوتب إن أروماطا\n\nشيري ني أو تي بارثينوس : تي أوورو إممي إن أليثيني : شيري إبشووشوو إنتيه بين جينوس : أري إجفو نان إن إممانوئيل\n\nتين تيهو أري بين ميفي : أوتي بروستاتيس إتينهوت : ناهرين بين تشويس إيسوس بي خريستوس : إنتيف كا نين نوفي نان إيفول",
+      copticcoptic:
+        "Ⲉ̀ⲣⲉ ⲡ̀ⲥⲟⲗⲥⲉⲗ ⲙ̀Ⲙⲁⲣⲓⲁⲙ: ϧⲉⲛ ⲛⲓⲫⲏⲟⲩⲓ̀ ⲉⲧ̀ⲥⲁ̀ⲡ̀ϣⲱⲓ ⲥⲁⲟⲩⲓ̀ⲛⲁⲙ ⲙ̀ⲡⲉⲥⲙⲉⲛⲣⲓⲧ: ⲉ̀ⲥⲧⲱⲃϩ ⲙ̀ⲙⲟϥ ⲉ̀ϩ̀ⲣⲏⲓ ⲉ̀ϫⲱⲛ.\n\n+ Ⲕⲁⲧⲁ ⲫ̀ⲣⲏϯ ⲉ̀ⲧⲁϥϫⲟⲥ: ⲛ̀ϫⲉ Ⲇⲁⲩⲓⲇ ϧⲉⲛ ⲡⲓⲯ̀ⲁⲗⲟⲙⲥ: ϫⲉ ⲁⲥⲟ̀ϩⲓ ⲉ̀ⲣⲁⲧⲥ ⲛ̀ϫⲉ ϯⲟⲩⲣⲱ: ⲥⲁⲟⲩⲓ̀ⲛⲁⲙ ⲙ̀ⲙⲟⲕ ⲡ̀Ⲟⲩⲣⲟ.\n\nⲤⲟⲗⲟⲙⲱⲛ ⲙⲟⲩϯ ⲉⲣⲟⲥ: ϧⲉⲛ ⲡⲓϫⲱ ⲛ̀ⲧⲉ ⲛⲓϫⲱ: ϫⲉ ⲧⲁⲥⲱⲛⲓ ⲟⲩⲟϩ ⲧⲁϣ̀ⲫⲉⲣⲓ: ⲧⲁⲡⲟⲗⲓⲥ ⲙ̀ⲙⲏⲓ Ⲓⲉⲣⲟⲩⲥⲁⲗⲏⲙ.\n\n+ Ⲁϥϯⲙⲏⲓⲛⲓ ⲅⲁⲣ ⲉ̀ⲣⲟⲥ: ϧⲉⲛ ϩⲁⲛⲙⲏϣ ⲛ̀ⲣⲁⲛ ⲉⲩϭⲟⲥⲓ: ϫⲉ ⲁ̀ⲙⲏ ⲉ̀ⲃⲟⲗϧⲉⲛ ⲡⲉⲕⲏ̀ⲡⲟⲥ: ⲱ̀ ⲑⲏⲉ̀ⲧⲁⲥⲱⲧⲡ ⲛ̀ⲁ̀ⲣⲱⲙⲁⲧⲁ.\n\nⲬⲉⲣⲉ ⲛⲉ ⲱ̀ ϯⲠⲁⲣⲑⲉⲛⲟⲥ: ϯⲟⲩⲣⲱ ⲙ̀ⲙⲏⲓ ⲛ̀ⲁ̀ⲗⲏⲑⲓⲛⲏ: ⲭⲉⲣⲉ ⲡ̀ϣⲟⲩϣⲟⲩ ⲛ̀ⲧⲉ ⲡⲉⲛⲅⲉⲛⲟⲥ: ⲁⲣⲉϫ̀ⲫⲟ ⲛⲁⲛ ⲛ̀Ⲉⲙⲙⲁⲛⲟⲩⲏⲗ.\n\n+ Ⲧⲉⲛϯϩⲟ ⲁ̀ⲣⲉⲡⲉⲛⲙⲉⲩⲓ̀: ⲱ̀ ϯⲡ̀ⲣⲟⲥⲧⲁⲧⲏⲥ ⲉ̀ⲧⲉⲛϩⲟⲧ: ⲛⲁϩⲣⲉⲛ ⲡⲉⲛⲟ̅ⲥ̅ Ⲓⲏ̅ⲥ̅ Ⲡⲭ̅ⲥ̅: ⲛ̀ⲧⲉϥⲭⲁ ⲛⲉⲛⲛⲟⲃⲓ ⲛⲁⲛ ⲉ̀ⲃⲟⲗ.",
+      arabicTranslation:
+        "زينة مريم في السموات العلوية عن يمين حبيبها تطلب منه عنا\n\nكما قال داود المرتل في المزمور: قامت الملكة عن يمينك أيها الملك\n\nسليمان دعاها في نشيد الأنشاد قائلاً أختي و صديقتي المدينة الحقيقية أورشليم\n\nلأنه أعطي علامة عنها بأسماء كثيرة عالية قائلاً: أخرجي من بستانك أيتها العنبر المختار\n\nالسلام لك أيتها العذراء الملكة الحقيقية. السلام لفخر جنسنا ولدت لنا عمانوئيل\n\nنسألك أذكرينا أيتها الشفيعة المؤتمنة أمام ربنا يسوع المسيح ليغفر لنا خطايانا",
     },
     {
       id: "k3",
@@ -109,9 +112,12 @@ const preparatoryVideos: StageVideos = {
       id: "s1",
       title: "أوشية المسافرين (قبطي + عربي)",
       url: `${BASE_URL}/T_rabaa-1_v2ci2f.mp4`,
-      copticArabic: "طوبه إيجين نينيوتى نيم نين إسنيو إيطاف شى إى إبشيممو يى نى إثميفئى إيشى خين ماى نيفين سوتون نومويت تيرو إيتى إيفول هيتين إفيوم يى نى ياروؤو يى نيليمنى يى نيمويت إمموش يى إفئيرى إمبو جينموشى إن ريتى نيفين هينا إنتى بى إخرستوس بيننوتى تاسطوؤو إى نيئتى نؤو إم ما إن شوبى خين أو هيرينى إنتيف كانين نوفى نان إيفول.",
-      copticcoptic: "Ⲧⲱⲃϩ ⲉ̀ϫⲉⲛ ⲛⲉⲛⲓⲟϯ ⲛⲉⲙ ⲛⲉⲛⲥ̀ⲛⲏⲟⲩ ⲉ̀ⲧⲁⲩϣⲉ ⲉ̀ⲡ̀ϣⲉⲙⲙⲟ: ⲓⲉ ⲛⲏⲉⲑⲙⲉⲩⲓ ⲉ̀ϣⲉ ϧⲉⲛ ⲙⲁⲓ ⲛⲓⲃⲉⲛ: ⲥⲟⲩⲧⲱⲛ ⲛⲟⲩⲙⲱⲓⲧ ⲧⲏⲣⲟⲩ: ⲓ̀ⲧⲉ ⲉ̀ⲃⲟⲗ ϩⲓⲧⲉⲛ ⲫ̀ⲓⲟⲙ: ⲓⲉ ⲛⲓⲓⲁⲣⲱⲟⲩ: ⲓⲉ ⲛⲓⲗⲩⲙⲛⲏ ⲓⲉ ⲛⲓⲙⲱⲓⲧ ⲙ̀ⲙⲟϣⲓ: ⲓⲉ ⲡⲓⲁ̀ⲏⲣ ⲓⲉ ⲉⲩⲓ̀ⲣⲓ ⲙ̀ⲡⲟⲩϫⲓⲛⲙⲟϣⲓ ⲛ̀ⲣⲏϯ ⲛⲓⲃⲉⲛ: ϩⲓⲛⲁ ⲛ̀ⲧⲉ Ⲡⲓⲭ̀ⲣⲓⲥⲧⲟⲥ Ⲡⲉⲛⲛⲟⲩϯ ⲧⲁⲥⲑⲱⲟⲩ ⲉ̀ⲛⲏⲉ̀ⲧⲉ ⲛⲟⲩⲟⲩ ⲙ̀ⲙⲁ ⲛ̀ϣⲱⲛⲓ ϧⲉⲛ ⲟⲩϩⲓⲣⲏⲛⲏ: ⲛ̀ⲧⲉϥⲭⲁ ⲛⲉⲛⲛⲟⲃⲓ ⲛⲁⲛ ⲉ̀ⲃⲟⲗ.",
-      arabicTranslation: "أُطلبوا عن آبائنا وإخوتنا المسافرين، والذين يضمرون السفر في كل موضع، لكي يُسهل طرقهم أجمعين إن كان في البحر أو الأنهار أو البحيرات أو الطرق المسلوكة أو الجو أو المسافرين بكل نوع، لكي المسيح إلهنا يردهم إلى مساكنهم سالمين، ويغفر لنا خطايانا.",
+      copticArabic:
+        "طوبه إيجين نينيوتى نيم نين إسنيو إيطاف شى إى إبشيممو يى نى إثميفئى إيشى خين ماى نيفين سوتون نومويت تيرو إيتى إيفول هيتين إفيوم يى نى ياروؤو يى نيليمنى يى نيمويت إمموش يى إفئيرى إمبو جينموشى إن ريتى نيفين هينا إنتى بى إخرستوس بيننوتى تاسطوؤو إى نيئتى نؤو إم ما إن شوبى خين أو هيرينى إنتيف كانين نوفى نان إيفول.",
+      copticcoptic:
+        "Ⲧⲱⲃϩ ⲉ̀ϫⲉⲛ ⲛⲉⲛⲓⲟϯ ⲛⲉⲙ ⲛⲉⲛⲥ̀ⲛⲏⲟⲩ ⲉ̀ⲧⲁⲩϣⲉ ⲉ̀ⲡ̀ϣⲉⲙⲙⲟ: ⲓⲉ ⲛⲏⲉⲑⲙⲉⲩⲓ ⲉ̀ϣⲉ ϧⲉⲛ ⲙⲁⲓ ⲛⲓⲃⲉⲛ: ⲥⲟⲩⲧⲱⲛ ⲛⲟⲩⲙⲱⲓⲧ ⲧⲏⲣⲟⲩ: ⲓ̀ⲧⲉ ⲉ̀ⲃⲟⲗ ϩⲓⲧⲉⲛ ⲫ̀ⲓⲟⲙ: ⲓⲉ ⲛⲓⲓⲁⲣⲱⲟⲩ: ⲓⲉ ⲛⲓⲗⲩⲙⲛⲏ ⲓⲉ ⲛⲓⲙⲱⲓⲧ ⲙ̀ⲙⲟϣⲓ: ⲓⲉ ⲡⲓⲁ̀ⲏⲣ ⲓⲉ ⲉⲩⲓ̀ⲣⲓ ⲙ̀ⲡⲟⲩϫⲓⲛⲙⲟϣⲓ ⲛ̀ⲣⲏϯ ⲛⲓⲃⲉⲛ: ϩⲓⲛⲁ ⲛ̀ⲧⲉ Ⲡⲓⲭ̀ⲣⲓⲥⲧⲟⲥ Ⲡⲉⲛⲛⲟⲩϯ ⲧⲁⲥⲑⲱⲟⲩ ⲉ̀ⲛⲏⲉ̀ⲧⲉ ⲛⲟⲩⲟⲩ ⲙ̀ⲙⲁ ⲛ̀ϣⲱⲛⲓ ϧⲉⲛ ⲟⲩϩⲓⲣⲏⲛⲏ: ⲛ̀ⲧⲉϥⲭⲁ ⲛⲉⲛⲛⲟⲃⲓ ⲛⲁⲛ ⲉ̀ⲃⲟⲗ.",
+      arabicTranslation:
+        "أُطلبوا عن آبائنا وإخوتنا المسافرين، والذين يضمرون السفر في كل موضع، لكي يُسهل طرقهم أجمعين إن كان في البحر أو الأنهار أو البحيرات أو الطرق المسلوكة أو الجو أو المسافرين بكل نوع، لكي المسيح إلهنا يردهم إلى مساكنهم سالمين، ويغفر لنا خطايانا.",
     },
     {
       id: "s2",
@@ -165,10 +171,13 @@ const preparatoryVideos: StageVideos = {
       id: "hs3",
       title: "مرد الابركسيس الأحد الأول (شيري غبريل بي نشتي ان ارشي انجيلوس)",
       url: "",
-      copticArabic: "شيرى غابرييل : بى نيشتى إن أرشى أنجيلوس : شيرى فى إيطاف هى شينوفى : إم ماريا تى بارثينوس .",
-      copticcoptic: "Ⲭⲉⲣⲉ Ⲅⲁⲃⲣⲓⲏⲗ: ⲡⲓⲛⲓϣϯ ⲛ̀ⲁⲣⲭⲏⲁⲅⲅⲉⲗⲟⲥ: ⲭⲉⲣⲉ ⲫⲏⲉ̀ⲧⲁϥϩⲓϣⲉⲛⲛⲟⲩϥⲓ: ⲙ̀Ⲙⲁⲣⲓⲁ Ϯⲡⲁⲣⲑⲉⲛⲟⲥ.",
-      arabicTranslation: "السلام لغبريال ، رئيس الملائكة العظيم ، السلام للذى بشر ، مريم العذراء .",
-      hazzatImage:"/photos/شيريه غابرييل بي نيشتي.png",
+      copticArabic:
+        "شيرى غابرييل : بى نيشتى إن أرشى أنجيلوس : شيرى فى إيطاف هى شينوفى : إم ماريا تى بارثينوس .",
+      copticcoptic:
+        "Ⲭⲉⲣⲉ Ⲅⲁⲃⲣⲓⲏⲗ: ⲡⲓⲛⲓϣϯ ⲛ̀ⲁⲣⲭⲏⲁⲅⲅⲉⲗⲟⲥ: ⲭⲉⲣⲉ ⲫⲏⲉ̀ⲧⲁϥϩⲓϣⲉⲛⲛⲟⲩϥⲓ: ⲙ̀Ⲙⲁⲣⲓⲁ Ϯⲡⲁⲣⲑⲉⲛⲟⲥ.",
+      arabicTranslation:
+        "السلام لغبريال ، رئيس الملائكة العظيم ، السلام للذى بشر ، مريم العذراء .",
+      hazzatImage: "/photos/شيريه غابرييل بي نيشتي.png",
     },
   ],
 };
@@ -181,9 +190,10 @@ export default function PreparatoryPage() {
   const [showCopticArabic, setShowCopticArabic] = useState(true);
   const [showArabic, setShowArabic] = useState(true);
   const [showCoptic, setShowCoptic] = useState(true);
-  const [showLanguageMenu, setShowLanguageMenu] = useState(false);
   const [fontSize, setFontSize] = useState(16);
   const [showHazzat, setShowHazzat] = useState(false);
+  const [rotateFromSidebar, setRotateFromSidebar] = useState(false);
+  const [showControlsPanel, setShowControlsPanel] = useState(false);
 
   useEffect(() => {
     if (selectedStage) {
@@ -194,8 +204,23 @@ export default function PreparatoryPage() {
   }, [selectedStage]);
 
   const visibleColumns = [showCopticArabic, showArabic, showCoptic].filter(
-    Boolean,
+    Boolean
   ).length;
+
+  const disabledColumns = 3 - visibleColumns;
+  const maxFontSize = 20 + disabledColumns * 2;
+
+  const increaseFontSize = () => {
+    setFontSize((prev) => Math.min(prev + 1, maxFontSize));
+  };
+
+  const decreaseFontSize = () => {
+    setFontSize((prev) => Math.max(prev - 1, 14));
+  };
+
+  useEffect(() => {
+    setFontSize((prev) => Math.min(prev, maxFontSize));
+  }, [maxFontSize]);
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-950 text-white font-sans">
@@ -283,107 +308,146 @@ export default function PreparatoryPage() {
       {/* --- مودال النصوص --- */}
       {fullscreenLyrics && (
         <div className="fixed inset-0 z-[100] bg-black flex flex-col overflow-hidden">
-          <header className="sticky top-0 z-50 p-3 md:p-4 bg-gray-900 border-b border-white/10 flex justify-between items-center gap-2">
-            <h2 className="text-blue-400 font-bold text-sm md:text-lg truncate flex-1">
+          <header className="sticky top-0 z-50 p-3 md:p-4 bg-gray-900 border-b border-white/10 flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-shrink-0">
+              <div className="relative">
+                <button
+                  onClick={() => setShowControlsPanel((prev) => !prev)}
+                  className="w-10 h-10 rounded-full bg-gray-900/90 border border-white/20 flex flex-col items-center justify-center gap-0.5 hover:bg-gray-800 transition-all"
+                  aria-label="إعدادات النص"
+                >
+                  <span className="w-5 h-0.5 bg-white rounded-full" />
+                  <span className="w-5 h-0.5 bg-white rounded-full" />
+                  <span className="w-5 h-0.5 bg-white rounded-full" />
+                </button>
+
+                {showControlsPanel && (
+                  <div className="absolute top-full mt-2 left-1/3 -translate-x-1/3 md:left-auto md:right-0 md:translate-x-0 w-56 md:w-64 max-w-[90vw] z-30 bg-gray-900/95 border border-white/10 rounded-2xl shadow-2xl flex flex-col gap-4 p-4 backdrop-blur">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-semibold text-gray-200">
+                        إعدادات النص
+                      </span>
+                      <button
+                        onClick={() => setShowControlsPanel(false)}
+                        className="w-7 h-7 flex items-center justify-center rounded-full bg-gray-800 hover:bg-gray-700 text-sm"
+                      >
+                        ✕
+                      </button>
+                    </div>
+
+                    <div className="flex flex-col gap-2">
+                      <span className="text-[11px] text-gray-400">
+                        حجم الخط
+                      </span>
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={decreaseFontSize}
+                          className="w-9 h-9 bg-gray-800 hover:bg-gray-700 rounded-lg border border-gray-700 flex items-center justify-center transition-all"
+                        >
+                          <span className="text-lg">-</span>
+                        </button>
+                        <span className="flex-1 text-center text-sm text-gray-100">
+                          {fontSize}
+                        </span>
+                        <button
+                          onClick={increaseFontSize}
+                          className="w-9 h-9 bg-gray-800 hover	bg-gray-700 rounded-lg border border-gray-700 flex items-center justify-center transition-all"
+                        >
+                          <span className="text-lg">+</span>
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col gap-2">
+                      <span className="text-[11px] text-gray-400">اللغات</span>
+                      <div className="flex flex-col gap-2">
+                        <button
+                          onClick={() => setShowArabic(!showArabic)}
+                          className={`px-3 py-2 rounded-lg text-xs font-bold border transition-all ${
+                            showArabic
+                              ? "bg-blue-600 border-blue-400 text-white"
+                              : "bg-gray-800 border-gray-700 text-gray-300"
+                          }`}
+                        >
+                          عربي
+                        </button>
+                        <button
+                          onClick={() => setShowCopticArabic(!showCopticArabic)}
+                          className={`px-3 py-2 rounded-lg text-xs font-bold border transition-all ${
+                            showCopticArabic
+                              ? "bg-emerald-600 border-emerald-400 text-white"
+                              : "bg-gray-800 border-gray-700 text-gray-300"
+                          }`}
+                        >
+                          قبطي معرب
+                        </button>
+                        <button
+                          onClick={() => setShowCoptic(!showCoptic)}
+                          className={`px-3 py-2 rounded-lg text-xs font-bold border transition-all ${
+                            showCoptic
+                              ? "bg-indigo-600 border-indigo-400 text-white"
+                              : "bg-gray-800 border-gray-700 text-gray-300"
+                          }`}
+                        >
+                          قبطي
+                        </button>
+                      </div>
+                    </div>
+
+                    {(() => {
+                      const count = [
+                        fullscreenLyrics.hazzatImage,
+                        fullscreenLyrics.hazzatImage2,
+                        fullscreenLyrics.hazzatImage3,
+                      ].filter(Boolean).length;
+                      return (
+                        count > 0 && (
+                          <button
+                            onClick={() => setShowHazzat(!showHazzat)}
+                            className={`w-full px-3 py-2 rounded-lg font-bold text-xs flex items-center justify-center gap-2 transition-all ${
+                              showHazzat
+                                ? "bg-yellow-600 hover:bg-yellow-700"
+                                : "bg-purple-600 hover:bg-purple-700"
+                            }`}
+                          >
+                            <span>🎵</span>
+                            <span>
+                              {showHazzat ? "إخفاء الهزات" : "هزات اللحن"}
+                            </span>
+                          </button>
+                        )
+                      );
+                    })()}
+
+                    <button
+                      onClick={() => {
+                        const btn = document.getElementById(
+                          "landscape-toggle-button"
+                        ) as HTMLButtonElement | null;
+                        if (btn) {
+                          btn.click();
+                          setRotateFromSidebar((prev) => !prev);
+                        }
+                      }}
+                      className="w-full px-3 py-2 rounded-lg font-bold text-xs bg-gray-800 hover:bg-gray-700 border border-gray-700 text-gray-100 transition-all"
+                    >
+                      تدوير الشاشة
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <h2 className="text-blue-400 font-bold text-sm md:text-lg flex-1 text-center md:text-right">
               {fullscreenLyrics.title}
             </h2>
-
-            {/* Font size controls */}
-            <div className="flex items-center gap-2 flex-shrink-0">
-              <button
-                onClick={() => setFontSize((p) => Math.max(p - 1, 14))}
-                className="w-10 h-10 bg-gray-800 hover:bg-gray-700 rounded-lg border border-gray-700 flex items-center justify-center transition-all"
-              >
-                <span className="text-xl">-</span>
-              </button>
-              <span className="text-sm px-2">{fontSize}</span>
-              <button
-                onClick={() => setFontSize((p) => Math.min(p + 1, 20))}
-                className="w-10 h-10 bg-gray-800 hover:bg-gray-700 rounded-lg border border-gray-700 flex items-center justify-center transition-all"
-              >
-                <span className="text-xl">+</span>
-              </button>
-            </div>
-
-            {/* Hazzat button */}
-            {(() => {
-              const count = [
-                fullscreenLyrics.hazzatImage,
-                fullscreenLyrics.hazzatImage2,
-                fullscreenLyrics.hazzatImage3,
-              ].filter(Boolean).length;
-              return (
-                count > 0 && (
-                  <button
-                    onClick={() => setShowHazzat(!showHazzat)}
-                    className={`px-4 py-2 rounded-lg font-bold text-sm transition-all flex items-center gap-2 flex-shrink-0 ${
-                      showHazzat
-                        ? "bg-yellow-600 hover:bg-yellow-700"
-                        : "bg-purple-600 hover:bg-purple-700"
-                    }`}
-                  >
-                    <span>🎵</span>
-                    <span className="hidden md:inline">
-                      {showHazzat ? "إخفاء الهزات" : "هزات اللحن"}
-                    </span>
-                    {count > 1 && (
-                      <span className="bg-white/20 px-2 py-0.5 rounded-full text-xs">
-                        {count}
-                      </span>
-                    )}
-                  </button>
-                )
-              );
-            })()}
-
-            {/* Language menu */}
-            <div className="relative flex-shrink-0">
-              <button
-                onClick={() => setShowLanguageMenu(!showLanguageMenu)}
-                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg font-bold text-sm transition-all"
-              >
-                اللغة
-              </button>
-              {showLanguageMenu && (
-                <div className="absolute left-0 mt-2 bg-gray-800 border border-gray-700 rounded-lg shadow-2xl p-4 min-w-[180px] z-[51]">
-                  <div className="flex flex-col gap-3">
-                    {[
-                      { label: "عربي", val: showArabic, set: setShowArabic },
-                      {
-                        label: "قبطي معرب",
-                        val: showCopticArabic,
-                        set: setShowCopticArabic,
-                      },
-                      { label: "قبطي", val: showCoptic, set: setShowCoptic },
-                    ].map(({ label, val, set }) => (
-                      <label
-                        key={label}
-                        className="flex items-center gap-2 cursor-pointer hover:bg-gray-700 p-2 rounded transition-all"
-                      >
-                        <input
-                          type="checkbox"
-                          checked={val}
-                          onChange={(e) => set(e.target.checked)}
-                          className="w-5 h-5 accent-blue-600"
-                        />
-                        <span className="text-sm">{label}</span>
-                      </label>
-                    ))}
-                  </div>
-                  <button
-                    onClick={() => setShowLanguageMenu(false)}
-                    className="w-full mt-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm transition-all"
-                  >
-                    إغلاق
-                  </button>
-                </div>
-              )}
-            </div>
 
             <button
               onClick={() => {
                 setFullscreenLyrics(null);
                 setShowHazzat(false);
+                setRotateFromSidebar(false);
+                setShowControlsPanel(false);
               }}
               className="text-2xl p-2 hover:bg-white/10 rounded-lg transition-colors flex-shrink-0"
             >
@@ -391,111 +455,170 @@ export default function PreparatoryPage() {
             </button>
           </header>
 
-          <div className="flex-1 overflow-y-auto bg-gray-950 p-2 md:p-6">
-            <div className="w-full max-w-7xl mx-auto">
-              {(() => {
-                const coptic = (fullscreenLyrics.copticcoptic || "").split(
-                  "\n\n",
-                );
-                const copticAr = (fullscreenLyrics.copticArabic || "").split(
-                  "\n\n",
-                );
-                const arabic = (fullscreenLyrics.arabicTranslation || "").split(
-                  "\n\n",
-                );
-                const maxParts = Math.max(
-                  coptic.length,
-                  copticAr.length,
-                  arabic.length,
-                );
+          <div className="relative flex flex-1 overflow-hidden">
+            <div className="flex-1 overflow-y-auto bg-gray-950 p-2 md:p-6">
+              <div className="w-full max-w-7xl mx-auto">
+                {(() => {
+                  const coptic = (fullscreenLyrics.copticcoptic || "").split(
+                    "\n\n"
+                  );
+                  const copticAr = (fullscreenLyrics.copticArabic || "").split(
+                    "\n\n"
+                  );
+                  const arabic = (
+                    fullscreenLyrics.arabicTranslation || ""
+                  ).split("\n\n");
+                  const maxParts = Math.max(
+                    coptic.length,
+                    copticAr.length,
+                    arabic.length
+                  );
 
-                return Array.from({ length: maxParts }).map((_, i) => (
-                  <div
-                    key={i}
-                    className="lyrics-row"
-                    style={{ ["--grid-columns" as any]: visibleColumns }}
-                  >
-                    {showCopticArabic && (
-                      <div
-                        dir="rtl"
-                        lang="ar-EG"
-                        className="lyrics-col lyrics-col-coptic-arabic"
-                        style={{ ["--font-size" as any]: `${fontSize}px` }}
-                      >
-                        {copticAr[i] || "-"}
-                      </div>
-                    )}
-                     {showArabic && (
-                      <div
-                        dir="rtl"
-                        lang="ar"
-                        className="lyrics-col lyrics-col-arabic"
-                        style={
-                          {
-                            "--font-size": `${fontSize + 3}px`,
-                            fontStyle: "normal", // لإلغاء أي ميلان
-                            fontWeight: "normal", // اختياري: لضمان عدم وجود سماكة مفرطة
-                            fontFamily:
-                              "'Amiri', 'Traditional Arabic', 'Simplified Arabic', serif", // أفضل الخطوط لنمط النسخ
-                          } as React.CSSProperties & { "--font-size": string }
-                        }
-                      >
-                        {arabic[i] || "-"}
-                      </div>
-                    )}
-                    {showCoptic && (
-                      <div
-                        dir="ltr"
-                        lang="cop"
-                        className="lyrics-col lyrics-col-coptic"
-                        style={{ ["--font-size" as any]: `${fontSize}px` }}
-                      >
-                        {coptic[i] || "-"}
-                      </div>
-                    )}
-                  </div>
-                ));
-              })()}
+                  let currentQuarter = 0;
 
-              {/* Hazzat images */}
-              {showHazzat &&
-                (fullscreenLyrics.hazzatImage ||
-                  fullscreenLyrics.hazzatImage2 ||
-                  fullscreenLyrics.hazzatImage3) && (
-                  <div className="mt-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                    <div className="bg-gradient-to-r from-purple-900/30 to-yellow-900/30 border border-purple-500/30 rounded-xl p-4 mb-6">
-                      <h3 className="text-2xl font-bold text-center text-yellow-400 flex items-center justify-center gap-3">
-                        <span>🎵</span> هزات اللحن <span>🎵</span>
-                      </h3>
+                  const isPsalm150Full =
+                    fullscreenLyrics.title &&
+                    fullscreenLyrics.title.includes("المزمور ال150") &&
+                    fullscreenLyrics.title.includes("الهوس الرابع");
+
+                  const disableQuarterNumbers =
+                    !isPsalm150Full && maxParts <= 3;
+
+                  return Array.from({ length: maxParts }).map((_, i) => {
+                    const arText = arabic[i] || "";
+                    const caText = copticAr[i] || "";
+                    const cText = coptic[i] || "";
+                    const headerSource = arText || caText || cText;
+
+                    const isAfEranav =
+                      isPsalm150Full &&
+                      (headerSource.includes("اف ايراناف") ||
+                        headerSource.includes("Ⲉϥⲉ̀ⲣⲁⲛⲁϥ"));
+
+                    const isSectionHeader =
+                      !isAfEranav &&
+                      (headerSource.includes("القطعة") ||
+                        headerSource.includes("المزمور"));
+
+                    if (!disableQuarterNumbers) {
+                      if (isSectionHeader) {
+                        currentQuarter = 0;
+                      } else if (!isAfEranav) {
+                        currentQuarter += 1;
+                      }
+                    }
+
+                    const quarterNumber =
+                      disableQuarterNumbers || isSectionHeader || isAfEranav
+                        ? null
+                        : currentQuarter;
+
+                    return (
+                      <div
+                        key={i}
+                        className={`lyrics-row ${
+                          isSectionHeader ? "lyrics-row-section" : ""
+                        }`}
+                        style={{ ["--grid-columns" as any]: visibleColumns }}
+                      >
+                        <div className="lyrics-quarter">
+                          {quarterNumber !== null && (
+                            <div className="lyrics-quarter-badge">
+                              {quarterNumber}
+                            </div>
+                          )}
+                        </div>
+
+                        {showCopticArabic && (
+                          <div
+                            dir="rtl"
+                            lang="ar-EG"
+                            className={`lyrics-col lyrics-col-coptic-arabic ${
+                              isSectionHeader ? "lyrics-section-text" : ""
+                            }`}
+                            style={{ ["--font-size" as any]: `${fontSize}px` }}
+                          >
+                            {copticAr[i] || "-"}
+                          </div>
+                        )}
+                        {showArabic && (
+                          <div
+                            dir="rtl"
+                            lang="ar"
+                            className={`lyrics-col lyrics-col-arabic ${
+                              isSectionHeader ? "lyrics-section-text" : ""
+                            }`}
+                            style={
+                              {
+                                "--font-size": `${fontSize + 3}px`,
+                                fontStyle: "normal",
+                                fontWeight: "normal",
+                                fontFamily:
+                                  "'Amiri', 'Traditional Arabic', 'Simplified Arabic', serif",
+                              } as React.CSSProperties & {
+                                "--font-size": string;
+                              }
+                            }
+                          >
+                            {arabic[i] || "-"}
+                          </div>
+                        )}
+                        {showCoptic && (
+                          <div
+                            dir="ltr"
+                            lang="cop"
+                            className={`lyrics-col lyrics-col-coptic ${
+                              isSectionHeader ? "lyrics-section-text" : ""
+                            }`}
+                            style={{ ["--font-size" as any]: `${fontSize}px` }}
+                          >
+                            {coptic[i] || "-"}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  });
+                })()}
+
+                {showHazzat &&
+                  (fullscreenLyrics.hazzatImage ||
+                    fullscreenLyrics.hazzatImage2 ||
+                    fullscreenLyrics.hazzatImage3) && (
+                    <div className="mt-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                      <div className="bg-gradient-to-r from-purple-900/30 to-yellow-900/30 border border-purple-500/30 rounded-xl p-4 mb-6">
+                        <h3 className="text-2xl font-bold text-center text-yellow-400 flex items-center justify-center gap-3">
+                          <span>🎵</span> هزات اللحن <span>🎵</span>
+                        </h3>
+                      </div>
+                      <div className="flex flex-col items-stretch">
+                        {fullscreenLyrics.hazzatImage && (
+                          <img
+                            src={fullscreenLyrics.hazzatImage}
+                            alt="هزات اللحن 1"
+                            className="block w-full"
+                            draggable={false}
+                          />
+                        )}
+                        {fullscreenLyrics.hazzatImage2 && (
+                          <img
+                            src={fullscreenLyrics.hazzatImage2}
+                            alt="هزات اللحن 2"
+                            className="block w-full"
+                            draggable={false}
+                          />
+                        )}
+                        {fullscreenLyrics.hazzatImage3 && (
+                          <img
+                            src={fullscreenLyrics.hazzatImage3}
+                            alt="هزات اللحن 3"
+                            className="block w-full"
+                            draggable={false}
+                          />
+                        )}
+                      </div>
                     </div>
-                    <div className="flex flex-col items-stretch">
-                      {fullscreenLyrics.hazzatImage && (
-                        <img
-                          src={fullscreenLyrics.hazzatImage}
-                          alt="هزات اللحن 1"
-                          className="block w-full"
-                          draggable={false}
-                        />
-                      )}
-                      {fullscreenLyrics.hazzatImage2 && (
-                        <img
-                          src={fullscreenLyrics.hazzatImage2}
-                          alt="هزات اللحن 2"
-                          className="block w-full"
-                          draggable={false}
-                        />
-                      )}
-                      {fullscreenLyrics.hazzatImage3 && (
-                        <img
-                          src={fullscreenLyrics.hazzatImage3}
-                          alt="هزات اللحن 3"
-                          className="block w-full"
-                          draggable={false}
-                        />
-                      )}
-                    </div>
-                  </div>
-                )}
+                  )}
+              </div>
             </div>
           </div>
         </div>
