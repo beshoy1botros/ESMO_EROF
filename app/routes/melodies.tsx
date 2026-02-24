@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import LazyVideo from "../components/LazyVideo";
@@ -1454,122 +1455,183 @@ export default function MelodiesPage() {
               <div className="relative">
                 <button
                   onClick={() => setShowControlsPanel((prev) => !prev)}
-                  className="w-10 h-10 rounded-full bg-gray-900/90 border border-white/20 flex flex-col items-center justify-center gap-0.5 hover:bg-gray-800 transition-all"
+                  className="w-10 h-10 rounded-full bg-gray-900/90 border border-blue-500/30 flex flex-col items-center justify-center gap-1 hover:bg-gray-800 transition-all shadow-[0_0_15px_rgba(59,130,246,0.2)] active:scale-90"
                   aria-label="إعدادات النص"
                 >
-                  <span className="w-5 h-0.5 bg-white rounded-full" />
-                  <span className="w-5 h-0.5 bg-white rounded-full" />
-                  <span className="w-5 h-0.5 bg-white rounded-full" />
+                  <motion.span
+                    animate={
+                      showControlsPanel
+                        ? { rotate: 45, y: 6 }
+                        : { rotate: 0, y: 0 }
+                    }
+                    className="w-5 h-0.5 bg-blue-400 rounded-full"
+                  />
+                  <motion.span
+                    animate={
+                      showControlsPanel
+                        ? { opacity: 0, x: -10 }
+                        : { opacity: 1, x: 0 }
+                    }
+                    className="w-5 h-0.5 bg-blue-400 rounded-full"
+                  />
+                  <motion.span
+                    animate={
+                      showControlsPanel
+                        ? { rotate: -45, y: -6 }
+                        : { rotate: 0, y: 0 }
+                    }
+                    className="w-5 h-0.5 bg-blue-400 rounded-full"
+                  />
                 </button>
 
-                {showControlsPanel && (
-                  <div className="absolute top-full mt-3 right-1/40 -translate-x-1/40 md:right-auto md:right-0 md:translate-x-0 w-56 md:w-64 max-w-[90vw] z-30 bg-gray-900/95 border border-white/10 rounded-2xl shadow-2xl flex flex-col gap-4 p-4 backdrop-blur">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-semibold text-gray-200">
-                        إعدادات النص
-                      </span>
-                      <button
-                        onClick={() => setShowControlsPanel(false)}
-                        className="w-7 h-7 flex items-center justify-center rounded-full bg-gray-800 hover:bg-gray-700 text-sm"
-                        aria-label="إغلاق الإعدادات"
-                      >
-                        ✕
-                      </button>
-                    </div>
-
-                    <div className="flex flex-col gap-2">
-                      <span className="text-[11px] text-gray-400">
-                        حجم الخط
-                      </span>
-                      <div className="flex items-center gap-2">
-                        <button
-                          onClick={decreaseFontSize}
-                          className="w-9 h-9 bg-gray-800 hover:bg-gray-700 rounded-lg border border-gray-700 flex items-center justify-center transition-all"
-                          aria-label="تصغير الخط"
-                        >
-                          <span className="text-lg">-</span>
-                        </button>
-                        <span className="flex-1 text-center text-sm text-gray-100">
-                          {fontSize}
-                        </span>
-                        <button
-                          onClick={increaseFontSize}
-                          className="w-9 h-9 bg-gray-800 hover:bg-gray-700 rounded-lg border border-gray-700 flex items-center justify-center transition-all"
-                          aria-label="تكبير الخط"
-                        >
-                          <span className="text-lg">+</span>
-                        </button>
-                      </div>
-                    </div>
-
-                    <div className="flex flex-col gap-2">
-                      <span className="text-[11px] text-gray-400">اللغات</span>
-                      <div className="flex flex-col gap-2">
-                        <button
-                          onClick={() => setShowArabic(!showArabic)}
-                          className={`px-3 py-2 rounded-lg text-xs font-bold border transition-all ${
-                            showArabic
-                              ? "bg-blue-600 border-blue-400 text-white"
-                              : "bg-gray-800 border-gray-700 text-gray-300"
-                          }`}
-                        >
-                          عربي
-                        </button>
-                        <button
-                          onClick={() => setShowCopticArabic(!showCopticArabic)}
-                          className={`px-3 py-2 rounded-lg text-xs font-bold border transition-all ${
-                            showCopticArabic
-                              ? "bg-emerald-600 border-emerald-400 text-white"
-                              : "bg-gray-800 border-gray-700 text-gray-300"
-                          }`}
-                        >
-                          قبطي معرب
-                        </button>
-                        <button
-                          onClick={() => setShowCoptic(!showCoptic)}
-                          className={`px-3 py-2 rounded-lg text-xs font-bold border transition-all ${
-                            showCoptic
-                              ? "bg-indigo-600 border-indigo-400 text-white"
-                              : "bg-gray-800 border-gray-700 text-gray-300"
-                          }`}
-                        >
-                          قبطي
-                        </button>
-                      </div>
-                    </div>
-
-                    {hazzatImagesCount > 0 && (
-                      <button
-                        onClick={() => setShowHazzat(!showHazzat)}
-                        className={`w-full px-3 py-2 rounded-lg font-bold text-xs flex items-center justify-center gap-2 transition-all ${
-                          showHazzat
-                            ? "bg-yellow-600 hover:bg-yellow-700"
-                            : "bg-purple-600 hover:bg-purple-700"
-                        }`}
-                      >
-                        <span className="text-lg">🎵</span>
-                        <span>
-                          {showHazzat ? "إخفاء الهزات" : "هزات اللحن"}
-                        </span>
-                      </button>
-                    )}
-
-                    <button
-                      onClick={() => {
-                        const btn = document.getElementById(
-                          "landscape-toggle-button"
-                        ) as HTMLButtonElement | null;
-                        if (btn) {
-                          btn.click();
-                          setRotateFromSidebar((prev) => !prev);
-                        }
+                <AnimatePresence>
+                  {showControlsPanel && (
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.9, y: -20, x: 10 }}
+                      animate={{ opacity: 1, scale: 1, y: 0, x: 0 }}
+                      exit={{ opacity: 0, scale: 0.9, y: -20, x: 10 }}
+                      transition={{
+                        type: "spring",
+                        damping: 20,
+                        stiffness: 300,
                       }}
-                      className="w-full px-3 py-2 rounded-lg font-bold text-xs bg-gray-800 hover:bg-gray-700 border border-gray-700 text-gray-100 transition-all"
+                      className="absolute top-full mt-3 right-0 w-64 max-w-[90vw] z-30 bg-gray-900/98 border border-blue-500/20 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex flex-col gap-5 p-5 backdrop-blur-xl"
                     >
-                      تدوير الشاشة
-                    </button>
-                  </div>
-                )}
+                      <div className="flex items-center justify-between border-b border-white/5 pb-3">
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+                          <span className="text-sm font-bold text-gray-100 tracking-wide">
+                            إعدادات العرض
+                          </span>
+                        </div>
+                        <button
+                          onClick={() => setShowControlsPanel(false)}
+                          className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-800 hover:bg-red-900/40 hover:text-red-400 transition-colors text-gray-400"
+                        >
+                          ✕
+                        </button>
+                      </div>
+
+                      <div className="flex flex-col gap-3">
+                        <label className="text-[11px] uppercase tracking-widest text-blue-400 font-bold px-1">
+                          حجم الخط
+                        </label>
+                        <div className="flex items-center gap-3 bg-gray-800/50 p-1.5 rounded-xl border border-white/5">
+                          <button
+                            onClick={decreaseFontSize}
+                            className="w-10 h-10 bg-gray-700 hover:bg-gray-600 active:scale-95 rounded-lg flex items-center justify-center transition-all shadow-lg"
+                          >
+                            <span className="text-xl font-bold text-blue-400">
+                              -
+                            </span>
+                          </button>
+                          <div className="flex-1 text-center">
+                            <span className="text-lg font-mono font-bold text-white">
+                              {fontSize}
+                            </span>
+                            <span className="text-[10px] block text-gray-500">
+                              px
+                            </span>
+                          </div>
+                          <button
+                            onClick={increaseFontSize}
+                            className="w-10 h-10 bg-gray-700 hover:bg-gray-600 active:scale-95 rounded-lg flex items-center justify-center transition-all shadow-lg"
+                          >
+                            <span className="text-xl font-bold text-blue-400">
+                              +
+                            </span>
+                          </button>
+                        </div>
+                      </div>
+
+                      <div className="flex flex-col gap-3">
+                        <label className="text-[11px] uppercase tracking-widest text-emerald-400 font-bold px-1">
+                          اللغات المفعلة
+                        </label>
+                        <div className="grid grid-cols-1 gap-2">
+                          {[
+                            {
+                              state: showArabic,
+                              setter: setShowArabic,
+                              label: "اللغة العربية",
+                              activeClass:
+                                "bg-blue-600/20 border-blue-500/50 text-blue-400 shadow-[inset_0_0_20px_rgba(0,0,0,0.2)]",
+                              dotClass:
+                                "bg-blue-400 shadow-[0_0_8px_rgba(59,130,246,0.5)]",
+                            },
+                            {
+                              state: showCopticArabic,
+                              setter: setShowCopticArabic,
+                              label: "قبطي معرب",
+                              activeClass:
+                                "bg-emerald-600/20 border-emerald-500/50 text-emerald-400 shadow-[inset_0_0_20px_rgba(0,0,0,0.2)]",
+                              dotClass:
+                                "bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.5)]",
+                            },
+                            {
+                              state: showCoptic,
+                              setter: setShowCoptic,
+                              label: "اللغة القبطية",
+                              activeClass:
+                                "bg-indigo-600/20 border-indigo-500/50 text-indigo-400 shadow-[inset_0_0_20px_rgba(0,0,0,0.2)]",
+                              dotClass:
+                                "bg-indigo-400 shadow-[0_0_8px_rgba(129,140,248,0.5)]",
+                            },
+                          ].map((lang) => (
+                            <button
+                              key={lang.label}
+                              onClick={() => lang.setter(!lang.state)}
+                              className={`group relative flex items-center justify-between px-4 py-3 rounded-xl font-bold text-xs transition-all duration-300 border ${
+                                lang.state
+                                  ? lang.activeClass
+                                  : "bg-gray-800/40 border-gray-700/50 text-gray-500 hover:bg-gray-800 hover:border-gray-600"
+                              }`}
+                            >
+                              <span>{lang.label}</span>
+                              <div
+                                className={`w-2 h-2 rounded-full transition-all duration-300 ${lang.state ? lang.dotClass : "bg-gray-700"}`}
+                              />
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="flex flex-col gap-2 pt-2 border-t border-white/5">
+                        {hazzatImagesCount > 0 && (
+                          <button
+                            onClick={() => setShowHazzat(!showHazzat)}
+                            className={`w-full px-4 py-3 rounded-xl font-bold text-xs flex items-center justify-center gap-3 transition-all duration-500 ${
+                              showHazzat
+                                ? "bg-yellow-600 text-white shadow-lg shadow-yellow-900/20"
+                                : "bg-gradient-to-r from-purple-600 to-indigo-600 text-white hover:scale-[1.02] active:scale-95"
+                            }`}
+                          >
+                            <span className="text-base animate-bounce">🎵</span>
+                            <span>
+                              {showHazzat ? "إخفاء الهزات" : "عرض هزات اللحن"}
+                            </span>
+                          </button>
+                        )}
+
+                        <button
+                          onClick={() => {
+                            const btn = document.getElementById(
+                              "landscape-toggle-button"
+                            ) as HTMLButtonElement | null;
+                            if (btn) {
+                              btn.click();
+                              setRotateFromSidebar((prev) => !prev);
+                            }
+                          }}
+                          className="w-full px-4 py-3 rounded-xl font-bold text-xs bg-gray-800 hover:bg-gray-700 border border-gray-700 text-gray-300 transition-all flex items-center justify-center gap-3"
+                        >
+                          <span className="text-base">🔄</span>
+                          تدوير الشاشة
+                        </button>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             </div>
 
