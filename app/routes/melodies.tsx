@@ -1208,20 +1208,18 @@ const stageVideoUrls = {
       `${BASE_URL}/University-2-2_scs9ub.mp4`,
       `${BASE_URL}/University-2-3_dinsks.mp4`,
     ],
-    gifted: ["", "", ""],
   },
   [StageKey.Servants]: {
     first: [
       `${BASE_URL}/Servants-1-1_e2hy5j.mp4`,
       `${BASE_URL}/Servants-1-2_jvaw8e.mp4`,
-      "",
+      `${BASE_URL}/Servants-1-3_zclwgc.mp4`,
     ],
     second: [
       `${BASE_URL}/Servants-2-1_etdtp4.mp4`,
       `${BASE_URL}/Middle-3-1_xixkl3.mp4`,
       `${BASE_URL}/Servants-2-3_ckqgj4.mp4`,
     ],
-    gifted: [""],
   },
   [StageKey.WeddingOfCana]: {
     first: [
@@ -1230,8 +1228,6 @@ const stageVideoUrls = {
       `${BASE_URL}/Khamsa_satta-1-4_eyonvs.mp4`,
       `${BASE_URL}/Talta_rabaa-1-1_ivpyzv.mp4`,
     ],
-    second: [],
-    gifted: [""],
   },
 } as const;
 
