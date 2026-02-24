@@ -56,7 +56,7 @@
 
   .home-background {
     position: relative;
-    background-image: url("/home.jpg");
+    background-image: url("/photos/home.jpg");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
