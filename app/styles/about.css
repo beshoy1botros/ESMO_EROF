@@ -62,6 +62,16 @@
   margin: var(--spacing-md) 0;
 }
 
+/* فئة الخط القبطي المدمج في النصوص */
+.coptic-inline {
+  font-family: "copt-main", "Noto Sans Coptic", sans-serif;
+  font-size: 1.2em;
+  color: #a78bfa; /* نفس لون accent-purple */
+  display: inline-block;
+  direction: ltr;
+  margin: 0 4px;
+}
+
 .text-content-card ul li {
   padding: 0.5rem 1rem;
   margin-bottom: 0.5rem;
