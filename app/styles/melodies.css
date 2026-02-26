@@ -147,6 +147,24 @@
   background-color: rgba(15, 23, 42, 0.9);
 }
 
+.lyrics-row-odd .lyrics-col {
+  color: #ffffff !important; /* لون ذهبي للأرباع الفردية */
+}
+
+.lyrics-row-even .lyrics-col {
+  color: #60a5fa !important; /* لون أزرق فاتح للأرباع الزوجية */
+}
+
+.lyrics-row-odd .lyrics-quarter-badge {
+  border-color: #ffffff;
+  color: #ffffff;
+}
+
+.lyrics-row-even .lyrics-quarter-badge {
+  border-color: #60a5fa;
+  color: #60a5fa;
+}
+
 .lyrics-section-text {
   color: #a5b4fc;
   font-size: 0.9rem;

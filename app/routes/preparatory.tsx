@@ -513,12 +513,22 @@ export default function PreparatoryPage() {
                         ? null
                         : currentQuarter;
 
+                    // تحديد لون الربع بناءً على رقمه (فردي/زوجي)
+                    const isEven =
+                      quarterNumber !== null && quarterNumber % 2 === 0;
+                    const quarterColorClass =
+                      quarterNumber === null
+                        ? ""
+                        : isEven
+                          ? "lyrics-row-even"
+                          : "lyrics-row-odd";
+
                     return (
                       <div
                         key={i}
                         className={`lyrics-row ${
                           isSectionHeader ? "lyrics-row-section" : ""
-                        }`}
+                        } ${quarterColorClass}`}
                         style={{ ["--grid-columns" as any]: visibleColumns }}
                       >
                         {quarterNumber !== null && (
@@ -541,6 +551,18 @@ export default function PreparatoryPage() {
                             {copticAr[i] || "-"}
                           </div>
                         )}
+                        {showCoptic && (
+                          <div
+                            dir="ltr"
+                            lang="cop"
+                            className={`lyrics-col lyrics-col-coptic ${
+                              isSectionHeader ? "lyrics-section-text" : ""
+                            }`}
+                            style={{ ["--font-size" as any]: `${fontSize}px` }}
+                          >
+                            {coptic[i] || "-"}
+                          </div>
+                        )}
                         {showArabic && (
                           <div
                             dir="rtl"
@@ -561,18 +583,6 @@ export default function PreparatoryPage() {
                             }
                           >
                             {arabic[i] || "-"}
-                          </div>
-                        )}
-                        {showCoptic && (
-                          <div
-                            dir="ltr"
-                            lang="cop"
-                            className={`lyrics-col lyrics-col-coptic ${
-                              isSectionHeader ? "lyrics-section-text" : ""
-                            }`}
-                            style={{ ["--font-size" as any]: `${fontSize}px` }}
-                          >
-                            {coptic[i] || "-"}
                           </div>
                         )}
                       </div>
