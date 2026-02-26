@@ -1709,8 +1709,10 @@ export default function MelodiesPage() {
                           ? "w-16 h-16 rounded-full cursor-pointer overflow-hidden border-2 border-blue-500 hover:scale-110 transition-all duration-300"
                           : "w-[70vw] max-w-[320px] md:max-w-[400px]"
                       } ${
-                        isMinimized && isVideoPlaying
-                          ? "animate-video-pulse"
+                        isMinimized
+                          ? isVideoPlaying
+                            ? "animate-video-pulse-active"
+                            : "animate-video-pulse-paused"
                           : ""
                       }`}
                       onTap={() => isMinimized && setIsMinimized(false)}
