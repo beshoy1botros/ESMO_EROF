@@ -513,13 +513,29 @@ export default function PreparatoryPage() {
                         ? null
                         : currentQuarter;
 
-                    // تحديد لون الربع بناءً على رقمه (فردي/زوجي)
-                    const isEven =
-                      quarterNumber !== null && quarterNumber % 2 === 0;
+                    // تحديد لون الربع بناءً على رقمه
+                    // الوضع الافتراضي: فردي بلون وزوجي بلون
+                    // وضع الإبصالية: كل ربعين بنفس اللون (1-2 بلون، 3-4 بلون، إلخ)
+                    const isPsali =
+                      fullscreenLyrics.title &&
+                      (fullscreenLyrics.title.includes("ابصالية") ||
+                        fullscreenLyrics.title.includes("إبصالية"));
+
+                    let isEvenRow = false;
+                    if (quarterNumber !== null) {
+                      if (isPsali) {
+                        // منطق الإبصالية: الربع 1 و 2 (فردي)، الربع 3 و 4 (زوجي)
+                        isEvenRow = Math.floor((quarterNumber - 1) / 2) % 2 === 1;
+                      } else {
+                        // المنطق العادي: فردي وزوجي
+                        isEvenRow = quarterNumber % 2 === 0;
+                      }
+                    }
+
                     const quarterColorClass =
                       quarterNumber === null
                         ? ""
-                        : isEven
+                        : isEvenRow
                           ? "lyrics-row-even"
                           : "lyrics-row-odd";
 
