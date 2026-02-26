@@ -1752,20 +1752,44 @@ export default function MelodiesPage() {
                                   e.stopPropagation();
                                   setIsMinimized(true);
                                 }}
-                                className="w-10 h-10 md:w-8 md:h-8 rounded-full bg-blue-600/80 md:bg-blue-600/60 backdrop-blur-md flex items-center justify-center text-white text-base md:text-xs border border-white/20 hover:bg-blue-600/80"
+                                className="w-10 h-10 md:w-8 md:h-8 rounded-full bg-blue-600/80 md:bg-blue-600/60 backdrop-blur-md flex items-center justify-center text-white border border-white/20 hover:bg-blue-600/80 transition-colors"
                                 title="تصغير"
                               >
-                                🗗
+                                <svg
+                                  className="w-5 h-5 md:w-4 md:h-4"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+                                  />
+                                </svg>
                               </button>
                               <button
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   setShowVideoInModal(false);
                                 }}
-                                className="w-10 h-10 md:w-8 md:h-8 rounded-full bg-red-600/80 md:bg-red-600/60 backdrop-blur-md flex items-center justify-center text-white text-base md:text-xs border border-white/20 hover:bg-red-600/80"
+                                className="w-10 h-10 md:w-8 md:h-8 rounded-full bg-red-600/80 md:bg-red-600/60 backdrop-blur-md flex items-center justify-center text-white border border-white/20 hover:bg-red-600/80 transition-colors"
                                 title="إغلاق"
                               >
-                                ✕
+                                <svg
+                                  className="w-5 h-5 md:w-4 md:h-4"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M6 18L18 6M6 6l12 12"
+                                  />
+                                </svg>
                               </button>
                             </div>
                           </>
