@@ -1745,8 +1745,8 @@ export default function MelodiesPage() {
 
                         {!isMinimized ? (
                           <>
-                            {/* أزرار تحكم سريعة فوق الفيديو - ظاهرة دائماً على الموبايل لتسهيل اللمس */}
-                            <div className="absolute top-2 left-2 flex gap-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
+                            {/* أزرار تحكم سريعة فوق الفيديو - ظاهرة دائماً */}
+                            <div className="absolute top-2 left-2 flex gap-2 z-10">
                               <button
                                 onClick={(e) => {
                                   e.stopPropagation();
