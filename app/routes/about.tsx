@@ -384,6 +384,9 @@ export default function About() {
   const [stage, setStage] = useState<string>("");
   const [level, setLevel] = useState<string>("");
   const [content, setContent] = useState<TextItem[]>([]);
+  const [expandedIndices, setExpandedIndices] = useState<
+    Record<number, boolean>
+  >({});
 
   const levels = stage ? getLevelsForStage(stage) : [];
 
@@ -391,6 +394,7 @@ export default function About() {
     setStage(newStage);
     setLevel("");
     setContent([]);
+    setExpandedIndices({});
 
     // إذا كانت المرحلة عرس قانا الجليل، عرض المحتوى مباشرة
     if (newStage === STAGE_KEYS.WEDDING_OF_CANA) {
@@ -402,11 +406,19 @@ export default function About() {
 
   const handleLevelChange = (newLevel: string) => {
     setLevel(newLevel);
+    setExpandedIndices({});
     if (stage && newLevel) {
       setContent(getContent(stage, newLevel));
     } else {
       setContent([]);
     }
+  };
+
+  const toggleRite = (index: number) => {
+    setExpandedIndices((prev) => ({
+      ...prev,
+      [index]: !prev[index],
+    }));
   };
 
   return (
@@ -474,17 +486,34 @@ export default function About() {
                 content.map((item, index) => (
                   <div
                     key={index}
-                    className="bg-gray-900 rounded-3xl overflow-hidden border border-white/5 shadow-2xl hover:scale-105 transition-all"
+                    className="bg-gray-900 rounded-3xl overflow-hidden border border-white/5 shadow-2xl hover:border-blue-500/30 transition-all flex flex-col"
                   >
-                    <div className="p-6">
-                      <h3 className="text-xl font-bold text-blue-400 mb-4">
+                    <div className="p-6 flex flex-col h-full">
+                      <h3 className="text-xl font-bold text-blue-400 mb-6 min-h-[3.5rem] flex items-center">
                         {item.title}
                       </h3>
-                      {item.content && (
-                        <p
-                          className="text-gray-300 leading-relaxed whitespace-pre-line"
-                          dangerouslySetInnerHTML={{ __html: item.content }}
-                        />
+
+                      <button
+                        onClick={() => toggleRite(index)}
+                        className={`w-full py-3 rounded-xl font-bold transition-all mb-4 ${
+                          expandedIndices[index]
+                            ? "bg-blue-600 text-white shadow-lg"
+                            : "bg-blue-600/10 text-blue-400 border border-blue-600/30 hover:bg-blue-600/20"
+                        }`}
+                      >
+                        {expandedIndices[index]
+                          ? "إخفاء طقس اللحن"
+                          : "عرض طقس اللحن"}
+                      </button>
+
+                      {expandedIndices[index] && item.content && (
+                        <div className="animate-in fade-in slide-in-from-top-2 duration-300">
+                          <div className="h-px bg-white/10 mb-4" />
+                          <p
+                            className="text-gray-300 leading-relaxed whitespace-pre-line text-sm md:text-base"
+                            dangerouslySetInnerHTML={{ __html: item.content }}
+                          />
+                        </div>
                       )}
                     </div>
                   </div>
