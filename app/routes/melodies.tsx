@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
@@ -1291,10 +1291,14 @@ export default function MelodiesPage() {
 
   // ====== خاصية التحكم في صور الهزات ======
   const [showHazzat, setShowHazzat] = useState(false);
+  const [showVideoInModal, setShowVideoInModal] = useState(false);
+  const [videoTime, setVideoTime] = useState<Record<string, number>>({});
   // تم إلغاء الڤول-سكرين لصور الهزّات بناءً على طلب المستخدم
 
   const [rotateFromSidebar, setRotateFromSidebar] = useState(false);
   const [showControlsPanel, setShowControlsPanel] = useState(false);
+  const [isMinimized, setIsMinimized] = useState(false);
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
 
   const levels = stage ? getLevelsForStage(stage as string) : [];
 
@@ -1420,7 +1424,14 @@ export default function MelodiesPage() {
                 >
                   <div className="aspect-video bg-black relative">
                     {v.url ? (
-                      <LazyVideo src={v.url} title={v.title} />
+                      <LazyVideo
+                        src={v.url}
+                        title={v.title}
+                        startTime={videoTime[v.id] || 0}
+                        onTimeUpdate={(time) =>
+                          setVideoTime((prev) => ({ ...prev, [v.id]: time }))
+                        }
+                      />
                     ) : (
                       <div className="flex flex-col items-center justify-center h-full text-gray-600 italic">
                         <span className="text-4xl mb-2">🎬</span> متاح قريباً
@@ -1629,6 +1640,25 @@ export default function MelodiesPage() {
                   )}
                 </AnimatePresence>
               </div>
+
+              {/* زر تشغيل الفيديو المدمج - وضع عائم افتراضي */}
+              {fullscreenLyrics.url && (
+                <div className="flex items-center gap-1">
+                  <button
+                    onClick={() => setShowVideoInModal((prev) => !prev)}
+                    className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${
+                      showVideoInModal
+                        ? "bg-red-600/20 border-red-500/50 text-red-400 shadow-[0_0_15px_rgba(239,68,68,0.2)]"
+                        : "bg-blue-600/20 border-blue-500/50 text-blue-400 shadow-[0_0_15px_rgba(59,130,246,0.2)]"
+                    } border active:scale-90`}
+                    title={showVideoInModal ? "إخفاء الفيديو" : "تشغيل اللحن"}
+                  >
+                    <span className="text-base">
+                      {showVideoInModal ? "✕" : "▶️"}
+                    </span>
+                  </button>
+                </div>
+              )}
             </div>
 
             <h2 className="text-blue-400 font-bold text-sm md:text-lg flex-1 text-center md:text-right">
@@ -1639,6 +1669,9 @@ export default function MelodiesPage() {
               onClick={() => {
                 setFullscreenLyrics(null);
                 setShowHazzat(false);
+                setShowVideoInModal(false);
+                setIsMinimized(false);
+                setIsVideoPlaying(false);
                 setRotateFromSidebar(false);
                 setShowControlsPanel(false);
               }}
@@ -1650,8 +1683,115 @@ export default function MelodiesPage() {
           </header>
 
           <div className="relative flex flex-1 overflow-hidden">
-            <div className="flex-1 overflow-y-auto bg-gray-950 p-2 md:p-6">
+            <div className="flex-1 overflow-y-auto bg-gray-950 p-2 md:p-6 relative scroll-smooth">
               <div className="w-full max-w-7xl mx-auto">
+                <AnimatePresence mode="popLayout">
+                  {showVideoInModal && fullscreenLyrics?.url && (
+                    <motion.div
+                      layout
+                      initial={{ opacity: 0, scale: 0.5 }}
+                      animate={{
+                        opacity: 1,
+                        scale: 1,
+                      }}
+                      exit={{
+                        opacity: 0,
+                        scale: 0.5,
+                        transition: { duration: 0.2 },
+                      }}
+                      transition={{
+                        type: "spring",
+                        damping: 30,
+                        stiffness: 150,
+                      }}
+                      className={`fixed bottom-6 right-6 z-[60] shadow-2xl ${
+                        isMinimized
+                          ? "w-16 h-16 rounded-full cursor-pointer overflow-hidden border-2 border-blue-500 hover:scale-110 transition-all duration-300"
+                          : "w-[70vw] max-w-[320px] md:max-w-[400px]"
+                      } ${
+                        isMinimized && isVideoPlaying
+                          ? "animate-video-pulse"
+                          : ""
+                      }`}
+                      onTap={() => isMinimized && setIsMinimized(false)}
+                    >
+                      <div
+                        className={`relative rounded-2xl overflow-hidden border border-blue-500/30 bg-black shadow-[0_0_30px_rgba(0,0,0,0.5)] group ${
+                          isMinimized ? "aspect-square" : "aspect-video"
+                        }`}
+                      >
+                        {/* الفيديو يظل يعمل في الخلفية حتى عند التصغير */}
+                        <div
+                          className={`w-full h-full ${
+                            isMinimized
+                              ? "absolute opacity-0 pointer-events-none"
+                              : "block"
+                          }`}
+                        >
+                          <LazyVideo
+                            key={fullscreenLyrics.id}
+                            src={fullscreenLyrics.url}
+                            title={fullscreenLyrics.title}
+                            startTime={videoTime[fullscreenLyrics.id] || 0}
+                            onTimeUpdate={(time) =>
+                              setVideoTime((prev) => ({
+                                ...prev,
+                                [fullscreenLyrics.id]: time,
+                              }))
+                            }
+                            onPlayChange={setIsVideoPlaying}
+                          />
+                        </div>
+
+                        {!isMinimized ? (
+                          <>
+                            {/* أزرار تحكم سريعة فوق الفيديو - ظاهرة دائماً على الموبايل لتسهيل اللمس */}
+                            <div className="absolute top-2 left-2 flex gap-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setIsMinimized(true);
+                                }}
+                                className="w-10 h-10 md:w-8 md:h-8 rounded-full bg-blue-600/80 md:bg-blue-600/60 backdrop-blur-md flex items-center justify-center text-white text-base md:text-xs border border-white/20 hover:bg-blue-600/80"
+                                title="تصغير"
+                              >
+                                🗗
+                              </button>
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setShowVideoInModal(false);
+                                }}
+                                className="w-10 h-10 md:w-8 md:h-8 rounded-full bg-red-600/80 md:bg-red-600/60 backdrop-blur-md flex items-center justify-center text-white text-base md:text-xs border border-white/20 hover:bg-red-600/80"
+                                title="إغلاق"
+                              >
+                                ✕
+                              </button>
+                            </div>
+                          </>
+                        ) : (
+                          <div
+                            className={`w-full h-full flex items-center justify-center transition-colors duration-300 ${
+                              isVideoPlaying
+                                ? "bg-blue-600/30"
+                                : "bg-gray-800/80 grayscale"
+                            }`}
+                          >
+                            <span
+                              className={`text-2xl transition-transform duration-300 ${
+                                isVideoPlaying
+                                  ? "scale-110"
+                                  : "scale-90 opacity-50"
+                              }`}
+                            >
+                              {isVideoPlaying ? "🎶" : "▶️"}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
                 {(() => {
                   const coptic = (fullscreenLyrics.copticcoptic || "").split(
                     /\n\s*\n/

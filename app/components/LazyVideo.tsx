@@ -13,19 +13,42 @@ interface LazyVideoProps {
   src: string;
   title: string;
   poster?: string | undefined;
+  startTime?: number;
+  onTimeUpdate?: (time: number) => void;
+  onPlayChange?: (isPlaying: boolean) => void;
 }
 
 // Global array to track all video instances
 const videoInstances: HTMLVideoElement[] = [];
 
-export default function LazyVideo({ src, title, poster }: LazyVideoProps) {
+export default function LazyVideo({ 
+  src, 
+  title, 
+  poster, 
+  startTime = 0,
+  onTimeUpdate,
+  onPlayChange
+}: LazyVideoProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const initialTimeSet = useRef(false);
   const [showMenu, setShowMenu] = useState(false);
   const [hasError, setHasError] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isWaiting, setIsWaiting] = useState(false);
+
+  useEffect(() => {
+    initialTimeSet.current = false;
+  }, [src]);
 
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
+
+    // Set initial time if provided (only once when src changes or on mount)
+    if (startTime > 0 && !initialTimeSet.current) {
+      video.currentTime = startTime;
+      initialTimeSet.current = true;
+    }
 
     // Add this video to the global instances
     videoInstances.push(video);
@@ -37,19 +60,57 @@ export default function LazyVideo({ src, title, poster }: LazyVideoProps) {
           v.pause();
         }
       });
+      setIsLoading(false);
+      setIsWaiting(false);
+      if (onPlayChange) onPlayChange(true);
     };
 
+    const handlePause = () => {
+      if (onPlayChange) onPlayChange(false);
+    };
+
+    const handleTimeUpdate = () => {
+      if (onTimeUpdate) {
+        onTimeUpdate(video.currentTime);
+      }
+    };
+
+    const handleWaiting = () => setIsWaiting(true);
+    const handleCanPlay = () => {
+      setIsLoading(false);
+      setIsWaiting(false);
+    };
+    const handleStalled = () => {
+      // Stalled means the browser is trying to fetch data, but it is not coming
+      // This is common on slow connections
+      console.warn("Video playback stalled:", src);
+    };
+
+    const handleLoadStart = () => setIsLoading(true);
+
     video.addEventListener("play", handlePlay);
+    video.addEventListener("pause", handlePause);
+    video.addEventListener("timeupdate", handleTimeUpdate);
+    video.addEventListener("waiting", handleWaiting);
+    video.addEventListener("canplay", handleCanPlay);
+    video.addEventListener("stalled", handleStalled);
+    video.addEventListener("loadstart", handleLoadStart);
 
     // Cleanup on unmount
     return () => {
       video.removeEventListener("play", handlePlay);
+      video.removeEventListener("pause", handlePause);
+      video.removeEventListener("timeupdate", handleTimeUpdate);
+      video.removeEventListener("waiting", handleWaiting);
+      video.removeEventListener("canplay", handleCanPlay);
+      video.removeEventListener("stalled", handleStalled);
+      video.removeEventListener("loadstart", handleLoadStart);
       const index = videoInstances.indexOf(video);
       if (index > -1) {
         videoInstances.splice(index, 1);
       }
     };
-  }, []);
+  }, [startTime]); // Added startTime to dependency array
 
   // يمكن إضافة وظائف إضافية لاحقًا (تحميل/قائمة) إن لزم
 
@@ -75,14 +136,19 @@ export default function LazyVideo({ src, title, poster }: LazyVideoProps) {
     <div className="relative w-full h-full">
       <video
         ref={videoRef}
-        className="w-full h-full object-contain"
+        className="w-full h-full object-contain bg-black"
         controls
         preload="metadata"
         poster={poster}
         playsInline
         crossOrigin="anonymous"
         disablePictureInPicture={false}
-        onError={() => setHasError(true)}
+        onError={() => {
+          setHasError(true);
+          setIsLoading(false);
+          setIsWaiting(false);
+        }}
+        onLoadedData={() => setIsLoading(false)}
         aria-label={title}
         title={title}
       >
@@ -91,6 +157,18 @@ export default function LazyVideo({ src, title, poster }: LazyVideoProps) {
           متصفحك لا يدعم تشغيل الفيديو. الرجاء تحديث المتصفح.
         </p>
       </video>
+
+      {/* Loading & Waiting State Overlay */}
+      {(isLoading || isWaiting) && !hasError && (
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/40 backdrop-blur-[2px] pointer-events-none transition-all duration-300">
+          <div className="w-10 h-10 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin shadow-lg" />
+          {isWaiting && (
+            <p className="mt-3 text-xs text-white/80 font-bold bg-black/40 px-3 py-1 rounded-full border border-white/10 animate-pulse">
+              جاري التحميل...
+            </p>
+          )}
+        </div>
+      )}
       {hasError && (
         <div className="absolute inset-0 flex items-center justify-center bg-black/60 text-white text-sm sm:text-base p-4 rounded">
           <div className="text-center">
