@@ -147,12 +147,20 @@
   background-color: rgba(15, 23, 42, 0.9);
 }
 
+.lyrics-row-odd.lyrics-row-section .lyrics-section-text {
+  color: #a5b4fc !important; /* لون بنفسجي فاتح للعناوين الفردية */
+}
+
+.lyrics-row-even.lyrics-row-section .lyrics-section-text {
+  color: #c084fc !important; /* لون أرجواني للعناوين الزوجية */
+}
+
 .lyrics-row-odd .lyrics-col {
-  color: #ffffff !important; /* لون ذهبي للأرباع الفردية */
+  color: #ffffff !important; /* أبيض للأرباع الفردية */
 }
 
 .lyrics-row-even .lyrics-col {
-  color: #e0c600d2 !important; /* لون أزرق فاتح للأرباع الزوجية */
+  color: #e0c600d2 !important; /* ذهبي للأرباع الزوجية */
 }
 
 .lyrics-row-odd .lyrics-quarter-badge {

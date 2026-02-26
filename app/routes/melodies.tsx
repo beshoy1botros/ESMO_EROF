@@ -1668,6 +1668,41 @@ export default function MelodiesPage() {
                     arabic.length
                   );
 
+                  // دالة لاستخراج الرقم من العنوان العربي (مثلاً: القطعة الثانية -> 2)
+                  const getNumberFromTitle = (title: string) => {
+                    if (!title) return null;
+                    const digitMatch = title.match(/\d+/);
+                    if (digitMatch) return parseInt(digitMatch[0]);
+
+                    const arabicNumbers: Record<string, number> = {
+                      الأولى: 1,
+                      الأول: 1,
+                      الثانية: 2,
+                      الثاني: 2,
+                      الثالثة: 3,
+                      الثالث: 3,
+                      الرابعة: 4,
+                      الرابع: 4,
+                      الخامسة: 5,
+                      الخامس: 5,
+                      السادسة: 6,
+                      السادس: 6,
+                      السابعة: 7,
+                      السابع: 7,
+                      الثامنة: 8,
+                      الثامن: 8,
+                      التاسعة: 9,
+                      التاسع: 9,
+                      العاشرة: 10,
+                      العاشر: 10,
+                    };
+
+                    for (const [key, value] of Object.entries(arabicNumbers)) {
+                      if (title.includes(key)) return value;
+                    }
+                    return null;
+                  };
+
                   let currentQuarter = 0;
 
                   // ✅ الكود الجديد المحسن - فائق الشمول والrobustness
@@ -1716,6 +1751,11 @@ export default function MelodiesPage() {
                         ? null
                         : currentQuarter;
 
+                    // تحديد رقم العنصر للتلوين (سواء كان ربع أو عنوان قسم)
+                    const colorReferenceNumber = isSectionHeader
+                      ? getNumberFromTitle(arabic[i] || "")
+                      : quarterNumber;
+
                     // تحديد لون الربع بناءً على رقمه
                     // الوضع الافتراضي: فردي بلون وزوجي بلون
                     // وضع الإبصالية: كل ربعين بنفس اللون (1-2 بلون، 3-4 بلون، إلخ)
@@ -1725,19 +1765,19 @@ export default function MelodiesPage() {
                         fullscreenLyrics.title.includes("إبصالية"));
 
                     let isEvenRow = false;
-                    if (quarterNumber !== null) {
+                    if (colorReferenceNumber !== null) {
                       if (isPsali) {
                         // منطق الإبصالية: الربع 1 و 2 (فردي)، الربع 3 و 4 (زوجي)
                         isEvenRow =
-                          Math.floor((quarterNumber - 1) / 2) % 2 === 1;
+                          Math.floor((colorReferenceNumber - 1) / 2) % 2 === 1;
                       } else {
                         // المنطق العادي: فردي وزوجي
-                        isEvenRow = quarterNumber % 2 === 0;
+                        isEvenRow = colorReferenceNumber % 2 === 0;
                       }
                     }
 
                     const quarterColorClass =
-                      quarterNumber === null
+                      colorReferenceNumber === null
                         ? ""
                         : isEvenRow
                           ? "lyrics-row-even"
