@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo, useRef } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
@@ -27,10 +27,10 @@ type ViewMode = "videos" | "rites";
 
 // --- المراحل المتاحة ---
 const STAGES = [
-  { key: "حضانة", label: "حضانة", },
-  { key: "اولي وتانيه وثالثة", label: "أولى وثانية وثالثة"},
-  { key: "رابعة وخامسة وسادسة", label: "رابعة وخامسة وسادسة"},
-  { key: "اعدادي وثانوي", label: "إعدادي وثانوي"},
+  { key: "حضانة", label: "حضانة" },
+  { key: "اولي وتانيه وثالثة", label: "أولى وثانية وثالثة" },
+  { key: "رابعة وخامسة وسادسة", label: "رابعة وخامسة وسادسة" },
+  { key: "اعدادي وثانوي", label: "إعدادي وثانوي" },
 ];
 
 const BASE_URL =
@@ -248,7 +248,7 @@ export default function PreparatoryPage() {
   }, [viewMode, stageKey]);
 
   const visibleColumns = [showCopticArabic, showArabic, showCoptic].filter(
-    Boolean
+    Boolean,
   ).length;
 
   const disabledColumns = 3 - visibleColumns;
@@ -600,7 +600,7 @@ export default function PreparatoryPage() {
                         <button
                           onClick={() => {
                             const btn = document.getElementById(
-                              "landscape-toggle-button"
+                              "landscape-toggle-button",
                             ) as HTMLButtonElement | null;
                             if (btn) {
                               btn.click();
@@ -797,10 +797,10 @@ export default function PreparatoryPage() {
                 </AnimatePresence>
                 {(() => {
                   const coptic = (fullscreenLyrics.copticcoptic || "").split(
-                    /\n\s*\n/
+                    /\n\s*\n/,
                   );
                   const copticAr = (fullscreenLyrics.copticArabic || "").split(
-                    /\n\s*\n/
+                    /\n\s*\n/,
                   );
                   const arabic = (
                     fullscreenLyrics.arabicTranslation || ""
@@ -808,7 +808,7 @@ export default function PreparatoryPage() {
                   const maxParts = Math.max(
                     coptic.length,
                     copticAr.length,
-                    arabic.length
+                    arabic.length,
                   );
 
                   // دالة لاستخراج الرقم من العنوان العربي (مثلاً: القطعة الثانية -> 2)
