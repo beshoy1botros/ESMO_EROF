@@ -1,4 +1,5 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import LazyVideo from "../components/LazyVideo";
@@ -199,6 +200,24 @@ export default function PreparatoryPage() {
   const [rotateFromSidebar, setRotateFromSidebar] = useState(false);
   const [showControlsPanel, setShowControlsPanel] = useState(false);
 
+  // حالات جديدة لمودال الفيديو
+  const [showVideoInModal, setShowVideoInModal] = useState(false);
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+  const [isMinimized, setIsMinimized] = useState(false);
+  const [videoTime, setVideoTime] = useState<Record<string, number>>({});
+  const [expandedIndices, setExpandedIndices] = useState<
+    Record<number, boolean>
+  >({});
+
+  const hazzatImagesCount = useMemo(() => {
+    if (!fullscreenLyrics) return 0;
+    return [
+      fullscreenLyrics.hazzatImage,
+      fullscreenLyrics.hazzatImage2,
+      fullscreenLyrics.hazzatImage3,
+    ].filter(Boolean).length;
+  }, [fullscreenLyrics]);
+
   useEffect(() => {
     if (selectedStage) {
       const list = preparatoryVideos[selectedStage] || [];
@@ -359,32 +378,61 @@ export default function PreparatoryPage() {
               </div>
             ) : (
               /* Rites Content */
-              <div className="bg-gray-900/50 border border-white/10 rounded-3xl p-6 md:p-8">
-                <h2 className="text-3xl font-bold text-purple-400 mb-6 text-center">
-                  طقس الألحان
-                </h2>
-                <div className="space-y-6">
-                  {riteContent.map((item: RiteItem, index: number) => (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {riteContent.length === 0 ? (
+                  <div className="col-span-full text-center p-8 bg-gray-800 rounded-xl border border-blue-500/30">
+                    <div className="text-5xl mb-4">📖</div>
+                    <p className="text-gray-400">لا يوجد محتوى لهذه المرحلة</p>
+                  </div>
+                ) : (
+                  riteContent.map((item: RiteItem, index: number) => (
                     <div
                       key={index}
-                      className="bg-gray-800/40 p-5 rounded-xl border border-white/5"
+                      className="bg-gray-900 rounded-3xl overflow-hidden border border-white/5 shadow-2xl hover:border-blue-500/30 transition-all flex flex-col"
                     >
-                      <h3 className="text-xl font-bold text-purple-300 mb-3">
-                        {item.title}
-                      </h3>
-                      <p className="text-gray-300 leading-relaxed whitespace-pre-line">
-                        {item.content}
-                      </p>
+                      <div className="p-6 flex flex-col h-full">
+                        <h3 className="text-xl font-bold text-blue-400 mb-6 min-h-[3.5rem] flex items-center">
+                          {item.title}
+                        </h3>
+
+                        <button
+                          onClick={() =>
+                            setExpandedIndices((prev) => ({
+                              ...prev,
+                              [index]: !prev[index],
+                            }))
+                          }
+                          className={`w-full py-3 rounded-xl font-bold transition-all mb-4 ${
+                            expandedIndices[index]
+                              ? "bg-blue-600 text-white shadow-lg"
+                              : "bg-blue-600/10 text-blue-400 border border-blue-600/30 hover:bg-blue-600/20"
+                          }`}
+                        >
+                          {expandedIndices[index]
+                            ? "إخفاء طقس اللحن"
+                            : "عرض طقس اللحن"}
+                        </button>
+
+                        {expandedIndices[index] && item.content && (
+                          <div className="animate-in fade-in slide-in-from-top-2 duration-300">
+                            <div className="h-px bg-white/10 mb-4" />
+                            <p
+                              className="text-gray-300 leading-relaxed whitespace-pre-line text-sm md:text-base"
+                              dangerouslySetInnerHTML={{ __html: item.content }}
+                            />
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  ))}
-                </div>
+                  ))
+                )}
               </div>
             )}
           </div>
         </div>
       </main>
 
-      {/* --- مودال النصوص --- */}
+      {/* --- مودال النصوص المحسّن للهواتف --- */}
       {fullscreenLyrics && (
         <div className="fixed inset-0 z-[100] bg-black flex flex-col overflow-hidden">
           <header className="sticky top-0 z-50 p-3 md:p-4 bg-gray-900 border-b border-white/10 flex items-center gap-2">
@@ -392,129 +440,203 @@ export default function PreparatoryPage() {
               <div className="relative">
                 <button
                   onClick={() => setShowControlsPanel((prev) => !prev)}
-                  className="w-10 h-10 rounded-full bg-gray-900/90 border border-white/20 flex flex-col items-center justify-center gap-0.5 hover:bg-gray-800 transition-all"
+                  className="w-10 h-10 rounded-full bg-gray-900/90 border border-blue-500/30 flex flex-col items-center justify-center gap-1 hover:bg-gray-800 transition-all shadow-[0_0_15px_rgba(59,130,246,0.2)] active:scale-90"
                   aria-label="إعدادات النص"
                 >
-                  <span className="w-5 h-0.5 bg-white rounded-full" />
-                  <span className="w-5 h-0.5 bg-white rounded-full" />
-                  <span className="w-5 h-0.5 bg-white rounded-full" />
+                  <motion.span
+                    animate={
+                      showControlsPanel
+                        ? { rotate: 45, y: 6 }
+                        : { rotate: 0, y: 0 }
+                    }
+                    className="w-5 h-0.5 bg-blue-400 rounded-full"
+                  />
+                  <motion.span
+                    animate={
+                      showControlsPanel
+                        ? { opacity: 0, x: -10 }
+                        : { opacity: 1, x: 0 }
+                    }
+                    className="w-5 h-0.5 bg-blue-400 rounded-full"
+                  />
+                  <motion.span
+                    animate={
+                      showControlsPanel
+                        ? { rotate: -45, y: -6 }
+                        : { rotate: 0, y: 0 }
+                    }
+                    className="w-5 h-0.5 bg-blue-400 rounded-full"
+                  />
                 </button>
 
-                {showControlsPanel && (
-                  <div className="absolute top-full mt-2 left-1/3 -translate-x-1/3 md:left-auto md:right-0 md:translate-x-0 w-56 md:w-64 max-w-[90vw] z-30 bg-gray-900/95 border border-white/10 rounded-2xl shadow-2xl flex flex-col gap-4 p-4 backdrop-blur">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-semibold text-gray-200">
-                        إعدادات النص
-                      </span>
-                      <button
-                        onClick={() => setShowControlsPanel(false)}
-                        className="w-7 h-7 flex items-center justify-center rounded-full bg-gray-800 hover:bg-gray-700 text-sm"
-                      >
-                        ✕
-                      </button>
-                    </div>
-
-                    <div className="flex flex-col gap-2">
-                      <span className="text-[11px] text-gray-400">
-                        حجم الخط
-                      </span>
-                      <div className="flex items-center gap-2">
+                <AnimatePresence>
+                  {showControlsPanel && (
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.9, y: -20, x: 10 }}
+                      animate={{ opacity: 1, scale: 1, y: 0, x: 0 }}
+                      exit={{ opacity: 0, scale: 0.9, y: -20, x: 10 }}
+                      transition={{
+                        type: "spring",
+                        damping: 20,
+                        stiffness: 300,
+                      }}
+                      className="absolute top-full mt-3 right-0 w-64 max-w-[90vw] z-30 bg-gray-900/98 border border-blue-500/20 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex flex-col gap-5 p-5 backdrop-blur-xl"
+                    >
+                      <div className="flex items-center justify-between border-b border-white/5 pb-3">
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+                          <span className="text-sm font-bold text-gray-100 tracking-wide">
+                            إعدادات العرض
+                          </span>
+                        </div>
                         <button
-                          onClick={decreaseFontSize}
-                          className="w-9 h-9 bg-gray-800 hover:bg-gray-700 rounded-lg border border-gray-700 flex items-center justify-center transition-all"
+                          onClick={() => setShowControlsPanel(false)}
+                          className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-800 hover:bg-red-900/40 hover:text-red-400 transition-colors text-gray-400"
                         >
-                          <span className="text-lg">-</span>
-                        </button>
-                        <span className="flex-1 text-center text-sm text-gray-100">
-                          {fontSize}
-                        </span>
-                        <button
-                          onClick={increaseFontSize}
-                          className="w-9 h-9 bg-gray-800 hover	bg-gray-700 rounded-lg border border-gray-700 flex items-center justify-center transition-all"
-                        >
-                          <span className="text-lg">+</span>
+                          ✕
                         </button>
                       </div>
-                    </div>
 
-                    <div className="flex flex-col gap-2">
-                      <span className="text-[11px] text-gray-400">اللغات</span>
-                      <div className="flex flex-col gap-2">
-                        <button
-                          onClick={() => setShowArabic(!showArabic)}
-                          className={`px-3 py-2 rounded-lg text-xs font-bold border transition-all ${
-                            showArabic
-                              ? "bg-blue-600 border-blue-400 text-white"
-                              : "bg-gray-800 border-gray-700 text-gray-300"
-                          }`}
-                        >
-                          عربي
-                        </button>
-                        <button
-                          onClick={() => setShowCopticArabic(!showCopticArabic)}
-                          className={`px-3 py-2 rounded-lg text-xs font-bold border transition-all ${
-                            showCopticArabic
-                              ? "bg-emerald-600 border-emerald-400 text-white"
-                              : "bg-gray-800 border-gray-700 text-gray-300"
-                          }`}
-                        >
-                          قبطي معرب
-                        </button>
-                        <button
-                          onClick={() => setShowCoptic(!showCoptic)}
-                          className={`px-3 py-2 rounded-lg text-xs font-bold border transition-all ${
-                            showCoptic
-                              ? "bg-indigo-600 border-indigo-400 text-white"
-                              : "bg-gray-800 border-gray-700 text-gray-300"
-                          }`}
-                        >
-                          قبطي
-                        </button>
-                      </div>
-                    </div>
-
-                    {(() => {
-                      const count = [
-                        fullscreenLyrics.hazzatImage,
-                        fullscreenLyrics.hazzatImage2,
-                        fullscreenLyrics.hazzatImage3,
-                      ].filter(Boolean).length;
-                      return (
-                        count > 0 && (
+                      <div className="flex flex-col gap-3">
+                        <label className="text-[11px] uppercase tracking-widest text-blue-400 font-bold px-1">
+                          حجم الخط
+                        </label>
+                        <div className="flex items-center gap-3 bg-gray-800/50 p-1.5 rounded-xl border border-white/5">
                           <button
-                            onClick={() => setShowHazzat(!showHazzat)}
-                            className={`w-full px-3 py-2 rounded-lg font-bold text-xs flex items-center justify-center gap-2 transition-all ${
-                              showHazzat
-                                ? "bg-yellow-600 hover:bg-yellow-700"
-                                : "bg-purple-600 hover:bg-purple-700"
-                            }`}
+                            onClick={decreaseFontSize}
+                            className="w-10 h-10 bg-gray-700 hover:bg-gray-600 active:scale-95 rounded-lg flex items-center justify-center transition-all shadow-lg"
                           >
-                            <span>🎵</span>
-                            <span>
-                              {showHazzat ? "إخفاء الهزات" : "هزات اللحن"}
+                            <span className="text-xl font-bold text-blue-400">
+                              -
                             </span>
                           </button>
-                        )
-                      );
-                    })()}
+                          <div className="flex-1 text-center">
+                            <span className="text-lg font-mono font-bold text-white">
+                              {fontSize}
+                            </span>
+                            <span className="text-[10px] block text-gray-500">
+                              px
+                            </span>
+                          </div>
+                          <button
+                            onClick={increaseFontSize}
+                            className="w-10 h-10 bg-gray-700 hover:bg-gray-600 active:scale-95 rounded-lg flex items-center justify-center transition-all shadow-lg"
+                          >
+                            <span className="text-xl font-bold text-blue-400">
+                              +
+                            </span>
+                          </button>
+                        </div>
+                      </div>
 
-                    <button
-                      onClick={() => {
-                        const btn = document.getElementById(
-                          "landscape-toggle-button"
-                        ) as HTMLButtonElement | null;
-                        if (btn) {
-                          btn.click();
-                          setRotateFromSidebar((prev) => !prev);
-                        }
-                      }}
-                      className="w-full px-3 py-2 rounded-lg font-bold text-xs bg-gray-800 hover:bg-gray-700 border border-gray-700 text-gray-100 transition-all"
-                    >
-                      تدوير الشاشة
-                    </button>
-                  </div>
-                )}
+                      <div className="flex flex-col gap-3">
+                        <label className="text-[11px] uppercase tracking-widest text-emerald-400 font-bold px-1">
+                          اللغات المفعلة
+                        </label>
+                        <div className="grid grid-cols-1 gap-2">
+                          {[
+                            {
+                              state: showArabic,
+                              setter: setShowArabic,
+                              label: "اللغة العربية",
+                              activeClass:
+                                "bg-blue-600/20 border-blue-500/50 text-blue-400 shadow-[inset_0_0_20px_rgba(0,0,0,0.2)]",
+                              dotClass:
+                                "bg-blue-400 shadow-[0_0_8px_rgba(59,130,246,0.5)]",
+                            },
+                            {
+                              state: showCopticArabic,
+                              setter: setShowCopticArabic,
+                              label: "قبطي معرب",
+                              activeClass:
+                                "bg-emerald-600/20 border-emerald-500/50 text-emerald-400 shadow-[inset_0_0_20px_rgba(0,0,0,0.2)]",
+                              dotClass:
+                                "bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.5)]",
+                            },
+                            {
+                              state: showCoptic,
+                              setter: setShowCoptic,
+                              label: "اللغة القبطية",
+                              activeClass:
+                                "bg-indigo-600/20 border-indigo-500/50 text-indigo-400 shadow-[inset_0_0_20px_rgba(0,0,0,0.2)]",
+                              dotClass:
+                                "bg-indigo-400 shadow-[0_0_8px_rgba(129,140,248,0.5)]",
+                            },
+                          ].map((lang) => (
+                            <button
+                              key={lang.label}
+                              onClick={() => lang.setter(!lang.state)}
+                              className={`group relative flex items-center justify-between px-4 py-3 rounded-xl font-bold text-xs transition-all duration-300 border ${
+                                lang.state
+                                  ? lang.activeClass
+                                  : "bg-gray-800/40 border-gray-700/50 text-gray-500 hover:bg-gray-800 hover:border-gray-600"
+                              }`}
+                            >
+                              <span>{lang.label}</span>
+                              <div
+                                className={`w-2 h-2 rounded-full transition-all duration-300 ${lang.state ? lang.dotClass : "bg-gray-700"}`}
+                              />
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="flex flex-col gap-2 pt-2 border-t border-white/5">
+                        {hazzatImagesCount > 0 && (
+                          <button
+                            onClick={() => setShowHazzat(!showHazzat)}
+                            className={`w-full px-4 py-3 rounded-xl font-bold text-xs flex items-center justify-center gap-3 transition-all duration-500 ${
+                              showHazzat
+                                ? "bg-yellow-600 text-white shadow-lg shadow-yellow-900/20"
+                                : "bg-gradient-to-r from-purple-600 to-indigo-600 text-white hover:scale-[1.02] active:scale-95"
+                            }`}
+                          >
+                            <span className="text-base animate-bounce">🎵</span>
+                            <span>
+                              {showHazzat ? "إخفاء الهزات" : "عرض هزات اللحن"}
+                            </span>
+                          </button>
+                        )}
+
+                        <button
+                          onClick={() => {
+                            const btn = document.getElementById(
+                              "landscape-toggle-button"
+                            ) as HTMLButtonElement | null;
+                            if (btn) {
+                              btn.click();
+                              setRotateFromSidebar((prev) => !prev);
+                            }
+                          }}
+                          className="w-full px-4 py-3 rounded-xl font-bold text-xs bg-gray-800 hover:bg-gray-700 border border-gray-700 text-gray-300 transition-all flex items-center justify-center gap-3"
+                        >
+                          <span className="text-base">🔄</span>
+                          تدوير الشاشة
+                        </button>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
+
+              {/* زر تشغيل الفيديو المدمج - وضع عائم افتراضي */}
+              {fullscreenLyrics.url && (
+                <div className="flex items-center gap-1">
+                  <button
+                    onClick={() => setShowVideoInModal((prev) => !prev)}
+                    className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${
+                      showVideoInModal
+                        ? "bg-red-600/20 border-red-500/50 text-red-400 shadow-[0_0_15px_rgba(239,68,68,0.2)]"
+                        : "bg-blue-600/20 border-blue-500/50 text-blue-400 shadow-[0_0_15px_rgba(59,130,246,0.2)]"
+                    } border active:scale-90`}
+                    title={showVideoInModal ? "إخفاء الفيديو" : "تشغيل اللحن"}
+                  >
+                    <span className="text-base">
+                      {showVideoInModal ? "✕" : "▶️"}
+                    </span>
+                  </button>
+                </div>
+              )}
             </div>
 
             <h2 className="text-blue-400 font-bold text-sm md:text-lg flex-1 text-center md:text-right">
@@ -525,28 +647,165 @@ export default function PreparatoryPage() {
               onClick={() => {
                 setFullscreenLyrics(null);
                 setShowHazzat(false);
+                setShowVideoInModal(false);
+                setIsMinimized(false);
+                setIsVideoPlaying(false);
                 setRotateFromSidebar(false);
                 setShowControlsPanel(false);
               }}
-              className="text-2xl p-2 hover:bg-white/10 rounded-lg transition-colors flex-shrink-0"
+              className="text-2xl md:text-3xl p-2 hover:bg-white/10 rounded-lg transition-colors flex-shrink-0"
+              aria-label="إغلاق"
             >
               ✕
             </button>
           </header>
 
           <div className="relative flex flex-1 overflow-hidden">
-            <div className="flex-1 overflow-y-auto bg-gray-950 p-2 md:p-6">
+            <div className="flex-1 overflow-y-auto bg-gray-950 p-2 md:p-6 relative scroll-smooth">
               <div className="w-full max-w-7xl mx-auto">
+                <AnimatePresence mode="popLayout">
+                  {showVideoInModal && fullscreenLyrics?.url && (
+                    <motion.div
+                      layout
+                      initial={{ opacity: 0, scale: 0.5 }}
+                      animate={{
+                        opacity: 1,
+                        scale: 1,
+                      }}
+                      exit={{
+                        opacity: 0,
+                        scale: 0.5,
+                        transition: { duration: 0.2 },
+                      }}
+                      transition={{
+                        type: "spring",
+                        damping: 30,
+                        stiffness: 150,
+                      }}
+                      className={`fixed bottom-6 right-6 z-[60] shadow-2xl ${
+                        isMinimized
+                          ? "w-16 h-16 rounded-full cursor-pointer overflow-hidden border-2 border-blue-500 hover:scale-110 transition-all duration-300"
+                          : "w-[70vw] max-w-[320px] md:max-w-[400px]"
+                      } ${
+                        isMinimized
+                          ? isVideoPlaying
+                            ? "animate-video-pulse-active"
+                            : "animate-video-pulse-paused"
+                          : ""
+                      }`}
+                      onTap={() => isMinimized && setIsMinimized(false)}
+                    >
+                      <div
+                        className={`relative rounded-2xl overflow-hidden border border-blue-500/30 bg-black shadow-[0_0_30px_rgba(0,0,0,0.5)] group ${
+                          isMinimized ? "aspect-square" : "aspect-video"
+                        }`}
+                      >
+                        {/* الفيديو يظل يعمل في الخلفية حتى عند التصغير */}
+                        <div
+                          className={`w-full h-full ${
+                            isMinimized
+                              ? "absolute opacity-0 pointer-events-none"
+                              : "block"
+                          }`}
+                        >
+                          <LazyVideo
+                            key={fullscreenLyrics.id}
+                            src={fullscreenLyrics.url}
+                            title={fullscreenLyrics.title}
+                            startTime={videoTime[fullscreenLyrics.id] || 0}
+                            onTimeUpdate={(time) =>
+                              setVideoTime((prev) => ({
+                                ...prev,
+                                [fullscreenLyrics.id]: time,
+                              }))
+                            }
+                            onPlayChange={setIsVideoPlaying}
+                          />
+                        </div>
+
+                        {!isMinimized ? (
+                          <>
+                            {/* أزرار تحكم سريعة فوق الفيديو - ظاهرة دائماً */}
+                            <div className="absolute top-2 left-2 flex gap-2 z-10">
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setIsMinimized(true);
+                                }}
+                                className="w-10 h-10 md:w-8 md:h-8 rounded-full bg-blue-600/80 md:bg-blue-600/60 backdrop-blur-md flex items-center justify-center text-white border border-white/20 hover:bg-blue-600/80 transition-colors"
+                                title="تصغير"
+                              >
+                                <svg
+                                  className="w-5 h-5 md:w-4 md:h-4"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+                                  />
+                                </svg>
+                              </button>
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setShowVideoInModal(false);
+                                }}
+                                className="w-10 h-10 md:w-8 md:h-8 rounded-full bg-red-600/80 md:bg-red-600/60 backdrop-blur-md flex items-center justify-center text-white border border-white/20 hover:bg-red-600/80 transition-colors"
+                                title="إغلاق"
+                              >
+                                <svg
+                                  className="w-5 h-5 md:w-4 md:h-4"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M6 18L18 6M6 6l12 12"
+                                  />
+                                </svg>
+                              </button>
+                            </div>
+                          </>
+                        ) : (
+                          <div
+                            className={`w-full h-full flex items-center justify-center transition-colors duration-300 ${
+                              isVideoPlaying
+                                ? "bg-blue-600/30"
+                                : "bg-gray-800/80 grayscale"
+                            }`}
+                          >
+                            <span
+                              className={`text-2xl transition-transform duration-300 ${
+                                isVideoPlaying
+                                  ? "scale-110"
+                                  : "scale-90 opacity-50"
+                              }`}
+                            >
+                              {isVideoPlaying ? "🎶" : "▶️"}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
                 {(() => {
                   const coptic = (fullscreenLyrics.copticcoptic || "").split(
-                    "\n\n"
+                    /\n\s*\n/
                   );
                   const copticAr = (fullscreenLyrics.copticArabic || "").split(
-                    "\n\n"
+                    /\n\s*\n/
                   );
                   const arabic = (
                     fullscreenLyrics.arabicTranslation || ""
-                  ).split("\n\n");
+                  ).split(/\n\s*\n/);
                   const maxParts = Math.max(
                     coptic.length,
                     copticAr.length,
