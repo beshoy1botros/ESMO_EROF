@@ -27,10 +27,10 @@ type ViewMode = "videos" | "rites";
 
 // --- المراحل المتاحة ---
 const STAGES = [
-  { key: "حضانة", label: "حضانة", icon: "🌱" },
-  { key: "اولي وتانيه وثالثة", label: "أولى وثانية وثالثة", icon: "📚" },
-  { key: "رابعة وخامسة وسادسة", label: "رابعة وخامسة وسادسة", icon: "🎓" },
-  { key: "اعدادي وثانوي", label: "إعدادي وثانوي", icon: "🏆" },
+  { key: "حضانة", label: "حضانة", },
+  { key: "اولي وتانيه وثالثة", label: "أولى وثانية وثالثة"},
+  { key: "رابعة وخامسة وسادسة", label: "رابعة وخامسة وسادسة"},
+  { key: "اعدادي وثانوي", label: "إعدادي وثانوي"},
 ];
 
 const BASE_URL =
@@ -301,7 +301,6 @@ export default function PreparatoryPage() {
                       : "bg-gray-900 border-gray-700 hover:border-blue-500/50 hover:bg-gray-800 text-gray-300"
                   }`}
                 >
-                  <span className="mr-1">{stage.icon}</span>
                   {stage.label}
                 </button>
               ))}
