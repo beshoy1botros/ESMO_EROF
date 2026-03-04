@@ -1254,7 +1254,7 @@ for (const stageKey of Object.keys(stageVideoUrls) as Array<
           video.url = "";
         }
       });
-    }
+    },
   );
 }
 
@@ -1306,6 +1306,13 @@ export default function MelodiesPage() {
     setStage(newStage);
     setLevel("");
     setVideos([]);
+
+    // إذا كانت المرحلة عرس قانا الجليل، عرض المحتوى مباشرة
+    if (newStage === StageKey.WeddingOfCana) {
+      const weddingContent = getVideos(newStage, "الأول");
+      setVideos(weddingContent);
+      setLevel("الأول");
+    }
   };
 
   const handleLevelChange = (newLevel: string) => {
@@ -1316,7 +1323,7 @@ export default function MelodiesPage() {
   };
 
   const visibleColumns = [showCopticArabic, showArabic, showCoptic].filter(
-    Boolean
+    Boolean,
   ).length;
 
   const disabledColumns = 3 - visibleColumns;
@@ -1396,8 +1403,8 @@ export default function MelodiesPage() {
               ))}
             </div>
 
-            {/* Level Selection */}
-            {stage && (
+            {/* اختيار المستوى - مخفي لعرس قانا الجليل */}
+            {stage && stage !== StageKey.WeddingOfCana && (
               <div className="flex flex-wrap gap-4 mb-10 justify-center animate-in fade-in zoom-in duration-300">
                 {levels.map((lvl) => (
                   <button
@@ -1623,7 +1630,7 @@ export default function MelodiesPage() {
                         <button
                           onClick={() => {
                             const btn = document.getElementById(
-                              "landscape-toggle-button"
+                              "landscape-toggle-button",
                             ) as HTMLButtonElement | null;
                             if (btn) {
                               btn.click();
@@ -1820,10 +1827,10 @@ export default function MelodiesPage() {
                 </AnimatePresence>
                 {(() => {
                   const coptic = (fullscreenLyrics.copticcoptic || "").split(
-                    /\n\s*\n/
+                    /\n\s*\n/,
                   );
                   const copticAr = (fullscreenLyrics.copticArabic || "").split(
-                    /\n\s*\n/
+                    /\n\s*\n/,
                   );
                   const arabic = (
                     fullscreenLyrics.arabicTranslation || ""
@@ -1831,7 +1838,7 @@ export default function MelodiesPage() {
                   const maxParts = Math.max(
                     coptic.length,
                     copticAr.length,
-                    arabic.length
+                    arabic.length,
                   );
 
                   // دالة لاستخراج الرقم من العنوان العربي (مثلاً: القطعة الثانية -> 2)
