@@ -28,7 +28,20 @@
 /* Coptic Main */
 @font-face {
   font-family: "copt-main";
-  src: url("/fonts/StGeorgeSamanFont.woff") format("truetype");
+  src: url("/fonts/StGeorgeSamanFont.woff") format("woff");
+  font-display: swap;
+}
+
+/* Coptic Alternative Fonts */
+@font-face {
+  font-family: "copt-alt";
+  src: url("/fonts/copt.ttf") format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "copt-youssef";
+  src: url("/fonts/Youssef-Nosshy.ttf") format("truetype");
   font-display: swap;
 }
 
@@ -63,15 +76,28 @@
   }
 
   .coptic-base {
-    font-family: "copt-main", sans-serif;
+    font-family:
+      "copt-main", "copt-alt", "copt-youssef", "Noto Sans Coptic", sans-serif;
     font-size: 1.1rem;
     line-height: 1.6;
   }
 
   .coptic-xl {
-    font-family: "copt-main", sans-serif;
+    font-family:
+      "copt-main", "copt-alt", "copt-youssef", "Noto Sans Coptic", sans-serif;
     font-size: 1.5rem;
     line-height: 1.8;
+  }
+
+  /* Coptic inline text styling */
+  .coptic-inline {
+    font-family:
+      "copt-main", "copt-alt", "copt-youssef", "Noto Sans Coptic", sans-serif;
+    font-size: 1.2em;
+    color: #a78bfa;
+    display: inline-block;
+    direction: ltr;
+    margin: 0 4px;
   }
 }
 
@@ -176,8 +202,9 @@ body {
 
 /* عربي ترجمة - خط نسخ واضح */
 .text-arabic-translation {
-  font-family: "Naskh-Custom", "Noto Naskh Arabic", "Traditional Arabic",
-    "Segoe UI", sans-serif;
+  font-family:
+    "Naskh-Custom", "Noto Naskh Arabic", "Traditional Arabic", "Segoe UI",
+    sans-serif;
   font-style: normal; /* إزالة italic */
   font-weight: 500;
   font-size: clamp(1.8rem, 5vw, 2.6rem);

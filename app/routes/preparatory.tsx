@@ -12,6 +12,26 @@ import {
 } from "../utils/preparatoryData";
 import { STAGE_KEYS } from "../utils/stageUtils";
 
+// CSS مخصص للنصوص القبطية
+const copticStyles = `
+  .coptic-content .coptic-inline {
+    font-family: "copt-main", "copt-alt", "copt-youssef", "Noto Sans Coptic", sans-serif !important;
+    font-size: 1.2em !important;
+    color: #a78bfa !important;
+    display: inline-block !important;
+    direction: ltr !important;
+    margin: 0 4px !important;
+  }
+  
+  .coptic-content {
+    font-family: "copt-main", "copt-alt", "copt-youssef", "Noto Sans Coptic", sans-serif !important;
+  }
+  
+  .coptic-content span[class*="coptic"] {
+    font-family: "copt-main", "copt-alt", "copt-youssef", "Noto Sans Coptic", sans-serif !important;
+  }
+`;
+
 // --- تعريفات الأنواع ---
 interface Video {
   id: string;
@@ -276,6 +296,7 @@ export default function PreparatoryPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-950 text-white font-sans">
+      <style dangerouslySetInnerHTML={{ __html: copticStyles }} />
       <Header />
       <main className="flex-1 page-bg-setup bg-melodies relative">
         <div className="bg-overlay" />
@@ -420,7 +441,7 @@ export default function PreparatoryPage() {
                           <div className="animate-in fade-in slide-in-from-top-2 duration-300">
                             <div className="h-px bg-white/10 mb-4" />
                             <p
-                              className="text-gray-300 leading-relaxed whitespace-pre-line text-sm md:text-base"
+                              className="text-gray-300 leading-relaxed whitespace-pre-line text-sm md:text-base coptic-content"
                               dangerouslySetInnerHTML={{ __html: item.content }}
                             />
                           </div>

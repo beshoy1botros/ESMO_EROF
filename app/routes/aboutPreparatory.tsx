@@ -11,6 +11,26 @@ import {
 import { preparatoryData } from "../utils/preparatoryData";
 import "../styles/about.css";
 
+// CSS مخصص للنصوص القبطية
+const copticStyles = `
+  .coptic-content .coptic-inline {
+    font-family: "copt-main", "copt-alt", "copt-youssef", "Noto Sans Coptic", sans-serif !important;
+    font-size: 1.2em !important;
+    color: #a78bfa !important;
+    display: inline-block !important;
+    direction: ltr !important;
+    margin: 0 4px !important;
+  }
+  
+  .coptic-content {
+    font-family: "copt-main", "copt-alt", "copt-youssef", "Noto Sans Coptic", sans-serif !important;
+  }
+  
+  .coptic-content span[class*="coptic"] {
+    font-family: "copt-main", "copt-alt", "copt-youssef", "Noto Sans Coptic", sans-serif !important;
+  }
+`;
+
 // تعريف واجهة للعنصر الواحد (اللحن أو الدرس) لمنع خطأ الـ Rendering
 interface PreparatoryItem {
   title: string;
@@ -78,6 +98,7 @@ export default function About() {
 
   return (
     <div className="min-h-screen flex flex-col font-sans">
+      <style dangerouslySetInnerHTML={{ __html: copticStyles }} />
       <Header />
 
       <main className="flex-1 page-bg-setup bg-about relative">
@@ -145,7 +166,7 @@ export default function About() {
                         <div className="animate-in fade-in slide-in-from-top-2 duration-300">
                           <div className="h-px bg-white/10 mb-4" />
                           <p
-                            className="text-gray-300 leading-relaxed whitespace-pre-line text-sm md:text-base"
+                            className="text-gray-300 leading-relaxed whitespace-pre-line text-sm md:text-base coptic-content"
                             dangerouslySetInnerHTML={{
                               __html: String(item.content),
                             }}
