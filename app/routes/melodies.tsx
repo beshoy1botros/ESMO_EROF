@@ -1088,34 +1088,34 @@ const stageVideoUrls = {
   [StageKey.Kindergarten]: {
     first: [
       `${BASE_URL}/Hadana-1-1_gf3h9c.mp4`,
-      `${BASE_URL}/Hadana-1-2_ouxy8q.mp4`,
+      `${BASE_URL}/Hadana-1-2_a6lf1y.mp4`,
       `${BASE_URL}/Hadana-1-3_rd273v.mp4`,
-      `${BASE_URL}/Hadana-1-4_t4uuq6.mp4`,
+      `${BASE_URL}/Hadana-1-4_gkkcss.mp4`,
     ],
     second: [
-      `${BASE_URL}/Hadana-2-1_mq1g5o.mp4`,
+      `${BASE_URL}/Hadana-2-1_sw4yc6.mp4`,
       `${BASE_URL}/Hadana-2-2_z9axb1.mp4`,
       `${BASE_URL}/Hadana-2-3_jxxtv4.mp4`,
       `${BASE_URL}/Hadana-2-4_cjjci2.mp4`,
     ],
     gifted: [
-      `${BASE_URL}/Hadana-3-1_jbjabj.mp4`,
+      `${BASE_URL}/Hadana-3-1_ueghwz.mp4`,
       `${BASE_URL}/Hdana-3-2_nenvrp.mp4`,
       `${BASE_URL}/Hadana-3-3_q347t9.mp4`,
     ],
   },
   [StageKey.FirstSecond]: {
     first: [
-      `${BASE_URL}/Owla_tania-1-1_s3ghne.mp4`,
-      `${BASE_URL}/Owla_tania-1-2_eykokn.mp4`,
-      `${BASE_URL}/Owla_tania-1-3_fdtqp8.mp4`,
+      `${BASE_URL}/Owla_tania-1-1_i34swr.mp4`,
+      `${BASE_URL}/Owla_tania-1-2_xculcu.mp4`,
+      `${BASE_URL}/Owla_tania-1-3_ut46rv.mp4`,
       `${BASE_URL}/Owla_tania-1-4_fqkxms.mp4`,
     ],
     second: [
       `${BASE_URL}/Owla_tania-2-1_j4ekrw.mp4`,
       `${BASE_URL}/Owla_tania-2-2_p7z0cl.mp4`,
-      `${BASE_URL}/Owla_tania-2-3_npw6bg.mp4`,
-      `${BASE_URL}/Owla_tania-2-4_ltxsuc.mp4`,
+      `${BASE_URL}/Owla_tania-2-3_lm5inb.mp4`,
+      `${BASE_URL}/Owla_tania-2-4_bkkvcp.mp4`,
     ],
     gifted: [
       `${BASE_URL}/Owla_tania-3-1_oltolz.mp4`,
