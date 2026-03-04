@@ -1224,7 +1224,7 @@ const stageVideoUrls = {
   [StageKey.WeddingOfCana]: {
     first: [
       `${BASE_URL}/Talta_rabaa-2-2_pfz3l0.mp4`,
-      "",
+      `${BASE_URL}/WeddingOfCana-2_myydat.mp4`,
       `${BASE_URL}/Khamsa_satta-1-4_eyonvs.mp4`,
       `${BASE_URL}/Talta_rabaa-1-1_ivpyzv.mp4`,
     ],
@@ -1295,7 +1295,7 @@ export default function MelodiesPage() {
   const [videoTime, setVideoTime] = useState<Record<string, number>>({});
   // تم إلغاء الڤول-سكرين لصور الهزّات بناءً على طلب المستخدم
 
-  const [rotateFromSidebar, setRotateFromSidebar] = useState(false);
+  const [_rotateFromSidebar, setRotateFromSidebar] = useState(false);
   const [showControlsPanel, setShowControlsPanel] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
