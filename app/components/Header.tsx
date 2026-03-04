@@ -48,12 +48,16 @@ export default function Header() {
               `}
             >
               {/* تأثير خلفية بسيط عند الـ Hover */}
-              <span className={`absolute inset-0 w-0 bg-blue-500/10 transition-all duration-300 group-hover:w-full ${isActive ? 'hidden' : ''}`}></span>
+              <span
+                className={`absolute inset-0 w-0 bg-blue-500/10 transition-all duration-300 group-hover:w-full ${isActive ? "hidden" : ""}`}
+              ></span>
 
               {/* الأيقونة */}
               <Icon
                 className={`z-10 transition-transform duration-300 group-hover:scale-110 ${
-                  isActive ? "text-blue-400" : "text-gray-400 group-hover:text-white"
+                  isActive
+                    ? "text-blue-400"
+                    : "text-gray-400 group-hover:text-white"
                 }`}
                 size={18}
               />
@@ -64,7 +68,7 @@ export default function Header() {
               </span>
 
               {/* خط سفلي متحرك يظهر فقط عند النشاط أو الـ Hover */}
-              <span 
+              <span
                 className={`absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5 bg-blue-500 transition-all duration-300 
                 ${isActive ? "w-1/2" : "w-0 group-hover:w-1/3"}`}
               ></span>

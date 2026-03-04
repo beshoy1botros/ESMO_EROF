@@ -10,6 +10,8 @@ export const STAGE_KEYS = {
   UNIVERSITY: "university",
   SERVANTS: "servants",
   WEDDING_OF_CANA: "weddingOfCana",
+  FOURTH_FIFTH_SIXTH: "fourthFifthSixth",
+  MIDDLE_HIGH: "middlehigh",
 } as const;
 
 export const STAGE_LABELS = {
@@ -22,6 +24,8 @@ export const STAGE_LABELS = {
   [STAGE_KEYS.UNIVERSITY]: "جامعة",
   [STAGE_KEYS.SERVANTS]: "خدام وخادمات",
   [STAGE_KEYS.WEDDING_OF_CANA]: "عرس قانا الجليل",
+  [STAGE_KEYS.FOURTH_FIFTH_SIXTH]: "رابعة و خامسة و سادسة",
+  [STAGE_KEYS.MIDDLE_HIGH]: "إعدادي و ثانوي",
 } as const;
 
 export const LEVEL_LABELS = {
@@ -47,6 +51,8 @@ export function getLevelsForStage(stage: string): string[] {
     case STAGE_KEYS.FIFTH_SIXTH:
     case STAGE_KEYS.MIDDLE:
     case STAGE_KEYS.HIGH:
+    case STAGE_KEYS.FOURTH_FIFTH_SIXTH: // تمت الإضافة
+    case STAGE_KEYS.MIDDLE_HIGH:        // تمت الإضافة
       return standardLevels;
     case STAGE_KEYS.UNIVERSITY:
     case STAGE_KEYS.SERVANTS:

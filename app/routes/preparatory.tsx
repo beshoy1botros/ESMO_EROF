@@ -6,7 +6,10 @@ import LazyVideo from "../components/LazyVideo";
 import "../styles/melodies.css";
 import "../styles/mobile-improvements.css";
 import { prewarmVideos } from "../utils/swClient";
-import { riteData, type RiteItem } from "../utils/riteData";
+import {
+  preparatoryData,
+  type PreparatoryItem,
+} from "../utils/preparatoryData";
 import { STAGE_KEYS } from "../utils/stageUtils";
 
 // --- تعريفات الأنواع ---
@@ -197,7 +200,7 @@ export default function PreparatoryPage() {
   const [showCoptic, setShowCoptic] = useState(true);
   const [fontSize, setFontSize] = useState(16);
   const [showHazzat, setShowHazzat] = useState(false);
-  const [rotateFromSidebar, setRotateFromSidebar] = useState(false);
+  const [_rotateFromSidebar, setRotateFromSidebar] = useState(false);
   const [showControlsPanel, setShowControlsPanel] = useState(false);
 
   // حالات جديدة لمودال الفيديو
@@ -233,16 +236,17 @@ export default function PreparatoryPage() {
 
   const stageKey = useMemo(() => {
     if (!selectedStage) return null;
-    if (selectedStage === "رابعة وخامسة وسادسة") return STAGE_KEYS.FIFTH_SIXTH;
-    if (selectedStage === "اعدادي وثانوي") return STAGE_KEYS.MIDDLE; // Assuming this maps to MIDDLE
+    if (selectedStage === "رابعة وخامسة وسادسة")
+      return STAGE_KEYS.FOURTH_FIFTH_SIXTH;
+    if (selectedStage === "اعدادي وثانوي") return STAGE_KEYS.MIDDLE_HIGH;
     return null;
   }, [selectedStage]);
 
   const riteContent = useMemo(() => {
-    if (viewMode === "rites" && stageKey && riteData[stageKey]) {
+    if (viewMode === "rites" && stageKey && preparatoryData[stageKey]) {
       // Assuming we want to show the 'first' level of rites for simplicity.
       // This can be expanded later if needed.
-      return riteData[stageKey].first || [];
+      return preparatoryData[stageKey].first || [];
     }
     return [];
   }, [viewMode, stageKey]);
@@ -384,7 +388,7 @@ export default function PreparatoryPage() {
                     <p className="text-gray-400">لا يوجد محتوى لهذه المرحلة</p>
                   </div>
                 ) : (
-                  riteContent.map((item: RiteItem, index: number) => (
+                  riteContent.map((item: PreparatoryItem, index: number) => (
                     <div
                       key={index}
                       className="bg-gray-900 rounded-3xl overflow-hidden border border-white/5 shadow-2xl hover:border-blue-500/30 transition-all flex flex-col"
