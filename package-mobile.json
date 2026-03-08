@@ -1,0 +1,148 @@
+{
+  "name": "esmo-erof-mobile",
+  "private": true,
+  "type": "module",
+  "version": "2.1.0",
+  "description": "تطبيق الألحان القبطية الأرثوذكسية - نسخة متنقلة محسّنة",
+  "keywords": [
+    "coptic",
+    "hymns",
+    "orthodox",
+    "mobile",
+    "pwa",
+    "arabic",
+    "christian",
+    "liturgy"
+  ],
+  "author": "ESMO EROF Team",
+  "license": "MIT",
+  "homepage": "https://esmo-erof.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/esmo-erof/esmo-erof-mobile.git"
+  },
+  "bugs": {
+    "url": "https://github.com/esmo-erof/esmo-erof-mobile/issues"
+  },
+  "scripts": {
+    "build": "react-router build",
+    "dev": "react-router dev",
+    "start": "react-router-serve build",
+    "typecheck": "react-router typegen && tsc",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,md}\"",
+    "format:check": "prettier --check \"**/*.{js,jsx,ts,tsx,json,css,md}\"",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "build:analyze": "npm run build && npx webpack-bundle-analyzer build/static/js/*.js",
+    "pwa:build": "npm run build && npx workbox generateSW workbox-config.js",
+    "serve": "serve -s build -l 3000",
+    "serve:https": "serve -s build -l 3000 --ssl-cert certificates/cert.pem --ssl-key certificates/key.pem",
+    "deploy": "npm run build && npm run pwa:build && firebase deploy",
+    "validate": "npm run lint && npm run typecheck && npm run test && npm run build"
+  },
+  "dependencies": {
+    "@react-router/dev": "^7.1.5",
+    "@react-router/fs-routes": "^7.1.5",
+    "@react-router/node": "^7.1.5",
+    "@react-router/serve": "^7.1.5",
+    "@types/react": "^19.0.7",
+    "@types/react-dom": "^19.0.3",
+    "@types/node": "^22.10.7",
+    "isbot": "^5.1.17",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-router": "^7.1.5",
+    "typescript": "^5.7.3"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.18.0",
+    "@types/jest": "^29.5.14",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^9.18.0",
+    "eslint-config-prettier": "^10.0.1",
+    "eslint-plugin-react": "^7.37.4",
+    "eslint-plugin-react-hooks": "^5.1.0",
+    "globals": "^15.14.0",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "postcss": "^8.5.1",
+    "prettier": "^3.4.2",
+    "serve": "^14.2.4",
+    "tailwindcss": "^3.4.17",
+    "typescript-eslint": "^8.21.0",
+    "vite": "^6.0.11",
+    "vite-tsconfig-paths": "^5.1.4",
+    "workbox-cli": "^7.3.0",
+    "workbox-webpack-plugin": "^7.3.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all",
+      "ios >= 12",
+      "android >= 6"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "jest": {
+    "testEnvironment": "jsdom",
+    "setupFilesAfterEnv": ["<rootDir>/src/setupTests.ts"],
+    "moduleNameMapping": {
+      "\\.(css|less|scss|sass)$": "identity-obj-proxy"
+    },
+    "collectCoverageFrom": ["src/**/*.{js,jsx,ts,tsx}", "!src/**/*.d.ts"]
+  },
+  "prettier": {
+    "semi": true,
+    "trailingComma": "es5",
+    "singleQuote": true,
+    "printWidth": 100,
+    "tabWidth": 2,
+    "useTabs": false,
+    "arrowParens": "avoid",
+    "endOfLine": "lf"
+  },
+  "eslintConfig": {
+    "extends": [
+      "eslint:recommended",
+      "plugin:react/recommended",
+      "plugin:react-hooks/recommended",
+      "prettier"
+    ],
+    "plugins": ["react", "react-hooks"],
+    "parserOptions": {
+      "ecmaVersion": 2022,
+      "sourceType": "module",
+      "ecmaFeatures": {
+        "jsx": true
+      }
+    },
+    "env": {
+      "browser": true,
+      "es2022": true,
+      "node": true,
+      "jest": true
+    },
+    "rules": {
+      "react/react-in-jsx-scope": "off",
+      "react/prop-types": "off"
+    },
+    "settings": {
+      "react": {
+        "version": "detect"
+      }
+    }
+  }
+}

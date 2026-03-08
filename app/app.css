@@ -1,55 +1,107 @@
 @import "tailwindcss";
 
 /* ============================================
-   Root Variables
+   Design System — ESMO EROF
+   نظام التصميم المتكامل
 ============================================ */
+
 :root {
-  --primary-color: #f44250;
-  --secondary-color: #121212;
-  --accent-color: #4f46e5;
-  --background-light: #ffffff;
-  --background-dark: #0f172a;
-  --text-light: #111111;
-  --text-dark: #ffffff;
-  --transition-speed: 0.3s;
+  /* ── الألوان الأساسية ── */
+  --clr-primary: #3b82f6; /* blue-500 */
+  --clr-primary-dk: #1d4ed8; /* blue-700 */
+  --clr-accent: #f44250;
+  --clr-accent-2: #4f46e5; /* indigo */
+  --clr-gold: #f59e0b;
+
+  /* ── خلفية / نص ── */
+  --clr-bg-light: #ffffff;
+  --clr-bg-dark: #060d1f;
+  --clr-surface: #0f172a;
+  --clr-text-light: #0f172a;
+  --clr-text-dark: #e2e8f0;
+
+  /* ── Glassmorphism ── */
+  --glass-bg: rgba(255, 255, 255, 0.06);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  --glass-blur: 16px;
+
+  /* ── Transitions ── */
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --t-fast: 150ms var(--ease-smooth);
+  --t-base: 300ms var(--ease-smooth);
+  --t-slow: 500ms var(--ease-smooth);
+
+  /* ── Typography Scale ── */
+  --fs-xs: clamp(0.7rem, 2vw, 0.75rem);
+  --fs-sm: clamp(0.82rem, 2.5vw, 0.875rem);
+  --fs-base: clamp(0.9rem, 3vw, 1rem);
+  --fs-lg: clamp(1.05rem, 3.5vw, 1.125rem);
+  --fs-xl: clamp(1.2rem, 4vw, 1.25rem);
+  --fs-2xl: clamp(1.4rem, 5vw, 1.5rem);
+  --fs-3xl: clamp(1.7rem, 6vw, 1.875rem);
+  --fs-4xl: clamp(2rem, 7vw, 2.25rem);
+  --fs-hero: clamp(2.5rem, 9vw, 4rem);
+
+  /* ── Spacing ── */
+  --sp-1: 0.25rem;
+  --sp-2: 0.5rem;
+  --sp-3: 0.75rem;
+  --sp-4: 1rem;
+  --sp-6: 1.5rem;
+  --sp-8: 2rem;
+  --sp-12: 3rem;
+  --sp-16: 4rem;
+
+  /* ── Border radius ── */
+  --r-sm: 0.375rem;
+  --r-md: 0.75rem;
+  --r-lg: 1rem;
+  --r-xl: 1.5rem;
+  --r-2xl: 2rem;
+
+  /* ── Safe areas (set via JS in root.tsx) ── */
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
 }
 
 /* ============================================
    Fonts
 ============================================ */
 
-/* NEWATH - Header/Footer */
 @font-face {
   font-family: "NEWATH";
   src: url("/fonts/NEWATH.ttf") format("truetype");
   font-display: swap;
+  font-weight: normal;
+  font-style: normal;
 }
 
-/* Coptic Main */
 @font-face {
   font-family: "copt-main";
   src: url("/fonts/StGeorgeSamanFont.woff") format("woff");
   font-display: swap;
+  font-weight: normal;
+  font-style: normal;
 }
 
-/* Coptic Alternative Fonts */
 @font-face {
   font-family: "copt-alt";
   src: url("/fonts/copt.ttf") format("truetype");
   font-display: swap;
+  font-weight: normal;
+  font-style: normal;
 }
 
 @font-face {
   font-family: "copt-youssef";
   src: url("/fonts/Youssef-Nosshy.ttf") format("truetype");
   font-display: swap;
-}
-
-/* Arabic Naskh (يفضل تحميله من Google Fonts لو متاح) */
-@font-face {
-  font-family: "Naskh-Custom";
-  src: local("Noto Naskh Arabic");
-  font-display: swap;
+  font-weight: normal;
+  font-style: normal;
 }
 
 /* ============================================
@@ -78,18 +130,17 @@
   .coptic-base {
     font-family:
       "copt-main", "copt-alt", "copt-youssef", "Noto Sans Coptic", sans-serif;
-    font-size: 1.1rem;
-    line-height: 1.6;
+    font-size: var(--fs-lg);
+    line-height: 1.7;
   }
 
   .coptic-xl {
     font-family:
       "copt-main", "copt-alt", "copt-youssef", "Noto Sans Coptic", sans-serif;
-    font-size: 1.5rem;
+    font-size: var(--fs-2xl);
     line-height: 1.8;
   }
 
-  /* Coptic inline text styling */
   .coptic-inline {
     font-family:
       "copt-main", "copt-alt", "copt-youssef", "Noto Sans Coptic", sans-serif;
@@ -99,40 +150,90 @@
     direction: ltr;
     margin: 0 4px;
   }
-}
 
-/* ============================================
-   Base HTML Styling
-============================================ */
-
-html,
-body {
-  background-color: var(--background-light);
-  color: var(--text-light);
-  font-family: "copt-main", "Inter", system-ui, sans-serif;
-  scroll-behavior: smooth;
-  overflow-x: hidden;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-/* Dark Mode */
-@media (prefers-color-scheme: dark) {
-  html,
-  body {
-    background-color: var(--background-dark);
-    color: var(--text-dark);
+  /* ── Safe area helpers ── */
+  .pt-safe-top {
+    padding-top: var(--safe-top);
+  }
+  .pb-safe-bottom {
+    padding-bottom: var(--safe-bottom);
+  }
+  .pl-safe-left {
+    padding-left: var(--safe-left);
+  }
+  .pr-safe-right {
+    padding-right: var(--safe-right);
   }
 }
 
 /* ============================================
-   Layout Helpers
+   Base Styles
+============================================ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px;
+  /* FIX: لازم الثلاثة مع بعض عشان تغطي كل المتصفحات */
+  -webkit-text-size-adjust: 100%; /* iOS Safari */
+  -moz-text-size-adjust: 100%; /* Firefox قديم */
+  text-size-adjust: 100%; /* Chrome / Edge / Samsung */
+  /* تقليل حجم الخط على الشاشات الصغيرة جداً */
+  font-size: 16px;
+}
+
+@media (max-width: 375px) {
+  html {
+    font-size: 15px;
+  }
+}
+
+body {
+  margin: 0;
+  background-color: var(--clr-bg-dark);
+  color: var(--clr-text-dark);
+  font-family: "copt-main", "Inter", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+  max-width: 100vw;
+  line-height: 1.6;
+}
+
+/* Dark mode هو الافتراضي للمشروع */
+@media (prefers-color-scheme: light) {
+  body {
+    background-color: var(--clr-bg-light);
+    color: var(--clr-text-light);
+  }
+}
+
+/* منع التمرير عند فتح القائمة (يُضاف عبر JS) */
+body.menu-open {
+  overflow: hidden;
+}
+
+/* ============================================
+   Layout
 ============================================ */
 
 .container {
   margin: 0 auto;
-  padding: 0 1rem;
+  padding: 0 var(--sp-4);
   max-width: 80rem;
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .container {
+    padding: 0 var(--sp-6);
+  }
 }
 
 .page-bg-setup {
@@ -141,6 +242,13 @@ body {
   background-repeat: no-repeat;
   background-attachment: fixed;
   position: relative;
+}
+
+/* منع background-attachment: fixed على الموبايل (أداء سيء) */
+@media (max-width: 768px) {
+  .page-bg-setup {
+    background-attachment: scroll;
+  }
 }
 
 .bg-about {
@@ -156,107 +264,340 @@ body {
 .bg-overlay {
   position: absolute;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0.75);
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.7) 0%,
+    rgba(6, 13, 31, 0.85) 100%
+  );
   z-index: 0;
 }
 
 /* ============================================
-   Visual Effects
+   Glass Effect
 ============================================ */
 
 .glass-card {
-  -webkit-backdrop-filter: blur(16px); /* Safari */
-  backdrop-filter: blur(16px);
-  background: rgba(255, 255, 255, 0.3);
-  border-radius: 1rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+  backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+  background: var(--glass-bg);
+  border-radius: var(--r-xl);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
 }
 
+/* حالة أغمق للبطاقات داخل الخلفيات الفاتحة */
+.glass-card-dark {
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(150%);
+  backdrop-filter: blur(var(--glass-blur)) saturate(150%);
+  background: rgba(6, 13, 31, 0.65);
+  border-radius: var(--r-xl);
+  border: 1px solid rgba(96, 165, 250, 0.12);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+}
+
+/* ============================================
+   Typography — Gradient Text
+============================================ */
+
 .gradient-text {
-  background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+  background: linear-gradient(135deg, var(--clr-accent), var(--clr-accent-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.gradient-text-blue {
+  background: linear-gradient(135deg, #60a5fa, #818cf8);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
 /* ============================================
-   Lyrics Text Styling (Balanced Version)
+   Lyrics Text Styling
 ============================================ */
 
-/* قبطي */
+/* قبطي خام */
 .text-coptic-raw {
   font-family: "copt-main", sans-serif;
-  font-size: clamp(1.4rem, 4vw, 2.1rem);
-  line-height: 1.6;
+  font-size: clamp(1.3rem, 4vw, 2.1rem);
+  line-height: 1.65;
   text-align: center;
 }
 
 /* قبطي عربي */
 .text-coptic-arabic {
   font-family: "copt-main", sans-serif;
-  font-size: clamp(1.6rem, 4.5vw, 2.3rem);
-  line-height: 1.65;
+  font-size: clamp(1.5rem, 4.5vw, 2.3rem);
+  line-height: 1.7;
   text-align: center;
 }
 
-/* عربي ترجمة - خط نسخ واضح */
+/* عربي ترجمة */
 .text-arabic-translation {
   font-family:
     "Naskh-Custom", "Noto Naskh Arabic", "Traditional Arabic", "Segoe UI",
     sans-serif;
-  font-style: normal; /* إزالة italic */
   font-weight: 500;
-  font-size: clamp(1.8rem, 5vw, 2.6rem);
-  line-height: 1.75;
+  font-size: clamp(1.6rem, 5vw, 2.6rem);
+  line-height: 1.8;
   text-align: center;
+  font-style: normal;
 }
 
-/* ============================================
-   Mobile Optimization
-============================================ */
-
-@media (max-width: 640px) {
+/* ── تعديلات الجوال الصغير ── */
+@media (max-width: 375px) {
   .text-coptic-raw {
-    font-size: clamp(1.5rem, 4.5vw, 2rem);
+    font-size: clamp(1.1rem, 3.5vw, 1.5rem);
   }
-
   .text-coptic-arabic {
-    font-size: clamp(1.7rem, 5vw, 2.2rem);
+    font-size: clamp(1.2rem, 4vw, 1.7rem);
   }
-
   .text-arabic-translation {
-    font-size: clamp(2rem, 5vw, 2.8rem);
+    font-size: clamp(1.4rem, 4.5vw, 2rem);
   }
 }
 
 /* ============================================
-   Accessibility & Interaction
+   Interactive Elements
 ============================================ */
 
-.font-control-button {
-  -webkit-user-select: none; /* Safari */
-  user-select: none;
+/* أزرار أساسية */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  min-height: 44px;
+  min-width: 44px;
+  border: none;
+  border-radius: var(--r-lg);
+  background: linear-gradient(135deg, var(--clr-primary), var(--clr-accent-2));
+  color: white;
+  font-size: var(--fs-base);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--t-fast);
   -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
 }
 
-.lyrics-modal-text {
-  -webkit-user-select: text; /* Safari */
-  user-select: text;
+.btn-primary:hover {
+  box-shadow: 0 6px 24px rgba(59, 130, 246, 0.45);
+  transform: translateY(-1px);
+}
+.btn-primary:active {
+  transform: scale(0.96);
+  box-shadow: none;
+}
+.btn-primary:focus-visible {
+  outline: 2px solid #60a5fa;
+  outline-offset: 3px;
 }
 
+/* أزرار ثانوية */
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  min-height: 44px;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-lg);
+  background: var(--glass-bg);
+  color: var(--clr-text-dark);
+  font-size: var(--fs-base);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--t-fast);
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.btn-ghost:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+.btn-ghost:active {
+  transform: scale(0.96);
+}
+
+/* ============================================
+   Touch & Interaction Helpers
+============================================ */
+
+.touch-target {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+.touch-feedback {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.touch-feedback:active {
+  transform: scale(0.96);
+  transition: transform 0.1s;
+}
+
+button,
+a,
+.clickable {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* ============================================
+   Accessibility
+============================================ */
+
+*:focus-visible {
+  outline: 2px solid var(--clr-primary);
+  outline-offset: 3px;
+  border-radius: var(--r-sm);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* إيقاف الحركة للمستخدمين الذين يفضلونها */
 @media (prefers-reduced-motion: reduce) {
-  * {
-    animation: none !important;
-    transition: none !important;
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  html {
+    scroll-behavior: auto;
   }
 }
 
+/* أحجام لمس أكبر على شاشات اللمس */
 @media (hover: none) and (pointer: coarse) {
-  button {
+  button,
+  a,
+  [role="button"] {
     min-height: 44px;
     min-width: 44px;
   }
+}
+
+/* ============================================
+   Form Inputs — منع التكبير على iOS
+============================================ */
+
+input,
+select,
+textarea {
+  font-size: 16px !important; /* يمنع iOS من تكبير الصفحة */
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* ============================================
+   Images & Media
+============================================ */
+
+img,
+video {
+  max-width: 100%;
+  height: auto;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+img {
+  display: block;
+}
+
+/* تحميل تدريجي */
+.lazy-image {
+  opacity: 0;
+  transition: opacity 0.4s var(--ease-smooth);
+}
+.lazy-image.loaded {
+  opacity: 1;
+}
+
+/* ============================================
+   Animations
+============================================ */
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+@keyframes pulse-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+  }
+  50% {
+    box-shadow: 0 0 20px 4px rgba(59, 130, 246, 0.4);
+  }
+}
+
+.animate-fade-up {
+  animation: fadeUp 0.5s var(--ease-smooth) both;
+}
+.animate-fade-in {
+  animation: fadeIn 0.3s var(--ease-smooth) both;
+}
+.animate-pulse-glow {
+  animation: pulse-glow 2.5s ease-in-out infinite;
+}
+
+/* Skeleton loading */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.05) 25%,
+    rgba(255, 255, 255, 0.1) 50%,
+    rgba(255, 255, 255, 0.05) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: var(--r-md);
 }
 
 /* ============================================
@@ -264,14 +605,93 @@ body {
 ============================================ */
 
 .custom-scrollbar::-webkit-scrollbar {
-  width: 8px;
+  width: 5px;
+  height: 5px;
 }
-
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 3px;
+}
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 3px;
 }
-
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.3);
+}
+
+/* ============================================
+   PWA Standalone Mode
+============================================ */
+
+@media (display-mode: standalone) {
+  .pwa-hidden {
+    display: none !important;
+  }
+  .pwa-fullscreen {
+    min-height: 100vh;
+    padding-top: var(--safe-top);
+    padding-bottom: var(--safe-bottom);
+  }
+}
+
+/* ============================================
+   Print
+============================================ */
+
+@media print {
+  header,
+  footer,
+  nav,
+  .no-print {
+    display: none !important;
+  }
+  * {
+    background: white !important;
+    color: black !important;
+  }
+  .glass-card {
+    box-shadow: none;
+    border: 1px solid #ccc;
+  }
+}
+
+/* ============================================
+   Classes replacing inline styles
+   (FIX: no-inline-styles diagnostic)
+============================================ */
+
+/* Header — backdrop blur بدل style={{ backdropFilter }} */
+.header-blur {
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  backdrop-filter: blur(16px) saturate(180%);
+}
+
+/* Overlay — blur عند فتح القائمة */
+.nav-overlay--open {
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+}
+
+/* home.tsx — زخرفة خلفية بدل style={{ backgroundImage: radial-gradient }} */
+.home-radial-glow {
+  background-image: radial-gradient(
+    ellipse 80% 60% at 50% 0%,
+    rgba(59, 130, 246, 0.25) 0%,
+    transparent 70%
+  );
+}
+
+/* تأخيرات حركة روابط القائمة بدل style={{ animationDelay }} */
+.nav-item-delay-0 {
+  animation-delay: 0ms;
+}
+.nav-item-delay-1 {
+  animation-delay: 60ms;
+}
+.nav-item-delay-2 {
+  animation-delay: 120ms;
+}
+.nav-item-delay-3 {
+  animation-delay: 180ms;
 }

@@ -1,13 +1,5 @@
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState, useCallback } from "react";
 import { evictVideo } from "../utils/swClient";
-
-/**
- * LazyVideo
- * — مكون فيديو بسيط يعتمد على عناصر الفيديو الأصلية مع ميزة:
- *   1) إيقاف بقية مقاطع الفيديو تلقائيًا عند تشغيل واحد منها.
- *   2) الحفاظ على واجهة استخدام نظيفة دون منيو مخصصة (مهيأة للتوسعة لاحقًا).
- * المكون لا يفعّل التحميل الكسول تلقائيًا، لكنه يستخدم preload=metadata لتقليل الحجم.
- */
 
 interface LazyVideoProps {
   src: string;
@@ -18,75 +10,172 @@ interface LazyVideoProps {
   onPlayChange?: (isPlaying: boolean) => void;
 }
 
-// Global array to track all video instances
 const videoInstances: HTMLVideoElement[] = [];
 
-export default function LazyVideo({ 
-  src, 
-  title, 
-  poster, 
+// عدد محاولات الاسترداد التلقائي قبل إظهار خطأ للمستخدم
+const MAX_STALL_RETRIES = 3;
+// الانتظار بين كل محاولة (ms) — يتضاعف مع كل محاولة (exponential backoff)
+const BASE_RETRY_DELAY = 2000;
+
+export default function LazyVideo({
+  src,
+  title,
+  poster,
   startTime = 0,
   onTimeUpdate,
-  onPlayChange
+  onPlayChange,
 }: LazyVideoProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const initialTimeSet = useRef(false);
-  const [showMenu, setShowMenu] = useState(false);
+  const stallRetryCount = useRef(0);
+  const stallTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const lastCurrentTime = useRef(0);
+
   const [hasError, setHasError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isWaiting, setIsWaiting] = useState(false);
+  const [stallMessage, setStallMessage] = useState<string | null>(null);
+  const [showMenu, setShowMenu] = useState(false);
 
-  useEffect(() => {
-    initialTimeSet.current = false;
+  // ── مسح الـ stall timer عند الـ unmount أو تغيير الـ src ──────────────
+  const clearStallTimer = useCallback(() => {
+    if (stallTimer.current) {
+      clearTimeout(stallTimer.current);
+      stallTimer.current = null;
+    }
+  }, []);
+
+  // ── محاولة استرداد تلقائي عند التوقف ────────────────────────────────
+  const attemptStalledRecovery = useCallback(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const retries = stallRetryCount.current;
+
+    if (retries >= MAX_STALL_RETRIES) {
+      // استنفدنا المحاولات → أظهر خطأ للمستخدم
+      setHasError(true);
+      setIsLoading(false);
+      setIsWaiting(false);
+      setStallMessage(null);
+      stallRetryCount.current = 0;
+      return;
+    }
+
+    const delay = BASE_RETRY_DELAY * Math.pow(2, retries); // 2s, 4s, 8s
+    stallRetryCount.current += 1;
+
+    setStallMessage(
+      `جاري الاسترداد... (محاولة ${stallRetryCount.current}/${MAX_STALL_RETRIES})`,
+    );
+
+    stallTimer.current = setTimeout(() => {
+      const v = videoRef.current;
+      if (!v) return;
+
+      const wasPlaying = !v.paused;
+      const savedTime = v.currentTime;
+
+      // الحيلة: تحريك الوقت بشكل طفيف يجبر المتصفح على طلب بيانات جديدة
+      try {
+        v.currentTime = Math.max(0, savedTime - 0.1);
+      } catch {}
+
+      if (wasPlaying) {
+        v.play().catch(() => {
+          // إذا فشل play()، أعد تحميل الـ src بـ timestamp لكسر الكاش
+          const sep = src.includes("?") ? "&" : "?";
+          const bustSrc = `${src}${sep}_cb=${Date.now()}`;
+          const sourceEl = v.querySelector("source");
+          if (sourceEl) sourceEl.setAttribute("src", bustSrc);
+          v.load();
+          v.currentTime = savedTime;
+          v.play().catch(() => {
+            setHasError(true);
+            setIsLoading(false);
+            setIsWaiting(false);
+          });
+        });
+      }
+    }, delay);
   }, [src]);
 
+  // ── إعادة ضبط عند تغيير الـ src ─────────────────────────────────────
+  useEffect(() => {
+    initialTimeSet.current = false;
+    stallRetryCount.current = 0;
+    setHasError(false);
+    setIsLoading(true);
+    setIsWaiting(false);
+    setStallMessage(null);
+    clearStallTimer();
+  }, [src, clearStallTimer]);
+
+  // ── ربط أحداث الفيديو ────────────────────────────────────────────────
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
-    // Set initial time if provided (only once when src changes or on mount)
     if (startTime > 0 && !initialTimeSet.current) {
       video.currentTime = startTime;
       initialTimeSet.current = true;
     }
 
-    // Add this video to the global instances
     videoInstances.push(video);
 
-    // Handler to pause other videos when this one plays
     const handlePlay = () => {
+      // أوقف بقية الفيديوهات
       videoInstances.forEach((v) => {
-        if (v !== video && !v.paused) {
-          v.pause();
-        }
+        if (v !== video && !v.paused) v.pause();
       });
+      // الفيديو شغّال → أعد ضبط حالات التوقف
+      clearStallTimer();
+      stallRetryCount.current = 0;
+      setStallMessage(null);
       setIsLoading(false);
       setIsWaiting(false);
-      if (onPlayChange) onPlayChange(true);
+      onPlayChange?.(true);
     };
 
     const handlePause = () => {
-      if (onPlayChange) onPlayChange(false);
+      clearStallTimer();
+      onPlayChange?.(false);
     };
 
     const handleTimeUpdate = () => {
-      if (onTimeUpdate) {
-        onTimeUpdate(video.currentTime);
-      }
+      lastCurrentTime.current = video.currentTime;
+      onTimeUpdate?.(video.currentTime);
     };
 
     const handleWaiting = () => setIsWaiting(true);
+
     const handleCanPlay = () => {
+      clearStallTimer();
+      stallRetryCount.current = 0;
+      setStallMessage(null);
       setIsLoading(false);
       setIsWaiting(false);
     };
-    const handleStalled = () => {
-      // Stalled means the browser is trying to fetch data, but it is not coming
-      // This is common on slow connections
-      console.warn("Video playback stalled:", src);
-    };
 
     const handleLoadStart = () => setIsLoading(true);
+
+    const handleLoadedData = () => setIsLoading(false);
+
+    const handleStalled = () => {
+      // "stalled" = المتصفح طلب بيانات لكنها ما جاتش
+      // نبدأ محاولة استرداد تلقائي فقط لو الفيديو كان شغّال
+      if (!video.paused) {
+        setIsWaiting(true);
+        attemptStalledRecovery();
+      }
+    };
+
+    const handleError = () => {
+      clearStallTimer();
+      setHasError(true);
+      setIsLoading(false);
+      setIsWaiting(false);
+    };
 
     video.addEventListener("play", handlePlay);
     video.addEventListener("pause", handlePause);
@@ -95,8 +184,9 @@ export default function LazyVideo({
     video.addEventListener("canplay", handleCanPlay);
     video.addEventListener("stalled", handleStalled);
     video.addEventListener("loadstart", handleLoadStart);
+    video.addEventListener("loadeddata", handleLoadedData);
+    video.addEventListener("error", handleError);
 
-    // Cleanup on unmount
     return () => {
       video.removeEventListener("play", handlePlay);
       video.removeEventListener("pause", handlePause);
@@ -105,32 +195,57 @@ export default function LazyVideo({
       video.removeEventListener("canplay", handleCanPlay);
       video.removeEventListener("stalled", handleStalled);
       video.removeEventListener("loadstart", handleLoadStart);
+      video.removeEventListener("loadeddata", handleLoadedData);
+      video.removeEventListener("error", handleError);
+
+      clearStallTimer();
       const index = videoInstances.indexOf(video);
-      if (index > -1) {
-        videoInstances.splice(index, 1);
-      }
+      if (index > -1) videoInstances.splice(index, 1);
     };
-  }, [startTime]); // Added startTime to dependency array
+  }, [
+    startTime,
+    attemptStalledRecovery,
+    clearStallTimer,
+    onPlayChange,
+    onTimeUpdate,
+  ]);
 
-  // يمكن إضافة وظائف إضافية لاحقًا (تحميل/قائمة) إن لزم
-
-  // Close menu when clicking outside
+  // ── إغلاق القائمة عند الضغط خارجها ──────────────────────────────────
   useEffect(() => {
+    if (!showMenu) return;
     const handleClickOutside = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      if (!target.closest(".video-menu-container")) {
+      if (!(e.target as HTMLElement).closest(".video-menu-container")) {
         setShowMenu(false);
       }
     };
-
-    if (showMenu) {
-      document.addEventListener("click", handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener("click", handleClickOutside);
-    };
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
   }, [showMenu]);
+
+  // ── إعادة المحاولة اليدوية (زر المستخدم) ────────────────────────────
+  const handleManualRetry = async () => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    try {
+      evictVideo(src);
+    } catch {}
+
+    stallRetryCount.current = 0;
+    setHasError(false);
+    setIsLoading(true);
+    setStallMessage(null);
+
+    const sep = src.includes("?") ? "&" : "?";
+    const newSrc = `${src}${sep}retry=${Date.now()}`;
+    const sourceEl = video.querySelector("source");
+    if (sourceEl) sourceEl.setAttribute("src", newSrc);
+    video.load();
+
+    try {
+      await video.play();
+    } catch {}
+  };
 
   return (
     <div className="relative w-full h-full">
@@ -143,14 +258,15 @@ export default function LazyVideo({
         playsInline
         crossOrigin="anonymous"
         disablePictureInPicture={false}
+        aria-label={title}
+        title={title}
         onError={() => {
+          clearStallTimer();
           setHasError(true);
           setIsLoading(false);
           setIsWaiting(false);
         }}
         onLoadedData={() => setIsLoading(false)}
-        aria-label={title}
-        title={title}
       >
         <source src={src} type="video/mp4" />
         <p className="text-gray-400 text-sm text-center p-4">
@@ -158,17 +274,19 @@ export default function LazyVideo({
         </p>
       </video>
 
-      {/* Loading & Waiting State Overlay */}
+      {/* Loading / Waiting / Stall overlay */}
       {(isLoading || isWaiting) && !hasError && (
         <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/40 backdrop-blur-[2px] pointer-events-none transition-all duration-300">
           <div className="w-10 h-10 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin shadow-lg" />
-          {isWaiting && (
+          {(isWaiting || stallMessage) && (
             <p className="mt-3 text-xs text-white/80 font-bold bg-black/40 px-3 py-1 rounded-full border border-white/10 animate-pulse">
-              جاري التحميل...
+              {stallMessage ?? "جاري التحميل..."}
             </p>
           )}
         </div>
       )}
+
+      {/* Error overlay */}
       {hasError && (
         <div className="absolute inset-0 flex items-center justify-center bg-black/60 text-white text-sm sm:text-base p-4 rounded">
           <div className="text-center">
@@ -176,25 +294,7 @@ export default function LazyVideo({
             <p className="opacity-80 mt-1">تحقق من اتصالك أو جرّب لاحقًا.</p>
             <button
               className="mt-2 inline-block bg-white text-black rounded px-3 py-1 mr-2"
-              onClick={async () => {
-                const video = videoRef.current;
-                if (!video) return;
-                try {
-                  evictVideo(src);
-                } catch {}
-                setHasError(false);
-                // أعد التحميل بعنوان فريد لتجاوز أي كاش وسيط
-                const newSrc =
-                  src + (src.includes("?") ? "&" : "?") + "retry=" + Date.now();
-                const sourceEl = video.querySelector("source");
-                if (sourceEl) {
-                  sourceEl.setAttribute("src", newSrc);
-                }
-                video.load();
-                try {
-                  await video.play();
-                } catch {}
-              }}
+              onClick={handleManualRetry}
             >
               إعادة المحاولة
             </button>

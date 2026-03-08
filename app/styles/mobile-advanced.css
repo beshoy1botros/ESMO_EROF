@@ -1,0 +1,481 @@
+/* إعدادات متقدمة للجوال - ESMO EROF */
+
+:root {
+  /* متغيرات التصميم المتجاوب */
+  --mobile-font-size: clamp(14px, 4vw, 18px);
+  --mobile-header-height: clamp(60px, 12vw, 80px);
+  --mobile-padding: clamp(10px, 3vw, 20px);
+  --mobile-border-radius: clamp(8px, 2vw, 12px);
+  --mobile-button-height: clamp(44px, 10vw, 56px);
+  --mobile-touch-target: 44px; /* الحد الأدنى الموصى به من Apple وGoogle */
+
+  /* ألوان متجاوبة */
+  --mobile-primary: #2563eb;
+  --mobile-secondary: #7c3aed;
+  --mobile-success: #10b981;
+  --mobile-warning: #f59e0b;
+  --mobile-error: #ef4444;
+  --mobile-background: #ffffff;
+  --mobile-surface: #f8fafc;
+  --mobile-text: #1e293b;
+  --mobile-text-secondary: #64748b;
+
+  /* ظلال متنقلة */
+  --mobile-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --mobile-shadow-md:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --mobile-shadow-lg:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --mobile-shadow-xl:
+    0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* وضع الظلام للجوال */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --mobile-background: #0f172a;
+    --mobile-surface: #1e293b;
+    --mobile-text: #f1f5f9;
+    --mobile-text-secondary: #94a3b8;
+  }
+}
+
+/* تقليل الحركة للمستخدمين الذين يفضلونها */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* تصميم أساسي للجوال */
+.mobile-optimized {
+  font-size: var(--mobile-font-size);
+  line-height: 1.6;
+  padding: var(--mobile-padding);
+  touch-action: manipulation; /* منع التكبير المزدوج */
+  -webkit-tap-highlight-color: transparent; /* إزالة التمييز الافتراضي */
+  -webkit-touch-callout: none; /* منع قائمة النقر الطويل */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* رأس متجاوب */
+.mobile-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  height: var(--mobile-header-height);
+  background: var(--mobile-background);
+  /* FIX: إضافة بادئة webkit لدعم Safari */
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: var(--mobile-shadow-sm);
+}
+
+/* أزرار متنقلة */
+.mobile-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--mobile-touch-target);
+  min-width: var(--mobile-touch-target);
+  padding: 12px 24px;
+  border: none;
+  border-radius: var(--mobile-border-radius);
+  font-size: var(--mobile-font-size);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mobile-button:active {
+  transform: scale(0.95);
+}
+
+.mobile-button-primary {
+  background: var(--mobile-primary);
+  color: white;
+  box-shadow: var(--mobile-shadow-md);
+}
+
+.mobile-button-secondary {
+  background: var(--mobile-surface);
+  color: var(--mobile-text);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* قائمة متنقلة */
+.mobile-menu {
+  position: fixed;
+  top: var(--mobile-header-height);
+  left: 0;
+  right: 0;
+  background: var(--mobile-background);
+  /* FIX: إضافة بادئة webkit لدعم Safari */
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  transform: translateY(-100%);
+  transition: transform 0.3s ease;
+  z-index: 999;
+  max-height: calc(100vh - var(--mobile-header-height));
+  overflow-y: auto;
+  /* FIX: إزالة -webkit-overflow-scrolling المهجورة، التمرير السلس مدعوم تلقائياً الآن */
+}
+
+.mobile-menu.open {
+  transform: translateY(0);
+}
+
+.mobile-menu-item {
+  display: block;
+  padding: 16px var(--mobile-padding);
+  color: var(--mobile-text);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: var(--mobile-font-size);
+  min-height: var(--mobile-touch-target);
+  display: flex;
+  align-items: center;
+}
+
+.mobile-menu-item:active {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* محتوى متجاوب */
+.mobile-content {
+  padding: var(--mobile-padding);
+  margin-top: var(--mobile-header-height);
+  min-height: calc(100vh - var(--mobile-header-height));
+  background: var(--mobile-background);
+  color: var(--mobile-text);
+}
+
+/* بطاقات متنقلة */
+.mobile-card {
+  background: var(--mobile-surface);
+  border-radius: var(--mobile-border-radius);
+  padding: var(--mobile-padding);
+  margin-bottom: var(--mobile-padding);
+  box-shadow: var(--mobile-shadow-sm);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* نصوص متنقلة */
+.mobile-text {
+  font-size: var(--mobile-font-size);
+  color: var(--mobile-text);
+  line-height: 1.7;
+  text-align: justify;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  /* FIX: إضافة بادئة webkit لدعم Safari على iOS */
+  -webkit-hyphens: auto;
+  hyphens: auto;
+}
+
+.mobile-text-large {
+  font-size: clamp(16px, 5vw, 22px);
+}
+
+.mobile-text-small {
+  font-size: clamp(12px, 3.5vw, 14px);
+  color: var(--mobile-text-secondary);
+}
+
+/* شريط تمرير مخصص */
+.mobile-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.mobile-scroll::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+.mobile-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+}
+
+.mobile-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* تحميل متجاوب */
+.mobile-loader {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: var(--mobile-primary);
+  animation: mobile-spin 1s ease-in-out infinite;
+}
+
+@keyframes mobile-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* تأثيرات لمس متقدمة */
+.mobile-ripple {
+  position: relative;
+  overflow: hidden;
+}
+
+.mobile-ripple::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  transform: translate(-50%, -50%);
+  transition:
+    width 0.6s,
+    height 0.6s;
+}
+
+.mobile-ripple:active::before {
+  width: 300px;
+  height: 300px;
+}
+
+/* أنيميشن دخول المحتوى */
+@keyframes mobile-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes mobile-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.mobile-animate-slide-up {
+  animation: mobile-slide-up 0.5s ease-out;
+}
+
+.mobile-animate-fade-in {
+  animation: mobile-fade-in 0.3s ease-out;
+}
+
+/* وسائط استعلام متقدمة للجوال */
+
+/* أجهزة صغيرة جداً (< 375px) */
+@media (max-width: 374px) {
+  :root {
+    --mobile-font-size: clamp(12px, 4vw, 16px);
+    --mobile-padding: clamp(8px, 2vw, 12px);
+    --mobile-border-radius: 6px;
+  }
+
+  .mobile-card {
+    padding: 12px;
+    margin-bottom: 12px;
+  }
+
+  .mobile-button {
+    padding: 10px 16px;
+    font-size: clamp(12px, 3.5vw, 14px);
+  }
+}
+
+/* أجهزة كبيرة ( tablets ) */
+@media (min-width: 768px) and (max-width: 1024px) {
+  :root {
+    --mobile-font-size: clamp(16px, 3vw, 20px);
+    --mobile-padding: clamp(20px, 4vw, 30px);
+  }
+
+  .mobile-menu {
+    position: static;
+    transform: none;
+    display: flex;
+    flex-direction: row;
+    max-height: none;
+    overflow: visible;
+  }
+
+  .mobile-menu-item {
+    border-bottom: none;
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+  }
+}
+
+/* وضع أفقي */
+@media (orientation: landscape) and (max-width: 896px) {
+  .mobile-header {
+    height: clamp(50px, 8vh, 60px);
+  }
+
+  .mobile-content {
+    margin-top: clamp(50px, 8vh, 60px);
+    min-height: calc(100vh - clamp(50px, 8vh, 60px));
+  }
+
+  .mobile-menu {
+    top: clamp(50px, 8vh, 60px);
+    max-height: calc(100vh - clamp(50px, 8vh, 60px));
+  }
+}
+
+/* دعم لمس متعدد */
+@media (pointer: coarse) {
+  .mobile-button {
+    min-height: 48px; /* أكبر للأصابع */
+  }
+
+  .mobile-menu-item {
+    padding: 20px var(--mobile-padding);
+  }
+}
+
+/* دعم قلم متعدد */
+@media (pointer: fine) {
+  .mobile-button {
+    min-height: 32px; /* أصغر للأقلام */
+  }
+}
+
+/* تحسينات الأداء */
+.mobile-optimized {
+  will-change: transform;
+  contain: layout style;
+}
+
+.mobile-card {
+  contain: layout style paint;
+}
+
+.mobile-button {
+  will-change: transform;
+}
+
+/* دعم RTL للعربية */
+.mobile-rtl {
+  direction: rtl;
+  text-align: right;
+}
+
+.mobile-rtl .mobile-menu-item {
+  text-align: right;
+}
+
+.mobile-rtl .mobile-button {
+  flex-direction: row-reverse;
+}
+
+/* إخفاء عناصر غير ضرورية على الجوال */
+.mobile-hide {
+  display: none !important;
+}
+
+@media (max-width: 768px) {
+  .mobile-hide-sm {
+    display: none !important;
+  }
+}
+
+/* إظهار عناصر خاصة بالجوال فقط */
+.mobile-show {
+  display: none !important;
+}
+
+@media (max-width: 768px) {
+  .mobile-show {
+    display: block !important;
+  }
+}
+
+/* فئات مساعدة إضافية */
+.mobile-text-center {
+  text-align: center !important;
+}
+.mobile-text-left {
+  text-align: left !important;
+}
+.mobile-text-right {
+  text-align: right !important;
+}
+
+.mobile-m-0 {
+  margin: 0 !important;
+}
+.mobile-mt-0 {
+  margin-top: 0 !important;
+}
+.mobile-mb-0 {
+  margin-bottom: 0 !important;
+}
+.mobile-ml-0 {
+  margin-left: 0 !important;
+}
+.mobile-mr-0 {
+  margin-right: 0 !important;
+}
+
+.mobile-p-0 {
+  padding: 0 !important;
+}
+.mobile-pt-0 {
+  padding-top: 0 !important;
+}
+.mobile-pb-0 {
+  padding-bottom: 0 !important;
+}
+.mobile-pl-0 {
+  padding-left: 0 !important;
+}
+.mobile-pr-0 {
+  padding-right: 0 !important;
+}
+
+.mobile-full-width {
+  width: 100% !important;
+}
+.mobile-full-height {
+  height: 100vh !important;
+}
+
+/* تأثيرات بصرية خاصة بالجوال */
+.mobile-glow {
+  box-shadow: 0 0 20px rgba(37, 99, 235, 0.5);
+}
+
+.mobile-pulse {
+  animation: mobile-pulse 2s infinite;
+}
+
+@keyframes mobile-pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}

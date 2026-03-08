@@ -11,6 +11,8 @@ import {
 import type { Route } from "./+types/root";
 import { useEffect, useState } from "react";
 import "./app.css";
+import "./styles/mobile-improvements.css";
+import "./styles/mobile-advanced.css";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -26,8 +28,8 @@ export const links: Route.LinksFunction = () => [
   },
   {
     rel: "shortcut icon",
-    href: "/photos/العذراء مريم.ico", // تم تغيير اسم الملف
-    type: "image/x-icon", // تم تغيير النوع إلى النوع القياسي
+    href: "/photos/العذراء مريم.ico",
+    type: "image/x-icon",
   },
   {
     rel: "manifest",
@@ -40,41 +42,131 @@ export function meta() {
     { charset: "utf-8" },
     {
       name: "viewport",
-      content: "width=device-width, initial-scale=1",
+      content:
+        "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover",
     },
     { name: "theme-color", content: "#1e3a8a" },
+    { name: "mobile-web-app-capable", content: "yes" },
+    { name: "apple-mobile-web-app-capable", content: "yes" },
+    {
+      name: "apple-mobile-web-app-status-bar-style",
+      content: "black-translucent",
+    },
+    { name: "apple-mobile-web-app-title", content: "ⲥⲙⲟⲩ ⲉⲣⲟϥ" },
+    { name: "application-name", content: "ⲥⲙⲟⲩ ⲉⲣⲟϥ - الألحان القبطية" },
+    { name: "format-detection", content: "telephone=no" },
+    { name: "msapplication-tap-highlight", content: "no" },
+    { name: "msapplication-TileColor", content: "#1e3a8a" },
+    { name: "msapplication-TileImage", content: "/photos/العذراء مريم.ico" },
+    {
+      name: "description",
+      content:
+        "تطبيق الألحان القبطية الأرثوذكسية - تعليم وتصفح الألحان القبطية بسهولة",
+    },
+    {
+      name: "keywords",
+      content: "ألحان قبطية, تعليم لحن, الكنيسة القبطية, ترانيم, طقس",
+    },
+    { name: "author", content: "ESMO EROF" },
+    { name: "robots", content: "index, follow" },
+    { property: "og:title", content: "ⲥⲙⲟⲩ ⲉⲣⲟϥ - الألحان القبطية" },
+    {
+      property: "og:description",
+      content: "تعلم الألحان القبطية الأرثوذكسية مع أفضل تطبيق تعليمي",
+    },
+    { property: "og:type", content: "website" },
+    { property: "og:url", content: "https://esmo-erof.com" },
+    { property: "og:image", content: "/photos/العذراء مريم.ico" },
+    { name: "twitter:card", content: "summary_large_image" },
+    { name: "twitter:title", content: "ⲥⲙⲟⲩ ⲉⲣⲟϥ - الألحان القبطية" },
+    {
+      name: "twitter:description",
+      content: "تعلم الألحان القبطية الأرثوذكسية مع أفضل تطبيق تعليمي",
+    },
+    { name: "twitter:image", content: "/photos/العذراء مريم.ico" },
   ];
 }
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ar">
+    // FIX: suppressHydrationWarning يمنع React من رفع خطأ عند اختلاف
+    // className أو style بين الـ SSR والـ client بسبب dark mode والـ CSS vars.
+    // هذا آمن لأن الاختلاف مقصود ومحدود بالـ <html> tag فقط.
+    <html lang="ar" suppressHydrationWarning>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        {/*
+          FIX: نقل script إعداد dark mode والـ CSS vars إلى <head>
+          كـ blocking script حتى يتنفذ قبل أي render ويختفي الـ flash،
+          وبذلك السيرفر والـ client بيبدأوا من نفس الحالة.
+        */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var root = document.documentElement;
+                  root.style.setProperty('--safe-area-top',    'env(safe-area-inset-top)');
+                  root.style.setProperty('--safe-area-bottom', 'env(safe-area-inset-bottom)');
+                  root.style.setProperty('--safe-area-left',   'env(safe-area-inset-left)');
+                  root.style.setProperty('--safe-area-right',  'env(safe-area-inset-right)');
+
+                  if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    root.style.setProperty('--theme-color', '#0f172a');
+                    root.classList.add('dark');
+                  } else {
+                    root.style.setProperty('--theme-color', '#ffffff');
+                  }
+                } catch (e) {}
+              })();
+            `,
+          }}
+        />
         <Meta />
         <Links />
       </head>
-      <body>
-        {/* لا تضع Header أو Footer هنا */}
+      <body suppressHydrationWarning>
         {children}
         <ScrollRestoration />
         <Scripts />
-        {/* تسجيل Service Worker */}
+
+        {/* Service Worker */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
               if ('serviceWorker' in navigator) {
                 window.addEventListener('load', function() {
                   navigator.serviceWorker.register('/sw.js')
-                    .then(function(registration) {
-                      console.log('Service Worker registered successfully:', registration.scope);
+                    .then(function(reg) {
+                      console.log('Service Worker registered:', reg.scope);
                     })
-                    .catch(function(error) {
-                      console.log('Service Worker registration failed:', error);
+                    .catch(function(err) {
+                      console.log('Service Worker failed:', err);
                     });
                 });
               }
+            `,
+          }}
+        />
+
+        {/* تحميل مميزات الجوال المتقدمة */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                function loadMobileFeatures() {
+                  var script = document.createElement('script');
+                  script.src   = '/app/utils/mobile-features.js';
+                  script.async = true;
+                  document.head.appendChild(script);
+                }
+                if ('requestIdleCallback' in window) {
+                  requestIdleCallback(loadMobileFeatures);
+                } else {
+                  setTimeout(loadMobileFeatures, 1000);
+                }
+              })();
             `,
           }}
         />
@@ -99,7 +191,7 @@ export default function App() {
 
   async function enableLandscape() {
     try {
-      const docEl: any = document.documentElement as any;
+      const docEl = document.documentElement as any;
       if (docEl.requestFullscreen) {
         await docEl.requestFullscreen();
       } else if (docEl.webkitRequestFullscreen) {
@@ -109,8 +201,7 @@ export default function App() {
         await (screen.orientation as any).lock("landscape");
       }
       setLandscapeEnabled(true);
-    } catch (e) {
-      // في حال الفشل، فعّل فقط نمط CSS
+    } catch {
       setLandscapeEnabled(true);
     }
   }
@@ -149,16 +240,15 @@ export default function App() {
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
-  // معالج الأخطاء العام لمسارات React Router
-  let message = "عذرًا!"; // تم توطين الرسالة
-  let details = "حدث خطأ غير متوقع."; // تم توطين الرسالة
+  let message = "عذرًا!";
+  let details = "حدث خطأ غير متوقع.";
   let stack: string | undefined;
 
   if (isRouteErrorResponse(error)) {
-    message = error.status === 404 ? "404" : "خطأ"; // تم توطين الرسالة
+    message = error.status === 404 ? "404" : "خطأ";
     details =
       error.status === 404
-        ? "الصفحة المطلوبة غير موجودة." // تم توطين الرسالة
+        ? "الصفحة المطلوبة غير موجودة."
         : error.statusText || details;
   } else if (import.meta.env.DEV && error && error instanceof Error) {
     details = error.message;

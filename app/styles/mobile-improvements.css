@@ -18,7 +18,7 @@
   }
 }
 
-/* تحسين التمرير - إزالة الخاصية القديمة */
+/* تحسين التمرير */
 * {
   scroll-behavior: smooth;
 }
@@ -28,7 +28,7 @@ button,
 a,
 .clickable {
   -webkit-tap-highlight-color: transparent;
-  -webkit-user-select: none; /* إضافة البادئة لـ Safari */
+  -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
@@ -189,7 +189,8 @@ video::-webkit-media-controls-fullscreen-button {
 @media (max-width: 640px) {
   .shadow-xl,
   .shadow-2xl {
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3),
+    box-shadow:
+      0 10px 25px -5px rgba(0, 0, 0, 0.3),
       0 8px 10px -6px rgba(0, 0, 0, 0.2);
   }
 }
@@ -392,6 +393,7 @@ video::-webkit-media-controls-fullscreen-button {
 /* تحسين التمرير السلس */
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 80px; /* منع تداخل المحتوى مع الهيدر الثابت */
 }
 
 /* تحسين عرض الخطوط */
@@ -399,6 +401,9 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+  /* FIX: إضافة النسخة القياسية إلى جانب بادئة webkit */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 /* منع التحديد غير المرغوب */
@@ -417,4 +422,359 @@ video {
 
 .will-change-opacity {
   will-change: opacity;
+}
+
+/* تحسينات خاصة بالهواتف الذكية */
+@media (max-width: 768px) {
+  /* منع التكبير عند التركيز */
+  input,
+  select,
+  textarea,
+  button {
+    font-size: 16px !important;
+    touch-action: manipulation;
+  }
+
+  /* تحسين منطقة اللمس */
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* منع التمرير الأفقي */
+  body {
+    overflow-x: hidden;
+    max-width: 100vw;
+  }
+}
+
+/* تحسينات للشاشات الصغيرة جداً */
+@media (max-width: 375px) {
+  .container {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+
+  .responsive-grid {
+    gap: 0.75rem;
+  }
+}
+
+/* تحسينات للوضع المظلم التلقائي */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: #0f172a;
+    --color-text: #f1f5f9;
+  }
+}
+
+/* تحسينات للمستخدمين الذين يفضلون الحركة المخففة */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* ========================================
+   تحسينات PWA المتقدمة
+======================================== */
+
+/* شريط العنوان المخصص */
+.theme-color {
+  background-color: var(--color-primary, #3b82f6);
+}
+
+/* إخفاء شريط العنوان في PWA */
+@media (display-mode: standalone) {
+  .pwa-hidden {
+    display: none !important;
+  }
+
+  .pwa-fullscreen {
+    height: 100vh;
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+/* دعم المناطق الآمنة لـ iPhone X والأحدث */
+.safe-area {
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-right: env(safe-area-inset-right, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  padding-left: env(safe-area-inset-left, 0px);
+}
+
+/* ========================================
+   تحسينات الشبكة والاتصال الضعيف
+======================================== */
+
+/* وضع الطيران أو الاتصال الضعيف */
+@media (prefers-reduced-data: reduce) {
+  .data-intensive {
+    display: none !important;
+  }
+
+  .low-data-alternative {
+    display: block !important;
+  }
+
+  img {
+    filter: grayscale(100%);
+  }
+
+  video {
+    display: none !important;
+  }
+}
+
+/* تحميل كسول للصور */
+img[loading="lazy"] {
+  transition: opacity 0.3s ease;
+}
+
+img[loading="lazy"]:not([src]) {
+  opacity: 0;
+}
+
+/* ========================================
+   تحسينات البحث الصوتي
+======================================== */
+
+/* دعم البحث الصوتي */
+.voice-search {
+  position: relative;
+}
+
+.voice-search-button {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--color-primary);
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.voice-search-button:active {
+  transform: translateY(-50%) scale(0.9);
+}
+
+.voice-search-button.recording {
+  background: var(--color-error);
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: translateY(-50%) scale(1);
+  }
+  50% {
+    transform: translateY(-50%) scale(1.1);
+  }
+  100% {
+    transform: translateY(-50%) scale(1);
+  }
+}
+
+/* ========================================
+   تحسينات الإشعارات
+======================================== */
+
+/* إشعارات الموقع */
+.notification-permission {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  right: 20px;
+  background: var(--mobile-background, white);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: var(--mobile-shadow-lg, 0 10px 25px rgba(0, 0, 0, 0.1));
+  z-index: 10000;
+  transform: translateY(100px);
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.notification-permission.show {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.notification-buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.notification-button {
+  flex: 1;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.notification-allow {
+  background: var(--color-success, #10b981);
+  color: white;
+}
+
+.notification-deny {
+  background: var(--color-text-secondary, #64748b);
+  color: white;
+}
+
+/* ========================================
+   تحسينات تخزين البيانات المحلية
+======================================== */
+
+/* مؤشر حالة التخزين */
+.storage-indicator {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  z-index: 10001;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.storage-indicator.show {
+  opacity: 1;
+}
+
+.storage-indicator.warning {
+  background: rgba(245, 158, 11, 0.9);
+}
+
+.storage-indicator.error {
+  background: rgba(239, 68, 68, 0.9);
+}
+
+/* ========================================
+   تحسينات الأمان والخصوصية
+======================================== */
+
+/* وضع التخفي */
+.incognito-mode {
+  filter: blur(5px);
+  transition: filter 0.3s ease;
+}
+
+.incognito-mode:hover {
+  filter: blur(0);
+}
+
+/* حماية المحتوى */
+.content-protection {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+/* ========================================
+   تحسينات التكامل مع الجهاز
+======================================== */
+
+/* دعم الاهتزاز */
+.vibrate-button:active {
+  /* سيتم التعامل معها عبر JavaScript */
+}
+
+/* دعم مصباح يدوي */
+.flashlight-button {
+  background: #000;
+  color: #fff;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.flashlight-button.active {
+  background: #fff;
+  color: #000;
+  box-shadow: 0 0 30px rgba(255, 255, 255, 0.8);
+}
+
+/* ========================================
+   تحسينات إضافية للأداء
+======================================== */
+
+/* تقليل استخدام الذاكرة */
+.memory-optimized {
+  contain: layout style paint;
+  will-change: transform;
+}
+
+/* تحسين الرسوم المتحركة */
+.gpu-accelerated {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* تحميل تدريجي للصور */
+.lazy-image {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.lazy-image.loaded {
+  opacity: 1;
+}
+
+/* ========================================
+   تحسينات النهاية - Mobile-First Approach
+======================================== */
+
+/* تصميم أساسي للجوال */
+.mobile-first {
+  /* كل التنسيقات الأساسية للجوال هنا */
+}
+
+/* تحسينات للأجهزة اللوحية */
+@media (min-width: 768px) {
+  .tablet-enhanced {
+    /* تحسينات إضافية للأجهزة اللوحية */
+  }
+}
+
+/* تحسينات لسطح المكتب */
+@media (min-width: 1024px) {
+  .desktop-enhanced {
+    /* تحسينات إضافية لسطح المكتب */
+  }
 }
