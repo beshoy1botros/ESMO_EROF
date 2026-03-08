@@ -89,29 +89,20 @@ export function meta() {
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
-    // FIX: suppressHydrationWarning يمنع React من رفع خطأ عند اختلاف
-    // className أو style بين الـ SSR والـ client بسبب dark mode والـ CSS vars.
-    // هذا آمن لأن الاختلاف مقصود ومحدود بالـ <html> tag فقط.
     <html lang="ar" suppressHydrationWarning>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        {/*
-          FIX: نقل script إعداد dark mode والـ CSS vars إلى <head>
-          كـ blocking script حتى يتنفذ قبل أي render ويختفي الـ flash،
-          وبذلك السيرفر والـ client بيبدأوا من نفس الحالة.
-        */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
                 try {
                   var root = document.documentElement;
-                  root.style.setProperty('--safe-area-top',    'env(safe-area-inset-top)');
+                  root.style.setProperty('--safe-area-top', 'env(safe-area-inset-top)');
                   root.style.setProperty('--safe-area-bottom', 'env(safe-area-inset-bottom)');
-                  root.style.setProperty('--safe-area-left',   'env(safe-area-inset-left)');
-                  root.style.setProperty('--safe-area-right',  'env(safe-area-inset-right)');
-
+                  root.style.setProperty('--safe-area-left', 'env(safe-area-inset-left)');
+                  root.style.setProperty('--safe-area-right', 'env(safe-area-inset-right)');
                   if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
                     root.style.setProperty('--theme-color', '#0f172a');
                     root.classList.add('dark');
@@ -130,34 +121,22 @@ export function Layout({ children }: { children: React.ReactNode }) {
         {children}
         <ScrollRestoration />
         <Scripts />
-
-        {/* Service Worker */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              if ('serviceWorker' in navigator) {
-                window.addEventListener('load', function() {
-                  navigator.serviceWorker.register('/sw.js')
-                    .then(function(reg) {
-                      console.log('Service Worker registered:', reg.scope);
-                    })
-                    .catch(function(err) {
-                      console.log('Service Worker failed:', err);
-                    });
-                });
-              }
-            `,
-          }}
-        />
-
-        {/* تحميل مميزات الجوال المتقدمة */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
+                // 1. تسجيل الـ Service Worker
+                if ('serviceWorker' in navigator) {
+                  window.addEventListener('load', function() {
+                    navigator.serviceWorker.register('/sw.js')
+                      .then(function(reg) { console.log('Service Worker registered:', reg.scope); })
+                      .catch(function(err) { console.log('Service Worker failed:', err); });
+                  });
+                }
+                // 2. تحميل مميزات الجوال
                 function loadMobileFeatures() {
                   var script = document.createElement('script');
-                  script.src   = '/app/utils/mobile-features.js';
+                  script.src = '/scripts/mobile-features.js'; 
                   script.async = true;
                   document.head.appendChild(script);
                 }
