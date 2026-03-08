@@ -1145,7 +1145,7 @@ const stageVideoUrls = {
   [StageKey.FifthSixth]: {
     first: [
       `${BASE_URL}/Khamsa_satta-1-1_npieb5.mp4`,
-      `${BASE_URL}/Khamsa_satta-1-2_fwsuuf.mp4`,
+      `${BASE_URL}/Khamsa_satta-1-2_jsq8ev.mp4`,
       `${BASE_URL}/Khamsa_satta-1-3_xgm1ev.mp4`,
       `${BASE_URL}/Khamsa_satta-1-4_eyonvs.mp4`,
     ],
