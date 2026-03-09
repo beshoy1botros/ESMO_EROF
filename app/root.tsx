@@ -52,8 +52,9 @@ export function meta() {
       name: "apple-mobile-web-app-status-bar-style",
       content: "black-translucent",
     },
-    { name: "apple-mobile-web-app-title", content: "ⲥⲙⲟⲩ ⲉⲣⲟϥ" },
-    { name: "application-name", content: "ⲥⲙⲟⲩ ⲉⲣⲟϥ - الألحان القبطية" },
+    // ✏️ تغيير اسم الموقع إلى الإنجليزية
+    { name: "apple-mobile-web-app-title", content: "Praise Him" },
+    { name: "application-name", content: "Praise Him — Coptic Hymns" },
     { name: "format-detection", content: "telephone=no" },
     { name: "msapplication-tap-highlight", content: "no" },
     { name: "msapplication-TileColor", content: "#1e3a8a" },
@@ -61,27 +62,27 @@ export function meta() {
     {
       name: "description",
       content:
-        "تطبيق الألحان القبطية الأرثوذكسية - تعليم وتصفح الألحان القبطية بسهولة",
+        "Praise Him — Learn and explore Coptic Orthodox hymns with ease. Your complete guide to Coptic liturgical chants.",
     },
     {
       name: "keywords",
-      content: "ألحان قبطية, تعليم لحن, الكنيسة القبطية, ترانيم, طقس",
+      content: "Coptic hymns, Coptic chants, Orthodox liturgy, ألحان قبطية, Coptic church",
     },
-    { name: "author", content: "ESMO EROF" },
+    { name: "author", content: "Praise Him" },
     { name: "robots", content: "index, follow" },
-    { property: "og:title", content: "ⲥⲙⲟⲩ ⲉⲣⲟϥ - الألحان القبطية" },
+    { property: "og:title", content: "Praise Him — Coptic Hymns" },
     {
       property: "og:description",
-      content: "تعلم الألحان القبطية الأرثوذكسية مع أفضل تطبيق تعليمي",
+      content: "Learn Coptic Orthodox hymns with the best educational app.",
     },
     { property: "og:type", content: "website" },
     { property: "og:url", content: "https://esmo-erof.com" },
     { property: "og:image", content: "/photos/العذراء مريم.ico" },
     { name: "twitter:card", content: "summary_large_image" },
-    { name: "twitter:title", content: "ⲥⲙⲟⲩ ⲉⲣⲟϥ - الألحان القبطية" },
+    { name: "twitter:title", content: "Praise Him — Coptic Hymns" },
     {
       name: "twitter:description",
-      content: "تعلم الألحان القبطية الأرثوذكسية مع أفضل تطبيق تعليمي",
+      content: "Learn Coptic Orthodox hymns with the best educational app.",
     },
     { name: "twitter:image", content: "/photos/العذراء مريم.ico" },
   ];
@@ -125,7 +126,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
-                // 1. تسجيل الـ Service Worker
+                // ✅ تسجيل الـ Service Worker (بدون اشتراك في إشعارات Push)
                 if ('serviceWorker' in navigator) {
                   window.addEventListener('load', function() {
                     navigator.serviceWorker.register('/sw.js')
@@ -133,10 +134,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
                       .catch(function(err) { console.log('Service Worker failed:', err); });
                   });
                 }
-                // 2. تحميل مميزات الجوال
+                // ❌ تم إلغاء طلب إذن الإشعارات Push نهائياً
+                // تحميل مميزات الجوال
                 function loadMobileFeatures() {
                   var script = document.createElement('script');
-                  script.src = '/scripts/mobile-features.js'; 
+                  script.src = '/scripts/mobile-features.js';
                   script.async = true;
                   document.head.appendChild(script);
                 }

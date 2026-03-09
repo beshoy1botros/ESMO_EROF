@@ -1,29 +1,23 @@
 /* melodies.css - أنماط مخصصة لصفحة الألحان */
 
-/* تعريف متغيرات CSS لتوحيد الألوان والمسافات والأحجام */
 :root {
-  /* ألوان الثيم */
-  --color-primary-bg: #232946; /* لون الخلفية الأساسي */
-  --color-primary-border: #3b82f6; /* لون الحدود الأساسي */
-  --color-text-light: #fff; /* لون النص الفاتح */
-  --color-accent: #60a5fa; /* لون التمييز/اللكنة */
-  --color-dark-bg: #000; /* لون الخلفية الداكنة (للفيديو) */
+  --color-primary-bg: #232946;
+  --color-primary-border: #3b82f6;
+  --color-text-light: #fff;
+  --color-accent: #60a5fa;
+  --color-dark-bg: #000;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --border-radius-sm: 0.5rem;
+  --border-radius-md: 1rem;
+  --font-size-md: 1.5rem;
+  --font-size-lg: 1.3rem;
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
 
-  /* المسافات (Spacing) */
-  --spacing-sm: 0.5rem; /* مسافة صغيرة */
-  --spacing-md: 1rem; /* مسافة متوسطة */
-  --spacing-lg: 1.5rem; /* مسافة كبيرة */
-
-  /* نصف قطر الحدود (Border Radius) */
-  --border-radius-sm: 0.5rem; /* نصف قطر صغير */
-  --border-radius-md: 1rem; /* نصف قطر متوسط */
-
-  /* أحجام الخطوط (Font Sizes) */
-  --font-size-md: 1.5rem; /* حجم خط متوسط */
-  --font-size-lg: 1.3rem; /* حجم خط كبير */
-
-  /* الظلال (Shadows) */
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08); /* ظل خفيف */
+  /* ✏️ ألوان نصوص الألحان — أبيض + بني وسط */
+  --hymn-color-odd: #ffffff; /* أبيض — الأرباع الفردية     */
+  --hymn-color-even: #ca8627; /* بني وسط دافئ — الأرباع الزوجية */
 }
 
 /* أنماط بطاقة الفيديو */
@@ -34,10 +28,10 @@
   padding: var(--spacing-lg);
   color: var(--color-text-light);
   box-shadow: var(--shadow-sm);
-  transition: border 0.2s; /* انتقال سلس لتغيير الحدود */
+  transition: border 0.2s;
 }
 .video-card:hover {
-  border-color: var(--color-accent); /* تغيير لون الحدود عند التحويم */
+  border-color: var(--color-accent);
 }
 .video-card h3 {
   color: var(--color-accent);
@@ -46,7 +40,6 @@
   text-align: center;
   font-weight: 600;
 }
-
 .video-card p {
   font-size: var(--font-size-lg);
   line-height: 1.6;
@@ -60,17 +53,15 @@
 }
 
 /* ============================================
-   Fullscreen Modal Styles - لقسم النصوص المحسّن
+   Fullscreen Modal Styles
    ============================================ */
 
-/* Container for the lyrics grid */
 .lyrics-grid-container {
   width: 100%;
   max-width: 80rem;
   margin: 0 auto;
 }
 
-/* Header row styling */
 .lyrics-header-row {
   display: grid;
   grid-template-columns: repeat(var(--grid-columns, 1), 1fr);
@@ -92,7 +83,7 @@
   }
 }
 
-/* تأثير النبض الاحترافي لأيقونة الفيديو المصغرة */
+/* تأثير النبض لأيقونة الفيديو المصغرة */
 @keyframes videoPulseActive {
   0% {
     transform: scale(1);
@@ -107,7 +98,6 @@
     box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
   }
 }
-
 @keyframes videoPulsePaused {
   0% {
     transform: scale(1);
@@ -126,25 +116,22 @@
 .animate-video-pulse-active {
   animation: videoPulseActive 2s infinite;
 }
-
 .animate-video-pulse-paused {
   animation: videoPulsePaused 2s infinite;
 }
 
-/* Header column text styling */
 .lyrics-header-col {
   text-align: center;
   font-weight: 900;
   font-size: 0.75rem;
 }
-
 @media (min-width: 768px) {
   .lyrics-header-col {
     font-size: 1.125rem;
   }
 }
 
-/* Lyrics row container */
+/* ─── صف الكلمات ─────────────────────────────────────────────────────────── */
 .lyrics-row {
   display: flex;
   flex-wrap: wrap;
@@ -155,7 +142,6 @@
   transition: background-color 0.2s ease;
   min-height: 4rem;
 }
-
 .lyrics-row:hover {
   background-color: rgba(255, 255, 255, 0.02);
 }
@@ -167,7 +153,6 @@
   justify-content: center;
   flex-shrink: 0;
 }
-
 .lyrics-quarter-badge {
   min-width: 2rem;
   height: 2rem;
@@ -186,30 +171,30 @@
   background-color: rgba(15, 23, 42, 0.9);
 }
 
+/* ✏️ ألوان عناوين الأقسام — نبقيها كما هي (بنفسجي + أرجواني) */
 .lyrics-row-odd.lyrics-row-section .lyrics-section-text {
-  color: #a5b4fc !important; /* لون بنفسجي فاتح للعناوين الفردية */
+  color: #a5b4fc !important;
 }
-
 .lyrics-row-even.lyrics-row-section .lyrics-section-text {
-  color: #c084fc !important; /* لون أرجواني للعناوين الزوجية */
+  color: #c084fc !important;
 }
 
+/* ✏️ ألوان نصوص الألحان: أبيض للفردي، بني وسط للزوجي */
 .lyrics-row-odd .lyrics-col {
-  color: #ffffff !important; /* أبيض للأرباع الفردية */
+  color: var(--hymn-color-odd) !important;
 }
-
 .lyrics-row-even .lyrics-col {
-  color: #e0c600d2 !important; /* ذهبي للأرباع الزوجية */
+  color: var(--hymn-color-even) !important;
 }
 
+/* ✏️ شارات الأرباع بنفس اللون */
 .lyrics-row-odd .lyrics-quarter-badge {
-  border-color: #ffffff;
-  color: #ffffff;
+  border-color: var(--hymn-color-odd);
+  color: var(--hymn-color-odd);
 }
-
 .lyrics-row-even .lyrics-quarter-badge {
-  border-color: #e0c600d2;
-  color: #e0c600d2;
+  border-color: var(--hymn-color-even);
+  color: var(--hymn-color-even);
 }
 
 .lyrics-section-text {
@@ -226,7 +211,6 @@
     min-height: 4.5rem;
   }
 }
-
 @media (min-width: 768px) {
   .lyrics-row {
     gap: 1.5rem;
@@ -234,7 +218,6 @@
     min-height: 5rem;
   }
 }
-
 @media (min-width: 1024px) {
   .lyrics-row {
     gap: 2rem;
@@ -242,7 +225,7 @@
   }
 }
 
-/* Individual lyrics column styling */
+/* ─── عمود الكلمات ───────────────────────────────────────────────────────── */
 .lyrics-col {
   font-size: var(--font-size, 18px);
   text-align: center;
@@ -252,32 +235,27 @@
   -webkit-hyphens: auto;
   hyphens: auto;
   text-rendering: optimizeLegibility;
-  shape-rendering: auto;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   direction: inherit;
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  padding: 0.5rem;
   flex: 1;
   min-width: 0;
 }
-
 @media (min-width: 640px) {
   .lyrics-col {
     padding: 0.75rem;
     flex: 1;
   }
 }
-
 @media (min-width: 768px) {
   .lyrics-col {
     padding: 1rem;
     flex: 1;
   }
 }
-
 @media (min-width: 1024px) {
   .lyrics-col {
     padding: 1.25rem;
@@ -285,14 +263,16 @@
   }
 }
 
-/* Coptic-Arabic text styling */
+/* ─── أنواع أعمدة النصوص ─────────────────────────────────────────────────── */
+
+/* النص القبطي-العربي */
 .lyrics-col-coptic-arabic {
-  color: #4ade80;
+  color: hwb(216 40% 0%);
   font-family: "Arial", "Traditional Arabic", "Segoe UI", sans-serif;
   unicode-bidi: bidi-override;
 }
 
-/* Arabic translation styling */
+/* الترجمة العربية */
 .lyrics-col-arabic {
   color: #fbbf24;
   font-style: italic;
@@ -301,9 +281,9 @@
   unicode-bidi: embed;
 }
 
-/* Coptic text styling - محسّــن للعرض الصحيح */
+/* النص القبطي */
 .lyrics-col-coptic {
-  color: #ffffff;
+  /* ✏️ اللون يرث من .lyrics-row-odd/.even ليكون أبيض أو بني حسب الصف */
   font-family:
     "Coptic Old Nubian", "copt-main", "Noto Sans Coptic", "Coptic", monospace,
     sans-serif;

@@ -12,8 +12,8 @@
   --spacing-lg: 1.5rem;
   --border-radius-md: 1rem;
   --border-radius-lg: 1.5rem;
-  --font-size-md: 1.5rem;
-  --font-size-lg: 1.75rem;
+  --font-size-md: 1.6rem; /* ↑ كان 1.5rem */
+  --font-size-lg: 2rem; /* ↑ كان 1.75rem */
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
@@ -48,8 +48,8 @@
 }
 
 .text-content-card p {
-  font-size: var(--font-size-lg);
-  line-height: 1.8;
+  font-size: var(--font-size-lg); /* ↑ مُكبَّر */
+  line-height: 1.9; /* ↑ مسافة سطر أوسع للقراءة المريحة */
   margin-bottom: var(--spacing-md);
   text-align: right;
   direction: rtl;
@@ -66,7 +66,7 @@
 .coptic-inline {
   font-family: "copt-main", "Noto Sans Coptic", sans-serif;
   font-size: 1.2em;
-  color: #a78bfa; /* نفس لون accent-purple */
+  color: #a78bfa;
   display: inline-block;
   direction: ltr;
   margin: 0 4px;
@@ -79,6 +79,8 @@
   border-radius: 0.5rem;
   border-right: 3px solid var(--color-accent);
   direction: rtl;
+  font-size: 1.75rem; /* ↑ حجم نص عناصر القائمة */
+  line-height: 1.8;
 }
 
 .text-content-card ul li:hover {
@@ -90,7 +92,7 @@
 /* أنماط للعناوين الفرعية */
 .text-content-card h4 {
   color: var(--color-accent);
-  font-size: 1.25rem;
+  font-size: 1.4rem; /* ↑ كان 1.25rem */
   margin-top: var(--spacing-lg);
   margin-bottom: var(--spacing-md);
   padding-bottom: 0.5rem;
@@ -112,8 +114,8 @@
 
 /* أنماط للنصوص العربية المترجمة */
 .arabic-translation {
-  font-size: 1.6rem;
-  line-height: 1.9;
+  font-size: 1.85rem; /* ↑ كان 1.6rem */
+  line-height: 2; /* ↑ كان 1.9 */
   text-align: right;
   direction: rtl;
   color: #cbd5e1;
@@ -132,12 +134,17 @@
   }
 
   .text-content-card h3 {
-    font-size: 1.25rem;
+    font-size: 1.4rem; /* ↑ كان 1.25rem */
   }
 
   .text-content-card p {
-    font-size: 1.1rem;
-    line-height: 1.7;
+    font-size: 1.35rem; /* ↑ كان 1.1rem */
+    line-height: 1.85;
+  }
+
+  .text-content-card ul li {
+    font-size: 1.25rem; /* ↑ حجم مناسب للجوال */
+    line-height: 1.75;
   }
 
   .coptic-text {
@@ -146,12 +153,13 @@
   }
 
   .arabic-translation {
-    font-size: 1.3rem;
+    font-size: 1.5rem; /* ↑ كان 1.3rem */
     padding: 0.75rem;
+    line-height: 1.9;
   }
 
   .text-content-card h4 {
-    font-size: 1.1rem;
+    font-size: 1.2rem; /* ↑ كان 1.1rem */
   }
 }
 

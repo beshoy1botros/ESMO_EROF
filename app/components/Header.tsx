@@ -2,7 +2,6 @@ import { Link, useLocation } from "react-router";
 import { FaHome, FaMusic, FaBook, FaGraduationCap } from "react-icons/fa";
 import { useState, useEffect, useRef } from "react";
 
-// TypeScript لا يعرف inert بشكل افتراضي — نُعرّفه هنا
 declare module "react" {
   interface HTMLAttributes<T> {
     inert?: boolean | undefined;
@@ -16,7 +15,6 @@ const navLinks = [
   { to: "/preparatory", label: "تمهيدي", icon: FaGraduationCap },
 ];
 
-// تأخيرات حركة روابط القائمة عبر CSS classes (بدل inline style)
 const NAV_DELAY_CLASSES = [
   "nav-item-delay-0",
   "nav-item-delay-1",
@@ -61,10 +59,6 @@ export default function Header() {
   return (
     <>
       {/* ══════════════ الهيدر ══════════════ */}
-      {/*
-        header-blur: backdrop-filter في CSS بدل inline style
-        FIX: أزلنا style={{ backdropFilter }} واستبدلناها بـ class
-      */}
       <header
         className={`
           header-blur sticky top-0 z-50 transition-all duration-300
@@ -78,7 +72,6 @@ export default function Header() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <div className="flex items-center justify-between py-3 sm:py-4">
             {/* زر القائمة */}
-            {/* axe/aria: false positive — القيمة دايماً "true" أو "false" string في runtime */}
             <button
               onClick={() => setIsMenuOpen((v) => !v)}
               className="
@@ -94,7 +87,6 @@ export default function Header() {
               aria-expanded={isMenuOpen ? "true" : "false"}
               aria-controls="mobile-nav"
             >
-              {/* FIX: aria-expanded قيمة نصية صريحة "true"/"false" بدل boolean */}
               <span
                 className={`block w-5 h-0.5 bg-current rounded-full transition-all duration-300 origin-center ${isMenuOpen ? "rotate-45 translate-y-[7px]" : ""}`}
               />
@@ -106,7 +98,7 @@ export default function Header() {
               />
             </button>
 
-            {/* العنوان في المنتصف */}
+            {/* ✏️ الاسم الجديد بالإنجليزية */}
             <Link
               to="/"
               className="flex-1 flex items-center justify-center group focus-visible:outline-none"
@@ -120,10 +112,10 @@ export default function Header() {
                 transition-colors duration-200
                 drop-shadow-[0_0_20px_rgba(96,165,250,0.3)]
                 group-hover:drop-shadow-[0_0_28px_rgba(96,165,250,0.5)]
-                text-center
+                text-center tracking-wide
               "
               >
-                # Cmou ; Erof ; #
+                ✦ Cmou ; Erof ;✦
               </h1>
             </Link>
 
@@ -182,10 +174,6 @@ export default function Header() {
       </header>
 
       {/* ══════════════ Overlay ══════════════ */}
-      {/*
-        nav-overlay--open: يضيف backdrop-filter عند الفتح بدل inline style
-        FIX: أزلنا style={{ backdropFilter }}
-      */}
       <div
         className={`
           nav-overlay fixed inset-0 z-40 md:hidden
@@ -220,7 +208,10 @@ export default function Header() {
       >
         {/* رأس القائمة */}
         <div className="flex items-center justify-between px-5 pt-safe-top py-4 border-b border-blue-800/40">
-          <span className="font-newath text-blue-400 text-xl">القائمة</span>
+          {/* ✏️ اسم الموقع داخل القائمة */}
+          <span className="font-newath text-blue-400 text-xl tracking-wide">
+             Cmou ; Erof ;
+          </span>
           <button
             onClick={() => setIsMenuOpen(false)}
             className="
@@ -294,7 +285,7 @@ export default function Header() {
         {/* ذيل القائمة */}
         <div className="px-5 py-4 border-t border-blue-800/40 pb-safe-bottom">
           <p className="text-center text-xs text-blue-700/70 font-newath">
-            ⲥⲙⲟⲩ ⲉⲣⲟϥ — الألحان القبطية
+             الألحان القبطية  —  Cmou ; Erof ; 
           </p>
         </div>
       </div>
