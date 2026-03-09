@@ -112,6 +112,50 @@
   margin: var(--spacing-md) 0;
 }
 
+/* أنماط لمحتوى طقس اللحن */
+.coptic-content {
+  font-size: 1.5rem !important;
+  line-height: 1.8 !important;
+  text-align: right !important;
+  direction: rtl !important;
+}
+
+.coptic-content .coptic-inline {
+  font-size: 1.2em !important;
+}
+
+/* أنماط محدثة لمحتوى طقس اللحن */
+.coptic-content {
+  font-family:
+    "copt-main", "copt-alt", "copt-youssef", "Noto Sans Coptic", sans-serif !important;
+  font-size: 1.5rem !important;
+  line-height: 1.8 !important;
+  text-align: right !important;
+  direction: rtl !important;
+  color: #d1d5db !important;
+}
+
+/* أنماط إضافية للتأكد من تطبيق الحجم */
+main .coptic-content,
+.bg-about .coptic-content,
+.text-gray-300.coptic-content {
+  font-size: 1.4rem !important;
+  line-height: 1.9 !important;
+}
+
+/* أنماط للشاشات الصغيرة */
+@media (max-width: 768px) {
+  .coptic-content {
+    font-size: 1.3rem !important;
+  }
+
+  main .coptic-content,
+  .bg-about .coptic-content,
+  .text-gray-300.coptic-content {
+    font-size: 1.2rem !important;
+  }
+}
+
 /* أنماط للنصوص العربية المترجمة */
 .arabic-translation {
   font-size: 1.85rem; /* ↑ كان 1.6rem */
@@ -160,6 +204,10 @@
 
   .text-content-card h4 {
     font-size: 1.2rem; /* ↑ كان 1.1rem */
+  }
+
+  .coptic-content {
+    font-size: 1.2rem !important;
   }
 }
 
