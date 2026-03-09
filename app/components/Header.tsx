@@ -76,12 +76,13 @@ export default function Header() {
               onClick={() => setIsMenuOpen((v) => !v)}
               className="
                 md:hidden relative flex flex-col items-center justify-center
-                w-11 h-11 rounded-xl
+                w-12 h-12 rounded-xl
                 text-white hover:text-blue-300
-                bg-blue-900/40 hover:bg-blue-800/60
-                border border-blue-700/40 hover:border-blue-500/60
-                transition-all duration-200 active:scale-95
+                bg-blue-900/50 hover:bg-blue-800/70
+                border-2 border-blue-700/50 hover:border-blue-500/70
+                transition-all duration-200 active:scale-95 shadow-lg
                 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400
+                mobile-menu-enhanced
               "
               aria-label={isMenuOpen ? "إغلاق القائمة" : "فتح القائمة"}
               aria-expanded={isMenuOpen ? "true" : "false"}
@@ -177,7 +178,7 @@ export default function Header() {
       <div
         className={`
           nav-overlay fixed inset-0 z-40 md:hidden
-          bg-black/60 transition-opacity duration-300
+          bg-black/80 backdrop-blur-sm transition-opacity duration-300
           ${
             isMenuOpen
               ? "opacity-100 pointer-events-auto nav-overlay--open"
@@ -194,11 +195,12 @@ export default function Header() {
         ref={menuRef}
         className={`
           fixed top-0 right-0 bottom-0 z-50 md:hidden
-          w-[min(280px,85vw)] flex flex-col
+          w-[min(320px,90vw)] flex flex-col
           bg-gradient-to-b from-blue-950 to-[#060d1f]
           border-l border-blue-800/50
-          shadow-[-8px_0_40px_rgba(0,0,0,0.6)]
+          shadow-[-12px_0_60px_rgba(0,0,0,0.8)]
           transition-transform duration-300 ease-out
+          mobile-menu-enhanced mobile-menu-glow
           ${isMenuOpen ? "translate-x-0" : "translate-x-full"}
         `}
         inert={!isMenuOpen || undefined}
@@ -207,23 +209,23 @@ export default function Header() {
         aria-label="قائمة التنقل"
       >
         {/* رأس القائمة */}
-        <div className="flex items-center justify-between px-5 pt-safe-top py-4 border-b border-blue-800/40">
+        <div className="flex items-center justify-between px-6 pt-safe-top py-5 border-b border-blue-800/40 bg-gradient-to-r from-blue-950 to-blue-900/50">
           {/* ✏️ اسم الموقع داخل القائمة */}
-          <span className="font-newath text-blue-400 text-xl tracking-wide">
-             Cmou ; Erof ;
+          <span className="font-newath text-blue-300 text-2xl tracking-wide font-bold">
+            Cmou ; Erof ;
           </span>
           <button
             onClick={() => setIsMenuOpen(false)}
             className="
-              w-9 h-9 flex items-center justify-center rounded-lg
-              text-gray-400 hover:text-white
-              bg-blue-900/40 hover:bg-blue-800/60
-              transition-all duration-200 active:scale-90
+              w-11 h-11 flex items-center justify-center rounded-xl
+              text-gray-300 hover:text-white hover:bg-blue-800/60
+              bg-blue-900/60 transition-all duration-200 active:scale-90
               focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400
+              shadow-lg
             "
             aria-label="إغلاق القائمة"
           >
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+            <svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor">
               <path d="M12.7 3.3a1 1 0 0 0-1.4 0L8 6.6 4.7 3.3a1 1 0 0 0-1.4 1.4L6.6 8l-3.3 3.3a1 1 0 1 0 1.4 1.4L8 9.4l3.3 3.3a1 1 0 0 0 1.4-1.4L9.4 8l3.3-3.3a1 1 0 0 0 0-1.4Z" />
             </svg>
           </button>
@@ -231,7 +233,7 @@ export default function Header() {
 
         {/* روابط التنقل */}
         <nav
-          className="flex-1 overflow-y-auto py-4 px-3"
+          className="flex-1 overflow-y-auto py-6 px-4 mobile-menu-scrollable"
           aria-label="روابط الصفحات"
         >
           {navLinks.map(({ to, label, icon: Icon }, index) => (
@@ -240,38 +242,38 @@ export default function Header() {
               to={to}
               onClick={() => setIsMenuOpen(false)}
               className={`
-                group flex items-center gap-3.5
-                w-full px-4 py-3.5 mb-1.5 rounded-xl text-base font-semibold
+                group flex items-center gap-4
+                w-full px-5 py-4 mb-3 rounded-xl text-lg font-semibold
                 transition-all duration-200 active:scale-[0.97]
                 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400
                 ${NAV_DELAY_CLASSES[index] ?? ""}
                 ${
                   isActive(to)
-                    ? "text-blue-300 bg-blue-800/50 border border-blue-600/30 shadow-inner"
-                    : "text-gray-300 hover:text-white hover:bg-blue-900/40 border border-transparent"
+                    ? "text-blue-300 bg-blue-800/60 border border-blue-500/40 shadow-inner"
+                    : "text-gray-200 hover:text-white hover:bg-blue-900/50 border border-transparent"
                 }
               `}
             >
               <span
                 className={`
-                flex items-center justify-center w-9 h-9 rounded-lg flex-shrink-0 transition-colors duration-200
+                flex items-center justify-center w-11 h-11 rounded-lg flex-shrink-0 transition-colors duration-200
                 ${
                   isActive(to)
-                    ? "bg-blue-600/30 text-blue-300"
-                    : "bg-blue-900/50 text-gray-400 group-hover:text-blue-300 group-hover:bg-blue-800/50"
+                    ? "bg-blue-600/40 text-blue-300 shadow-md"
+                    : "bg-blue-900/60 text-gray-300 group-hover:text-blue-300 group-hover:bg-blue-800/60"
                 }
               `}
               >
-                <Icon size={17} />
+                <Icon size={20} />
               </span>
 
-              {label}
+              <span className="flex-1 mobile-menu-text-enhanced">{label}</span>
 
               {isActive(to) && (
                 <svg
-                  className="mr-auto text-blue-500"
-                  width="16"
-                  height="16"
+                  className="text-blue-400 ml-2"
+                  width="18"
+                  height="18"
                   viewBox="0 0 16 16"
                   fill="currentColor"
                 >
@@ -283,10 +285,15 @@ export default function Header() {
         </nav>
 
         {/* ذيل القائمة */}
-        <div className="px-5 py-4 border-t border-blue-800/40 pb-safe-bottom">
-          <p className="text-center text-xs text-blue-700/70 font-newath">
-             الألحان القبطية  —  Cmou ; Erof ; 
+        <div className="px-6 py-5 border-t border-blue-800/40 pb-safe-bottom bg-gradient-to-r from-blue-950 to-blue-900/30">
+          <p className="text-center text-sm text-blue-400/80 font-newath font-semibold">
+            الألحان القبطية — Cmou ; Erof ;
           </p>
+          <div className="mt-3 flex justify-center space-x-3">
+            <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
+            <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+            <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+          </div>
         </div>
       </div>
     </>
