@@ -19,6 +19,12 @@
     },
     {
       "src": "/photos/العذراء مريم.png",
+      "sizes": "64x64",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/photos/العذراء مريم.png",
       "sizes": "72x72",
       "type": "image/png",
       "purpose": "any"
@@ -50,18 +56,6 @@
     {
       "src": "/photos/العذراء مريم.png",
       "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "/photos/العذراء مريم.png",
-      "sizes": "256x256",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "/photos/العذراء مريم.png",
-      "sizes": "384x384",
       "type": "image/png",
       "purpose": "any maskable"
     }
