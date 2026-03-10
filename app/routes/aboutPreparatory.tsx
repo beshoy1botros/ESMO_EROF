@@ -188,7 +188,7 @@ export default function About() {
 
 export function meta() {
   return [
-    { title: "ⲥⲙⲟⲩ ⲉⲣⲟϥ - طقس اللحن" },
+    { title: "Coptic Hymns - طقس اللحن" },
     { name: "description", content: "موقع متخصص في تعليم الألحان القبطية" },
   ];
 }

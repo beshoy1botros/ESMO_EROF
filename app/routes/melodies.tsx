@@ -2277,3 +2277,12 @@ export default function MelodiesPage() {
     </div>
   );
 }
+export function meta() {
+  return [
+    { title: "Coptic Hymns - الألحان" },
+    {
+      name: "description",
+      content: "موقع متخصص في تعليم الألحان القبطية للطلاب في مختلف المراحل",
+    },
+  ];
+}

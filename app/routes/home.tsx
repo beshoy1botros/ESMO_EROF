@@ -3,7 +3,7 @@ import Footer from "../components/Footer";
 
 export function meta() {
   return [
-    { title: "ⲥⲙⲟⲩ ⲉⲣⲟϥ — الرئيسية" },
+    { title: "Coptic Hymns — الرئيسية" },
     {
       name: "description",
       content: "موقع متخصص في تعليم الألحان القبطية للطلاب في مختلف المراحل",

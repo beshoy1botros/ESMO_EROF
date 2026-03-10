@@ -54,8 +54,8 @@ export function meta() {
       content: "black-translucent",
     },
     // ✏️ تغيير اسم الموقع إلى الإنجليزية
-    { name: "apple-mobile-web-app-title", content: "Praise Him" },
-    { name: "application-name", content: "Praise Him — Coptic Hymns" },
+    { name: "apple-mobile-web-app-title", content: "Coptic Hymns" },
+    { name: "application-name", content: "Coptic Hymns - ألحان مهرجان الكرازة" },
     { name: "format-detection", content: "telephone=no" },
     { name: "msapplication-tap-highlight", content: "no" },
     { name: "msapplication-TileColor", content: "#1e3a8a" },
@@ -63,16 +63,16 @@ export function meta() {
     {
       name: "description",
       content:
-        "Praise Him — Learn and explore Coptic Orthodox hymns with ease. Your complete guide to Coptic liturgical chants.",
+        "Coptic Hymns - Learn and explore Coptic Orthodox hymns with ease. Your complete guide to Coptic liturgical chants.",
     },
     {
       name: "keywords",
       content:
-        "Coptic hymns, Coptic chants, Orthodox liturgy, ألحان قبطية, Coptic church",
+        "Coptic Hymns - ألحان قبطية, Coptic hymns, Coptic chants, Orthodox liturgy",
     },
-    { name: "author", content: "Praise Him" },
+    { name: "author", content: "Coptic Hymns" },
     { name: "robots", content: "index, follow" },
-    { property: "og:title", content: "Praise Him — Coptic Hymns" },
+    { property: "og:title", content: "Coptic Hymns - ألحان festival الكرازة لإيبارشية الشرقية والعاشر من رمضان" },
     {
       property: "og:description",
       content: "Learn Coptic Orthodox hymns with the best educational app.",
@@ -81,7 +81,7 @@ export function meta() {
     { property: "og:url", content: "https://esmo-erof.com" },
     { property: "og:image", content: "/photos/العذراء مريم.png" },
     { name: "twitter:card", content: "summary_large_image" },
-    { name: "twitter:title", content: "Praise Him — Coptic Hymns" },
+    { name: "twitter:title", content: "Coptic Hymns - ألحان festival الكرازة لإيبارشية الشرقية والعاشر منرمضان" },
     {
       name: "twitter:description",
       content: "Learn Coptic Orthodox hymns with the best educational app.",
