@@ -1,12 +1,11 @@
-import { render, screen } from '@testing-library/react';
-import * as ReactRouter from 'react-router';
-import { ErrorBoundary } from '../root';
+import { render, screen } from "@testing-library/react";
+import { ErrorBoundary } from "../root";
 
-describe('ErrorBoundary', () => {
-  it('renders localized fallback when generic error occurs', () => {
+describe("ErrorBoundary", () => {
+  it("renders localized fallback when generic error occurs", () => {
     render(
       <ErrorBoundary
-        error={new Error('Unexpected')}
+        error={new Error("Unexpected")}
         // @ts-expect-error: route prop is provided by router at runtime
         route={{} as any}
       />

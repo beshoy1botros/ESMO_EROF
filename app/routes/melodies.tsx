@@ -1271,7 +1271,6 @@ function getVideos(stage: StageKey, levelLabel: string): Video[] {
   return stageData && englishLevel ? stageData[englishLevel] || [] : [];
 }
 
-console.log("تم تحديث روابط Cloudinary بنجاح!");
 
 // --- 4. المكون الرئيسي ---
 
@@ -1304,7 +1303,7 @@ export default function MelodiesPage() {
   const [videoPosition, setVideoPosition] = useState({ x: 24, y: 24 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
-  const [wasJustDragging, setWasJustDragging] = useState(false);
+  const [, setWasJustDragging] = useState(false);
 
   const levels = stage ? getLevelsForStage(stage as string) : [];
 
@@ -1347,7 +1346,7 @@ export default function MelodiesPage() {
   // ====== دوال تحريك الفيديو ======
   const handleDragStart = (e: React.MouseEvent | React.TouchEvent) => {
     // لل touch events، نستخدم CSS لمنع التمرير بدلاً من preventDefault
-    if (!('touches' in e)) {
+    if (!("touches" in e)) {
       e.preventDefault();
     }
     e.stopPropagation();
@@ -1366,9 +1365,9 @@ export default function MelodiesPage() {
 
   const handleDragMove = (e: React.MouseEvent | React.TouchEvent) => {
     if (!isDragging) return;
-    
+
     // لل touch events، نستخدم CSS لمنع التمرير بدلاً من preventDefault
-    if (!('touches' in e)) {
+    if (!("touches" in e)) {
       e.preventDefault();
     }
     e.stopPropagation();

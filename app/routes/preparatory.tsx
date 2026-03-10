@@ -235,7 +235,7 @@ export default function PreparatoryPage() {
   const [videoPosition, setVideoPosition] = useState({ x: 24, y: 24 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
-  const [wasJustDragging, setWasJustDragging] = useState(false);
+  const [, setWasJustDragging] = useState(false);
 
   const hazzatImagesCount = useMemo(() => {
     if (!fullscreenLyrics) return 0;
