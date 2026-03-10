@@ -1254,7 +1254,7 @@ for (const stageKey of Object.keys(stageVideoUrls) as Array<
           video.url = "";
         }
       });
-    },
+    }
   );
 }
 
@@ -1299,11 +1299,12 @@ export default function MelodiesPage() {
   const [showControlsPanel, setShowControlsPanel] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
-  
+
   // ====== حالة تحريك الفيديو ======
   const [videoPosition, setVideoPosition] = useState({ x: 24, y: 24 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+  const [wasJustDragging, setWasJustDragging] = useState(false);
 
   const levels = stage ? getLevelsForStage(stage as string) : [];
 
@@ -1328,7 +1329,7 @@ export default function MelodiesPage() {
   };
 
   const visibleColumns = [showCopticArabic, showArabic, showCoptic].filter(
-    Boolean,
+    Boolean
   ).length;
 
   const disabledColumns = 3 - visibleColumns;
@@ -1345,44 +1346,91 @@ export default function MelodiesPage() {
 
   // ====== دوال تحريك الفيديو ======
   const handleDragStart = (e: React.MouseEvent | React.TouchEvent) => {
-    e.preventDefault();
+    // لل touch events، نستخدم CSS لمنع التمرير بدلاً من preventDefault
+    if (!('touches' in e)) {
+      e.preventDefault();
+    }
     e.stopPropagation();
-    
-    const clientX = 'touches' in e ? e.touches[0].clientX : (e as React.MouseEvent).clientX;
-    const clientY = 'touches' in e ? e.touches[0].clientY : (e as React.MouseEvent).clientY;
-    
+
+    const clientX =
+      "touches" in e ? e.touches[0].clientX : (e as React.MouseEvent).clientX;
+    const clientY =
+      "touches" in e ? e.touches[0].clientY : (e as React.MouseEvent).clientY;
+
     setDragOffset({
       x: clientX - videoPosition.x,
-      y: clientY - videoPosition.y
+      y: clientY - videoPosition.y,
     });
     setIsDragging(true);
   };
 
   const handleDragMove = (e: React.MouseEvent | React.TouchEvent) => {
     if (!isDragging) return;
-    e.preventDefault();
+    
+    // لل touch events، نستخدم CSS لمنع التمرير بدلاً من preventDefault
+    if (!('touches' in e)) {
+      e.preventDefault();
+    }
     e.stopPropagation();
-    
-    const clientX = 'touches' in e ? e.touches[0].clientX : (e as React.MouseEvent).clientX;
-    const clientY = 'touches' in e ? e.touches[0].clientY : (e as React.MouseEvent).clientY;
-    
+
+    const clientX =
+      "touches" in e ? e.touches[0].clientX : (e as React.MouseEvent).clientX;
+    const clientY =
+      "touches" in e ? e.touches[0].clientY : (e as React.MouseEvent).clientY;
+
     const newX = clientX - dragOffset.x;
     const newY = clientY - dragOffset.y;
-    
-    // تحديد الحدود لمنع الخروج من الشاشة
-    const videoWidth = isMinimized ? 64 : (window.innerWidth < 400 ? window.innerWidth * 0.7 : 320);
-    const videoHeight = isMinimized ? 64 : 200;
-    const maxX = window.innerWidth - videoWidth - 10;
-    const maxY = window.innerHeight - videoHeight - 10;
-    
+
+    // حساب أبعاد الفيديو بناءً على حالة التصغير
+    const videoWidth = isMinimized
+      ? 64
+      : Math.min(window.innerWidth * 0.85, 320);
+    const videoHeight = isMinimized ? 64 : 180;
+
+    // تحديد الحدود لمنع خروج الفيديو من الشاشة
+    const padding = 10;
+    const maxX = window.innerWidth - videoWidth - padding;
+    const maxY = window.innerHeight - videoHeight - padding;
+
     setVideoPosition({
-      x: Math.max(10, Math.min(newX, maxX)),
-      y: Math.max(10, Math.min(newY, maxY))
+      x: Math.max(padding, Math.min(newX, maxX)),
+      y: Math.max(padding, Math.min(newY, maxY)),
     });
   };
 
   const handleDragEnd = () => {
+    if (isDragging) {
+      setWasJustDragging(true);
+      setTimeout(() => setWasJustDragging(false), 100);
+    }
     setIsDragging(false);
+  };
+
+  // دالة توسيع الفيديو مع ضبط الموقع إذا كان عند الحافة
+  const handleExpandVideo = () => {
+    if (!isMinimized) return;
+    if (isDragging) return;
+
+    // حساب حدود الفيديو عند التوسيع
+    const videoWidth = Math.min(window.innerWidth * 0.85, 320);
+    const videoHeight = 180;
+    const padding = 10;
+
+    // التحقق إذا كان الفيديو عند الحافة وتعديل_position
+    let newX = videoPosition.x;
+    let newY = videoPosition.y;
+
+    const maxX = window.innerWidth - videoWidth - padding;
+    const maxY = window.innerHeight - videoHeight - padding;
+
+    if (newX > maxX) newX = maxX;
+    if (newY > maxY) newY = maxY;
+
+    if (newX !== videoPosition.x || newY !== videoPosition.y) {
+      setVideoPosition({ x: newX, y: newY });
+    }
+
+    setIsMinimized(false);
   };
 
   useEffect(() => {
@@ -1677,7 +1725,7 @@ export default function MelodiesPage() {
                         <button
                           onClick={() => {
                             const btn = document.getElementById(
-                              "landscape-toggle-button",
+                              "landscape-toggle-button"
                             ) as HTMLButtonElement | null;
                             if (btn) {
                               btn.click();
@@ -1772,8 +1820,12 @@ export default function MelodiesPage() {
                       style={{
                         left: videoPosition.x,
                         top: videoPosition.y,
-                        transition: isDragging ? 'none' : 'all 0.3s ease',
-                        cursor: isDragging ? 'grabbing' : (isMinimized ? 'pointer' : 'grab'),
+                        transition: isDragging ? "none" : "all 0.3s ease",
+                        cursor: isDragging
+                          ? "grabbing"
+                          : isMinimized
+                            ? "pointer"
+                            : "grab",
                       }}
                       onMouseDown={handleDragStart}
                       onMouseMove={handleDragMove}
@@ -1782,7 +1834,8 @@ export default function MelodiesPage() {
                       onTouchStart={handleDragStart}
                       onTouchMove={handleDragMove}
                       onTouchEnd={handleDragEnd}
-                      onTap={() => isMinimized && setIsMinimized(false)}
+                      onClick={handleExpandVideo}
+                      onTap={handleExpandVideo}
                     >
                       <div
                         className={`relative rounded-2xl overflow-hidden border border-blue-500/30 bg-black shadow-[0_0_30px_rgba(0,0,0,0.5)] group ${
@@ -1791,15 +1844,21 @@ export default function MelodiesPage() {
                       >
                         {/* مؤشر التحريك - يظهر عند السحب */}
                         {!isMinimized && (
-                          <div className={`absolute top-2 right-2 z-20 opacity-50 hover:opacity-80 transition-opacity cursor-move ${
-                            isDragging ? 'opacity-80' : ''
-                          }`} title="اسحب لتحريك الفيديو">
-                            <svg className="w-5 h-5 text-white/70" fill="currentColor" viewBox="0 0 24 24">
-                              <path d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
+                          <div
+                            className={`absolute top-2 right-2 z-20 opacity-50 hover:opacity-80 transition-opacity cursor-move ${
+                              isDragging ? "opacity-80" : ""
+                            }`}
+                            title="اسحب لتحريك الفيديو"
+                          >
+                            <svg
+                              className="w-5 h-5 text-white/70"
+                              fill="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
                             </svg>
                           </div>
                         )}
-                        {/* الفيديو يظل يعمل في الخلفية حتى عند التصغير */}
                         <div
                           className={`w-full h-full ${
                             isMinimized
@@ -1897,10 +1956,10 @@ export default function MelodiesPage() {
                 </AnimatePresence>
                 {(() => {
                   const coptic = (fullscreenLyrics.copticcoptic || "").split(
-                    /\n\s*\n/,
+                    /\n\s*\n/
                   );
                   const copticAr = (fullscreenLyrics.copticArabic || "").split(
-                    /\n\s*\n/,
+                    /\n\s*\n/
                   );
                   const arabic = (
                     fullscreenLyrics.arabicTranslation || ""
@@ -1908,7 +1967,7 @@ export default function MelodiesPage() {
                   const maxParts = Math.max(
                     coptic.length,
                     copticAr.length,
-                    arabic.length,
+                    arabic.length
                   );
 
                   // دالة لاستخراج الرقم من العنوان العربي (مثلاً: القطعة الثانية -> 2)

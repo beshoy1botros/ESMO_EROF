@@ -402,8 +402,8 @@
     initLazyImages();
     checkStorage();
 
-    // اطلب إشعارات بعد 30 ثانية (لا تزعج المستخدم فور الدخول)
-    setTimeout(requestNotifications, 30_000);
+    // تم تعطيل طلب الإشعارات نهائياً بناءً على طلب المستخدم
+    // setTimeout(requestNotifications, 30_000);
 
     // صفّ الـ body
     document.body.classList.toggle("is-mobile", device.isMobile);
