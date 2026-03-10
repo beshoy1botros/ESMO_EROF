@@ -172,7 +172,7 @@ const preparatoryVideos: StageVideos = {
     {
       id: "hs1",
       title: "لحن طاي شوري",
-      url: `${BASE_URL}/Owla_tania-2-2_p7z0cl.mp4`,
+      url: `${BASE_URL}/Talta_rabaa-2-2_m7phqi.mp4`,
       copticArabic:
         "طاى شورى إن نوب إن كاثاروس إت فاى خا بى أروماطا إت خين نين ﭼيج إن آآرون بى أوويب إفطالى أو إستوى نوفى إى إبشوى إيجين بى ما إن إرشوؤوشى",
       copticcoptic:
