@@ -13,6 +13,12 @@
   "icons": [
     {
       "src": "/photos/العذراء مريم.png",
+      "sizes": "48x48",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/photos/العذراء مريم.png",
       "sizes": "72x72",
       "type": "image/png",
       "purpose": "any"
@@ -49,13 +55,13 @@
     },
     {
       "src": "/photos/العذراء مريم.png",
-      "sizes": "384x384",
+      "sizes": "256x256",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
       "src": "/photos/العذراء مريم.png",
-      "sizes": "512x512",
+      "sizes": "384x384",
       "type": "image/png",
       "purpose": "any maskable"
     }
