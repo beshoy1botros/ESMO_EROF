@@ -10,6 +10,7 @@ import {
 
 import type { Route } from "./+types/root";
 import { useEffect, useState } from "react";
+import { AppInstaller } from "./components/AppInstaller";
 import "./app.css";
 import "./styles/mobile-improvements.css";
 import "./styles/mobile-advanced.css";
@@ -66,7 +67,8 @@ export function meta() {
     },
     {
       name: "keywords",
-      content: "Coptic hymns, Coptic chants, Orthodox liturgy, ألحان قبطية, Coptic church",
+      content:
+        "Coptic hymns, Coptic chants, Orthodox liturgy, ألحان قبطية, Coptic church",
     },
     { name: "author", content: "Praise Him" },
     { name: "robots", content: "index, follow" },
@@ -207,6 +209,7 @@ export default function App() {
   return (
     <div dir="rtl">
       <Outlet />
+      <AppInstaller />
       <button
         id="landscape-toggle-button"
         onClick={toggleLandscape}
