@@ -1108,7 +1108,7 @@ const stageVideoUrls = {
     first: [
       `${BASE_URL}/Owla_tania-1-1_i34swr.mp4`,
       `${BASE_URL}/Owla_tania-1-2_xculcu.mp4`,
-      `${BASE_URL}/Owla_tania-1-3_wq7emu.mp4`,
+      `${BASE_URL}/Owla_tania-1-3_ndtdz9.mp4`,
       `${BASE_URL}/Owla_tania-1-4_fqkxms.mp4`,
     ],
     second: [
@@ -1125,7 +1125,7 @@ const stageVideoUrls = {
   },
   [StageKey.ThirdFourth]: {
     first: [
-      `${BASE_URL}/Talta_rabaa-1-1_ivpyzv.mp4`,
+      `${BASE_URL}/Talta_rabaa-1-1_kom2c4.mp4`,
       `${BASE_URL}/Talta_rabaa_1_2_whwht7.mp4`,
       `${BASE_URL}/Talta_rabaa-1-3_hypqmt.mp4`,
       `${BASE_URL}/Talta_rabaa-1-4_dh8ppl.mp4`,
@@ -1182,7 +1182,7 @@ const stageVideoUrls = {
     first: [
       `${BASE_URL}/High-1-1_dkmfwi.mp4 `,
       `${BASE_URL}/High-1-2_hdjp9d.mp4`,
-      `${BASE_URL}/Talta_rabaa-1-1_ivpyzv.mp4`,
+      `${BASE_URL}/Talta_rabaa-1-1_kom2c4.mp4`,
       `${BASE_URL}/High-1-4_rxqx8v.mp4`,
     ],
     second: [
@@ -1226,7 +1226,7 @@ const stageVideoUrls = {
       `${BASE_URL}/Talta_rabaa-2-2_m7phqi.mp4`,
       `${BASE_URL}/WeddingOfCana-2_ieovpq.mp4`,
       `${BASE_URL}/Khamsa_satta-1-4_eyonvs.mp4`,
-      `${BASE_URL}/Talta_rabaa-1-1_ivpyzv.mp4`,
+      `${BASE_URL}/Talta_rabaa-1-1_kom2c4.mp4`,
     ],
   },
 } as const;
