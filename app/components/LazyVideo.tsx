@@ -66,7 +66,7 @@ export default function LazyVideo({
     stallRetryCount.current += 1;
 
     setStallMessage(
-      `جاري الاسترداد... (محاولة ${stallRetryCount.current}/${MAX_STALL_RETRIES})`,
+      `جاري الاسترداد... (محاولة ${stallRetryCount.current}/${MAX_STALL_RETRIES})`
     );
 
     stallTimer.current = setTimeout(() => {
@@ -251,7 +251,7 @@ export default function LazyVideo({
     <div className="relative w-full h-full">
       <video
         ref={videoRef}
-        className="w-full h-full object-contain bg-black"
+        className="w-full h-full max-w-full max-h-full object-contain bg-black"
         controls
         preload="metadata"
         poster={poster}
