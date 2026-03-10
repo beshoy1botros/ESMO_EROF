@@ -29,8 +29,8 @@ export const links: Route.LinksFunction = () => [
   },
   {
     rel: "shortcut icon",
-    href: "/photos/العذراء مريم.ico",
-    type: "image/x-icon",
+    href: "/photos/العذراء مريم.png",
+    type: "image/png",
   },
   {
     rel: "manifest",
@@ -59,7 +59,7 @@ export function meta() {
     { name: "format-detection", content: "telephone=no" },
     { name: "msapplication-tap-highlight", content: "no" },
     { name: "msapplication-TileColor", content: "#1e3a8a" },
-    { name: "msapplication-TileImage", content: "/photos/العذراء مريم.ico" },
+    { name: "msapplication-TileImage", content: "/photos/العذراء مريم.png" },
     {
       name: "description",
       content:
@@ -79,14 +79,14 @@ export function meta() {
     },
     { property: "og:type", content: "website" },
     { property: "og:url", content: "https://esmo-erof.com" },
-    { property: "og:image", content: "/photos/العذراء مريم.ico" },
+    { property: "og:image", content: "/photos/العذراء مريم.png" },
     { name: "twitter:card", content: "summary_large_image" },
     { name: "twitter:title", content: "Praise Him — Coptic Hymns" },
     {
       name: "twitter:description",
       content: "Learn Coptic Orthodox hymns with the best educational app.",
     },
-    { name: "twitter:image", content: "/photos/العذراء مريم.ico" },
+    { name: "twitter:image", content: "/photos/العذراء مريم.png" },
   ];
 }
 
