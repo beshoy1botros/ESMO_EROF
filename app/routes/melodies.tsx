@@ -1299,6 +1299,11 @@ export default function MelodiesPage() {
   const [showControlsPanel, setShowControlsPanel] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+  
+  // ====== حالة تحريك الفيديو ======
+  const [videoPosition, setVideoPosition] = useState({ x: 24, y: 24 });
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
 
   const levels = stage ? getLevelsForStage(stage as string) : [];
 
@@ -1336,6 +1341,48 @@ export default function MelodiesPage() {
 
   const decreaseFontSize = () => {
     setFontSize((prev) => Math.max(prev - 1, 14));
+  };
+
+  // ====== دوال تحريك الفيديو ======
+  const handleDragStart = (e: React.MouseEvent | React.TouchEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const clientX = 'touches' in e ? e.touches[0].clientX : (e as React.MouseEvent).clientX;
+    const clientY = 'touches' in e ? e.touches[0].clientY : (e as React.MouseEvent).clientY;
+    
+    setDragOffset({
+      x: clientX - videoPosition.x,
+      y: clientY - videoPosition.y
+    });
+    setIsDragging(true);
+  };
+
+  const handleDragMove = (e: React.MouseEvent | React.TouchEvent) => {
+    if (!isDragging) return;
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const clientX = 'touches' in e ? e.touches[0].clientX : (e as React.MouseEvent).clientX;
+    const clientY = 'touches' in e ? e.touches[0].clientY : (e as React.MouseEvent).clientY;
+    
+    const newX = clientX - dragOffset.x;
+    const newY = clientY - dragOffset.y;
+    
+    // تحديد الحدود لمنع الخروج من الشاشة
+    const videoWidth = isMinimized ? 64 : (window.innerWidth < 400 ? window.innerWidth * 0.7 : 320);
+    const videoHeight = isMinimized ? 64 : 200;
+    const maxX = window.innerWidth - videoWidth - 10;
+    const maxY = window.innerHeight - videoHeight - 10;
+    
+    setVideoPosition({
+      x: Math.max(10, Math.min(newX, maxX)),
+      y: Math.max(10, Math.min(newY, maxY))
+    });
+  };
+
+  const handleDragEnd = () => {
+    setIsDragging(false);
   };
 
   useEffect(() => {
@@ -1711,7 +1758,7 @@ export default function MelodiesPage() {
                         damping: 30,
                         stiffness: 150,
                       }}
-                      className={`fixed bottom-6 right-6 z-[60] shadow-2xl ${
+                      className={`fixed z-[60] shadow-2xl ${
                         isMinimized
                           ? "w-16 h-16 rounded-full cursor-pointer overflow-hidden border-2 border-blue-500 hover:scale-110 transition-all duration-300"
                           : "w-[70vw] max-w-[320px] md:max-w-[400px]"
@@ -1722,6 +1769,19 @@ export default function MelodiesPage() {
                             : "animate-video-pulse-paused"
                           : ""
                       }`}
+                      style={{
+                        left: videoPosition.x,
+                        top: videoPosition.y,
+                        transition: isDragging ? 'none' : 'all 0.3s ease',
+                        cursor: isDragging ? 'grabbing' : (isMinimized ? 'pointer' : 'grab'),
+                      }}
+                      onMouseDown={handleDragStart}
+                      onMouseMove={handleDragMove}
+                      onMouseUp={handleDragEnd}
+                      onMouseLeave={handleDragEnd}
+                      onTouchStart={handleDragStart}
+                      onTouchMove={handleDragMove}
+                      onTouchEnd={handleDragEnd}
                       onTap={() => isMinimized && setIsMinimized(false)}
                     >
                       <div
@@ -1729,6 +1789,16 @@ export default function MelodiesPage() {
                           isMinimized ? "aspect-square" : "aspect-video"
                         }`}
                       >
+                        {/* مؤشر التحريك - يظهر عند السحب */}
+                        {!isMinimized && (
+                          <div className={`absolute top-2 right-2 z-20 opacity-50 hover:opacity-80 transition-opacity cursor-move ${
+                            isDragging ? 'opacity-80' : ''
+                          }`} title="اسحب لتحريك الفيديو">
+                            <svg className="w-5 h-5 text-white/70" fill="currentColor" viewBox="0 0 24 24">
+                              <path d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
+                            </svg>
+                          </div>
+                        )}
                         {/* الفيديو يظل يعمل في الخلفية حتى عند التصغير */}
                         <div
                           className={`w-full h-full ${

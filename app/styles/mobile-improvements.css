@@ -99,6 +99,47 @@ a,
 
 /* منع التشغيل التلقائي */
 video {
+  playsinline: true;
+  webkit-playsinline: true;
+}
+
+/* فيديو قابل للتحريك على شاشات اللمس */
+.fixed.z-\[60\] {
+  touch-action: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* تأثير الظل عند السحب */
+.fixed.z-\[60\]:active {
+  box-shadow: 0 0 40px rgba(59, 130, 246, 0.5);
+  transform: scale(1.02);
+}
+
+/* تحسين استجابة اللمس */
+@media (hover: none) and (pointer: coarse) {
+  .fixed.z-\[60\] {
+    cursor: grab !important;
+  }
+
+  .fixed.z-\[60\]:active {
+    cursor: grabbing !important;
+  }
+}
+
+/* مؤشر التحريك */
+.drag-handle {
+  opacity: 0.5;
+  transition: opacity 0.2s ease;
+}
+
+.drag-handle:hover,
+.drag-handle.dragging {
+  opacity: 0.9;
+}
+
+video {
   pointer-events: auto;
 }
 
