@@ -1100,7 +1100,7 @@ const stageVideoUrls = {
     ],
     gifted: [
       `${BASE_URL}/Hadana-3-1_ueghwz.mp4`,
-      `${BASE_URL}/Hdana-3-2_nenvrp.mp4`,
+      `${BASE_URL}/Hadana-3-2_ci1vdg.mp4`,
       `${BASE_URL}/Hadana-3-3_q347t9.mp4`,
     ],
   },
@@ -1108,19 +1108,19 @@ const stageVideoUrls = {
     first: [
       `${BASE_URL}/Owla_tania-1-1_i34swr.mp4`,
       `${BASE_URL}/Owla_tania-1-2_xculcu.mp4`,
-      `${BASE_URL}/Owla_tania-1-3_ut46rv.mp4`,
+      `${BASE_URL}/Owla_tania-1-3_wq7emu.mp4`,
       `${BASE_URL}/Owla_tania-1-4_fqkxms.mp4`,
     ],
     second: [
       `${BASE_URL}/Owla_tania-2-1_j4ekrw.mp4`,
       `${BASE_URL}/Owla_tania-2-2_p7z0cl.mp4`,
       `${BASE_URL}/Owla_tania-2-3_lm5inb.mp4`,
-      `${BASE_URL}/Owla_tania-2-4_bkkvcp.mp4`,
+      `${BASE_URL}/Owla_tania-2-4_i9anxt.mp4`,
     ],
     gifted: [
       `${BASE_URL}/Owla_tania-3-1_oltolz.mp4`,
       `${BASE_URL}/Owla_tania-3-2_p602ok.mp4`,
-      `${BASE_URL}/Owla_tania-3-3_ubogua.mp4`,
+      `${BASE_URL}/Owla_tania-3-3_yh03ip.mp4 `,
     ],
   },
   [StageKey.ThirdFourth]: {
@@ -1132,7 +1132,7 @@ const stageVideoUrls = {
     ],
     second: [
       `${BASE_URL}/Talta_rabaa-2-1_egiv11.mp4`,
-      `${BASE_URL}/Talta_rabaa-2-2_pfz3l0.mp4`,
+      `${BASE_URL}/Talta_rabaa-2-2_m7phqi.mp4`,
       `${BASE_URL}/Talta_rabaa-2-3_lkrfue.mp4`,
       `${BASE_URL}/Talta_rabaa-2-4_apakmp.mp4`,
     ],
@@ -1144,14 +1144,14 @@ const stageVideoUrls = {
   },
   [StageKey.FifthSixth]: {
     first: [
-      `${BASE_URL}/Khamsa_satta-1-1_npieb5.mp4`,
+      `${BASE_URL}/Khamsa_satta-1-1_rgz9tt.mp4`,
       `${BASE_URL}/Khamsa_satta-1-2_jsq8ev.mp4`,
       `${BASE_URL}/Khamsa_satta-1-3_xgm1ev.mp4`,
       `${BASE_URL}/Khamsa_satta-1-4_eyonvs.mp4`,
     ],
     second: [
       `${BASE_URL}/Khamsa_satta-2-1_hqcj0a.mp4`,
-      `${BASE_URL}/Khamsa_satta-2-2_qsyxww.mp4`,
+      `${BASE_URL}/Khamsa_satta-2-2_f3tqy0.mp4`,
       `${BASE_URL}/Khamsa_satta-2-3_mvawvs.mp4`,
       `${BASE_URL}/Khamsa_satta-2-4_igbiek.mp4`,
     ],
@@ -1169,7 +1169,7 @@ const stageVideoUrls = {
     ],
     second: [
       `${BASE_URL}/Middle-2-1_wd3yvy.mp4`,
-      `${BASE_URL}/Midde-2-2_mltaa8.mp4`,
+      `${BASE_URL}/Midde-2-2_bkrddm.mp4 `,
       `${BASE_URL}/Midde-2-3_zvgag4.mp4`,
     ],
     gifted: [
@@ -1180,13 +1180,13 @@ const stageVideoUrls = {
   },
   [StageKey.High]: {
     first: [
-      `${BASE_URL}/High-1-1_zjghrp.mp4`,
+      `${BASE_URL}/High-1-1_dkmfwi.mp4 `,
       `${BASE_URL}/High-1-2_hdjp9d.mp4`,
       `${BASE_URL}/Talta_rabaa-1-1_ivpyzv.mp4`,
       `${BASE_URL}/High-1-4_rxqx8v.mp4`,
     ],
     second: [
-      `${BASE_URL}/Midde-2-2_mltaa8.mp4`,
+      `${BASE_URL}/Midde-2-2_bkrddm.mp4 `,
       `${BASE_URL}/High-2-2_bgy0po.mp4`,
       `${BASE_URL}/High-2-3_xa9ltr.mp4`,
       `${BASE_URL}/High-2-4_c1gsas.mp4`,
@@ -1223,8 +1223,8 @@ const stageVideoUrls = {
   },
   [StageKey.WeddingOfCana]: {
     first: [
-      `${BASE_URL}/Talta_rabaa-2-2_pfz3l0.mp4`,
-      `${BASE_URL}/WeddingOfCana-2_myydat.mp4`,
+      `${BASE_URL}/Talta_rabaa-2-2_m7phqi.mp4`,
+      `${BASE_URL}/WeddingOfCana-2_ieovpq.mp4`,
       `${BASE_URL}/Khamsa_satta-1-4_eyonvs.mp4`,
       `${BASE_URL}/Talta_rabaa-1-1_ivpyzv.mp4`,
     ],
@@ -1270,7 +1270,6 @@ function getVideos(stage: StageKey, levelLabel: string): Video[] {
   const stageData = videoData[stage];
   return stageData && englishLevel ? stageData[englishLevel] || [] : [];
 }
-
 
 // --- 4. المكون الرئيسي ---
 
