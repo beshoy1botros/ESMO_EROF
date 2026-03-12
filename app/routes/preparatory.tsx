@@ -472,7 +472,18 @@ export default function PreparatoryPage() {
                   >
                     <div className="aspect-video bg-black relative">
                       {video.url ? (
-                        <LazyVideo src={video.url} title={video.title} />
+                        <LazyVideo
+                          src={video.url}
+                          title={video.title}
+                          startTime={videoTime[video.id] || 0}
+                          currentTime={videoTime[video.id]}
+                          onTimeUpdate={(time) =>
+                            setVideoTime((prev) => ({
+                              ...prev,
+                              [video.id]: time,
+                            }))
+                          }
+                        />
                       ) : (
                         <div className="flex flex-col items-center justify-center h-full text-gray-600">
                           <span className="text-4xl mb-2">🎬</span>
@@ -865,6 +876,8 @@ export default function PreparatoryPage() {
                             src={fullscreenLyrics.url}
                             title={fullscreenLyrics.title}
                             startTime={videoTime[fullscreenLyrics.id] || 0}
+                            currentTime={videoTime[fullscreenLyrics.id]}
+                            isActive={true}
                             onTimeUpdate={(time) =>
                               setVideoTime((prev) => ({
                                 ...prev,

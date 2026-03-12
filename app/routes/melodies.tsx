@@ -1528,6 +1528,7 @@ export default function MelodiesPage() {
                         src={v.url}
                         title={v.title}
                         startTime={videoTime[v.id] || 0}
+                        currentTime={videoTime[v.id]}
                         onTimeUpdate={(time) =>
                           setVideoTime((prev) => ({ ...prev, [v.id]: time }))
                         }
@@ -1869,6 +1870,8 @@ export default function MelodiesPage() {
                             src={fullscreenLyrics.url}
                             title={fullscreenLyrics.title}
                             startTime={videoTime[fullscreenLyrics.id] || 0}
+                            currentTime={videoTime[fullscreenLyrics.id]}
+                            isActive={showVideoInModal}
                             onTimeUpdate={(time) =>
                               setVideoTime((prev) => ({
                                 ...prev,
