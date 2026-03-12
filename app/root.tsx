@@ -46,6 +46,8 @@ export const links: Route.LinksFunction = () => [
     rel: "manifest",
     href: "/manifest.json",
   },
+  // Android App Links
+  { rel: "manifest", href: "/manifest-mobile.json" },
 ];
 
 export function meta() {
@@ -70,6 +72,8 @@ export function meta() {
     { name: "msapplication-tap-highlight", content: "no" },
     { name: "msapplication-TileColor", content: "#1e3a8a" },
     { name: "msapplication-TileImage", content: "/photos/icon-192.png" },
+    // Android App Links
+    { name: "android-app-link", content: "https://esmo-erof.com" },
     {
       name: "description",
       content:
@@ -97,6 +101,14 @@ export function meta() {
       content: "Learn Coptic Orthodox hymns with the best educational app.",
     },
     { name: "twitter:image", content: "/photos/icon-512.png" },
+    // iOS App Store (replace with actual app ID when available)
+    { property: "al:ios:url", content: "https://esmo-erof.com" },
+    { property: "al:ios:app_store_id", content: "" },
+    { property: "al:ios:app_name", content: "Coptic Hymns" },
+    // Android (replace with actual package name when available)
+    { property: "al:android:url", content: "https://esmo-erof.com" },
+    { property: "al:android:package", content: "" },
+    { property: "al:android:app_name", content: "Coptic Hymns" },
   ];
 }
 
