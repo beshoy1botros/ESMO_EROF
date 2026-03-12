@@ -67,13 +67,16 @@ export function meta() {
     },
     // ✏️ تغيير اسم الموقع إلى الإنجليزية
     { name: "apple-mobile-web-app-title", content: "Coptic Hymns" },
-    { name: "application-name", content: "Coptic Hymns - ألحان مهرجان الكرازة" },
+    {
+      name: "application-name",
+      content: "Coptic Hymns - ألحان مهرجان الكرازة",
+    },
     { name: "format-detection", content: "telephone=no" },
     { name: "msapplication-tap-highlight", content: "no" },
     { name: "msapplication-TileColor", content: "#1e3a8a" },
     { name: "msapplication-TileImage", content: "/photos/icon-192.png" },
     // Android App Links
-    { name: "android-app-link", content: "https://esmo-erof.com" },
+    { name: "android-app-link", content: "https://esmo-erof.vercel.app" },
     {
       name: "description",
       content:
@@ -86,27 +89,35 @@ export function meta() {
     },
     { name: "author", content: "Coptic Hymns" },
     { name: "robots", content: "index, follow" },
-    { property: "og:title", content: "Coptic Hymns - ألحان مهرجان الكرازة لإيبارشية الشرقية والعاشر من رمضان" },
+    {
+      property: "og:title",
+      content:
+        "Coptic Hymns - ألحان مهرجان الكرازة لإيبارشية الشرقية والعاشر من رمضان",
+    },
     {
       property: "og:description",
       content: "Learn Coptic Orthodox hymns with the best educational app.",
     },
     { property: "og:type", content: "website" },
-    { property: "og:url", content: "https://esmo-erof.com" },
+    { property: "og:url", content: "https://esmo-erof.vercel.app" },
     { property: "og:image", content: "/photos/icon-512.png" },
     { name: "twitter:card", content: "summary_large_image" },
-    { name: "twitter:title", content: "Coptic Hymns - ألحان مهرجان الكرازة لإيبارشية الشرقية والعاشر منرمضان" },
+    {
+      name: "twitter:title",
+      content:
+        "Coptic Hymns - ألحان مهرجان الكرازة لإيبارشية الشرقية والعاشر منرمضان",
+    },
     {
       name: "twitter:description",
       content: "Learn Coptic Orthodox hymns with the best educational app.",
     },
     { name: "twitter:image", content: "/photos/icon-512.png" },
     // iOS App Store (replace with actual app ID when available)
-    { property: "al:ios:url", content: "https://esmo-erof.com" },
+    { property: "al:ios:url", content: "https://esmo-erof.vercel.app" },
     { property: "al:ios:app_store_id", content: "" },
     { property: "al:ios:app_name", content: "Coptic Hymns" },
     // Android (replace with actual package name when available)
-    { property: "al:android:url", content: "https://esmo-erof.com" },
+    { property: "al:android:url", content: "https://esmo-erof.vercel.app" },
     { property: "al:android:package", content: "" },
     { property: "al:android:app_name", content: "Coptic Hymns" },
   ];
