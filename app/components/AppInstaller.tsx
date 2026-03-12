@@ -9,7 +9,7 @@ interface BeforeInstallPromptEvent extends Event {
   prompt(): Promise<void>;
 }
 
-// Track installation for analytics
+// Track installation locally
 export function trackInstallation(platform: string) {
   // Store in localStorage (simple counter per device)
   const installData = JSON.parse(localStorage.getItem("app_installs") || "{}");
@@ -21,8 +21,10 @@ export function trackInstallation(platform: string) {
   // Log for debugging
   console.log("📱 App Installed!", installData);
   
-  // You can also send to analytics service here
-  // Example: fetch('/api/track-install', { method: 'POST', body: JSON.stringify(installData) });
+  // Also track globally (Firebase)
+  import("../utils/analytics").then(({ trackGlobalInstallation }) => {
+    trackGlobalInstallation(platform as "Android" | "iOS");
+  });
 }
 
 export function getInstallStats() {
