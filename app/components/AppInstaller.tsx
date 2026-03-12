@@ -9,6 +9,26 @@ interface BeforeInstallPromptEvent extends Event {
   prompt(): Promise<void>;
 }
 
+// Track installation for analytics
+export function trackInstallation(platform: string) {
+  // Store in localStorage (simple counter per device)
+  const installData = JSON.parse(localStorage.getItem("app_installs") || "{}");
+  installData[platform] = (installData[platform] || 0) + 1;
+  installData.total = (installData.total || 0) + 1;
+  installData.lastInstall = new Date().toISOString();
+  localStorage.setItem("app_installs", JSON.stringify(installData));
+  
+  // Log for debugging
+  console.log("📱 App Installed!", installData);
+  
+  // You can also send to analytics service here
+  // Example: fetch('/api/track-install', { method: 'POST', body: JSON.stringify(installData) });
+}
+
+export function getInstallStats() {
+  return JSON.parse(localStorage.getItem("app_installs") || "{}");
+}
+
 export function AppInstaller() {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [isInstallable, setIsInstallable] = useState(false);
@@ -71,6 +91,10 @@ export function AppInstaller() {
       setIsInstallable(false);
       setDeferredPrompt(null);
       setShowiOSBanner(false);
+      
+      // Track the installation
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+      trackInstallation(isIOS ? "iOS" : "Android");
     };
 
     window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);

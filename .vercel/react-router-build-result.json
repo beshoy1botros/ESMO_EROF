@@ -13,7 +13,8 @@
       "routes/home": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
       "routes/melodies": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
       "routes/about": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
-      "routes/preparatory": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0"
+      "routes/preparatory": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/stats": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0"
     },
     "routes": {
       "root": {
@@ -54,6 +55,15 @@
         "parentId": "root",
         "file": "app/routes/preparatory.tsx",
         "path": "preparatory",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/stats": {
+        "id": "routes/stats",
+        "parentId": "root",
+        "file": "app/routes/stats.tsx",
+        "path": "stats",
         "config": {
           "runtime": "nodejs"
         }
@@ -102,6 +112,12 @@
         "parentId": "root",
         "file": "routes/preparatory.tsx",
         "path": "preparatory"
+      },
+      "routes/stats": {
+        "id": "routes/stats",
+        "parentId": "root",
+        "file": "routes/stats.tsx",
+        "path": "stats"
       }
     },
     "routeDiscovery": {
@@ -133,6 +149,10 @@
           {
             "file": "routes/preparatory.tsx",
             "path": "preparatory"
+          },
+          {
+            "file": "routes/stats.tsx",
+            "path": "stats"
           }
         ]
       }
