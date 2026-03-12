@@ -29,8 +29,18 @@ export const links: Route.LinksFunction = () => [
   },
   {
     rel: "shortcut icon",
-    href: "/photos/العذراء مريم.png",
+    href: "/photos/favicon.ico",
+    type: "image/x-icon",
+  },
+  {
+    rel: "icon",
+    href: "/photos/favicon-96x96.png",
     type: "image/png",
+    sizes: "96x96",
+  },
+  {
+    rel: "apple-touch-icon",
+    href: "/photos/apple-touch.png",
   },
   {
     rel: "manifest",
@@ -59,7 +69,7 @@ export function meta() {
     { name: "format-detection", content: "telephone=no" },
     { name: "msapplication-tap-highlight", content: "no" },
     { name: "msapplication-TileColor", content: "#1e3a8a" },
-    { name: "msapplication-TileImage", content: "/photos/العذراء مريم.png" },
+    { name: "msapplication-TileImage", content: "/photos/icon-192.png" },
     {
       name: "description",
       content:
@@ -72,21 +82,21 @@ export function meta() {
     },
     { name: "author", content: "Coptic Hymns" },
     { name: "robots", content: "index, follow" },
-    { property: "og:title", content: "Coptic Hymns - ألحان festival الكرازة لإيبارشية الشرقية والعاشر من رمضان" },
+    { property: "og:title", content: "Coptic Hymns - ألحان مهرجان الكرازة لإيبارشية الشرقية والعاشر من رمضان" },
     {
       property: "og:description",
       content: "Learn Coptic Orthodox hymns with the best educational app.",
     },
     { property: "og:type", content: "website" },
     { property: "og:url", content: "https://esmo-erof.com" },
-    { property: "og:image", content: "/photos/العذراء مريم.png" },
+    { property: "og:image", content: "/photos/icon-512.png" },
     { name: "twitter:card", content: "summary_large_image" },
-    { name: "twitter:title", content: "Coptic Hymns - ألحان festival الكرازة لإيبارشية الشرقية والعاشر منرمضان" },
+    { name: "twitter:title", content: "Coptic Hymns - ألحان مهرجان الكرازة لإيبارشية الشرقية والعاشر منرمضان" },
     {
       name: "twitter:description",
       content: "Learn Coptic Orthodox hymns with the best educational app.",
     },
-    { name: "twitter:image", content: "/photos/العذراء مريم.png" },
+    { name: "twitter:image", content: "/photos/icon-512.png" },
   ];
 }
 

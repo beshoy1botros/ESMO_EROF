@@ -127,12 +127,6 @@ export default function Header() {
                 alt=""
                 width={64}
                 height={64}
-                className="
-                  w-16 h-16 sm:w-20 sm:h-20 object-contain
-                  rounded-xl ring-1 ring-blue-700/40
-                  hover:ring-blue-400/60 transition-all duration-200
-                  hover:scale-105 active:scale-95
-                "
                 loading="eager"
               />
             </Link>
