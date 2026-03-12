@@ -97,6 +97,11 @@ export function AppInstaller() {
       // Track the installation
       const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
       trackInstallation(isIOS ? "iOS" : "Android");
+      
+      // Also track page visit as backup
+      fetch("https://api.countapi.xyz/hit/esmo-erof-app/downloads")
+        .then(() => console.log("Download tracked"))
+        .catch(() => {});
     };
 
     window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);

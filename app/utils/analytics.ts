@@ -1,49 +1,36 @@
-import { db } from "./firebase";
-import { doc, getDoc, setDoc, increment } from "firebase/firestore";
+// Simple global counter using countapi.xyz (free service)
+const COUNTER_NAMESPACE = "esmo-erof-app";
+const COUNTER_KEY = "downloads";
 
-// Track app installation globally
-export async function trackGlobalInstallation(platform: "Android" | "iOS") {
-  if (!db) {
-    console.log("Firebase not configured, skipping global tracking");
-    return;
-  }
+interface CounterResult {
+  value: number;
+}
 
+// Get current download count
+export async function getGlobalStats() {
   try {
-    const statsRef = doc(db, "stats", "downloads");
-    
-    // Get current stats
-    const docSnap = await getDoc(statsRef);
-    const data = docSnap.data() || { total: 0, Android: 0, iOS: 0 };
-    
-    // Increment the counter
-    await setDoc(statsRef, {
-      total: increment(1),
-      [platform]: increment(1),
-      lastInstall: new Date().toISOString()
-    }, { merge: true });
-    
-    console.log("📱 Global installation tracked!");
+    const response = await fetch(
+      `https://api.countapi.xyz/get/${COUNTER_NAMESPACE}/${COUNTER_KEY}`
+    );
+    const data: CounterResult = await response.json();
+    return { total: data.value };
   } catch (error) {
-    console.error("Error tracking installation:", error);
+    console.error("Error getting stats:", error);
+    return null;
   }
 }
 
-// Get global download stats
-export async function getGlobalStats() {
-  if (!db) {
-    return null;
-  }
-
+// Increment download counter (call when app is installed)
+export async function trackGlobalInstallation(platform: "Android" | "iOS") {
   try {
-    const statsRef = doc(db, "stats", "downloads");
-    const docSnap = await getDoc(statsRef);
-    
-    if (docSnap.exists()) {
-      return docSnap.data();
-    }
-    return null;
+    const response = await fetch(
+      `https://api.countapi.xyz/create?namespace=${COUNTER_NAMESPACE}&key=${COUNTER_KEY}&enable_reset=0`
+    );
+    const data: CounterResult = await response.json();
+    console.log("📱 Installation tracked! Total:", data.value);
+    return data.value;
   } catch (error) {
-    console.error("Error getting stats:", error);
+    console.error("Error tracking installation:", error);
     return null;
   }
 }

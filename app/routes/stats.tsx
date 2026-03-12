@@ -1,25 +1,40 @@
 import { useState, useEffect } from "react";
-import { getGlobalStats } from "../utils/analytics";
 
-interface GlobalStats {
-  total?: number;
-  Android?: number;
-  iOS?: number;
-  lastInstall?: string;
+interface Stats {
+  visits?: number;
+  downloads?: number;
 }
 
 export default function Stats() {
-  const [globalStats, setGlobalStats] = useState<GlobalStats | null>(null);
+  const [stats, setStats] = useState<Stats>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const stats = await getGlobalStats();
-        setGlobalStats(stats);
+        // First, try to create the counter if it doesn't exist
+        await fetch("https://api.countapi.xyz/create?namespace=esmo-erof-app&key=visits&enable_reset=0");
+        
+        // Get visits
+        const visitsRes = await fetch(
+          "https://api.countapi.xyz/get/esmo-erof-app/visits"
+        );
+        const visitsData = await visitsRes.json();
+        
+        // Get downloads
+        const downloadsRes = await fetch(
+          "https://api.countapi.xyz/get/esmo-erof-app/downloads"
+        );
+        const downloadsData = await downloadsRes.json();
+        
+        setStats({
+          visits: visitsData.value,
+          downloads: downloadsData.value
+        });
       } catch (err) {
-        setError("تعذر تحميل الإحصائيات");
+        console.error("Error fetching stats:", err);
+        setError("تعذر تحميل الإحصائيات - تأكد من الاتصال بالإنترنت");
       }
       setLoading(false);
     };
@@ -48,10 +63,28 @@ export default function Stats() {
           padding: "20px",
           borderRadius: "10px",
           color: "#dc2626",
-          textAlign: "center"
+          textAlign: "center",
+          marginBottom: "20px"
         }}>
           {error}
         </div>
+        <p style={{ textAlign: "center", color: "#64748b" }}>
+          ملاحظة: الإحصائيات ستعمل عند رفع الموقع على Vercel
+        </p>
+        <a 
+          href="/"
+          style={{
+            display: "inline-block",
+            marginTop: "20px",
+            padding: "12px 24px",
+            background: "#1e3a8a",
+            color: "white",
+            borderRadius: "8px",
+            textDecoration: "none"
+          }}
+        >
+          ← العودة للرئيسية
+        </a>
       </div>
     );
   }
@@ -68,7 +101,7 @@ export default function Stats() {
         marginBottom: "30px",
         textAlign: "center"
       }}>
-        📊 إحصائيات التحميل العالمية
+        📊 إحصائيات الموقع
       </h1>
 
       <div style={{ 
@@ -86,10 +119,10 @@ export default function Stats() {
           boxShadow: "0 4px 15px rgba(30, 58, 138, 0.3)"
         }}>
           <div style={{ fontSize: "48px", fontWeight: "bold" }}>
-            {globalStats?.total || 0}
+            {stats.visits || 0}
           </div>
           <div style={{ fontSize: "16px", opacity: 0.9 }}>
-            إجمالي التحميلات
+            عدد الزيارات
           </div>
         </div>
 
@@ -102,51 +135,12 @@ export default function Stats() {
           boxShadow: "0 4px 15px rgba(16, 185, 129, 0.3)"
         }}>
           <div style={{ fontSize: "48px", fontWeight: "bold" }}>
-            {globalStats?.Android || 0}
+            {stats.downloads || 0}
           </div>
           <div style={{ fontSize: "16px", opacity: 0.9 }}>
-            أجهزة أندرويد
+            التحميلات
           </div>
         </div>
-
-        <div style={{
-          background: "linear-gradient(135deg, #6366f1 0%, #818cf8 100%)",
-          color: "white",
-          padding: "30px",
-          borderRadius: "15px",
-          textAlign: "center",
-          boxShadow: "0 4px 15px rgba(99, 102, 241, 0.3)"
-        }}>
-          <div style={{ fontSize: "48px", fontWeight: "bold" }}>
-            {globalStats?.iOS || 0}
-          </div>
-          <div style={{ fontSize: "16px", opacity: 0.9 }}>
-            أجهزة آيفون
-          </div>
-        </div>
-      </div>
-
-      {globalStats?.lastInstall && (
-        <div style={{
-          background: "#f8fafc",
-          padding: "15px",
-          borderRadius: "10px",
-          textAlign: "center",
-          color: "#64748b"
-        }}>
-          آخر تحميل: {new Date(globalStats.lastInstall).toLocaleString("ar-EG")}
-        </div>
-      )}
-
-      <div style={{
-        marginTop: "30px",
-        padding: "20px",
-        background: "#dbeafe",
-        borderRadius: "10px",
-        fontSize: "14px",
-        color: "#1e40af"
-      }}>
-        ✅ هذه الإحصائيات عالمية تشمل جميع الأجهزة حول العالم
       </div>
 
       <a 
