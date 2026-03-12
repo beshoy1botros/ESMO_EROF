@@ -36,6 +36,8 @@ export default function LazyVideo({
   const [isWaiting, setIsWaiting] = useState(false);
   const [stallMessage, setStallMessage] = useState<string | null>(null);
   const [showMenu, setShowMenu] = useState(false);
+  const [loadProgress, setLoadProgress] = useState(0);
+  const [showInitialLoader, setShowInitialLoader] = useState(true);
 
   // ── مسح الـ stall timer عند الـ unmount أو تغيير الـ src ──────────────
   const clearStallTimer = useCallback(() => {
@@ -108,6 +110,8 @@ export default function LazyVideo({
     setIsLoading(true);
     setIsWaiting(false);
     setStallMessage(null);
+    setLoadProgress(0);
+    setShowInitialLoader(true);
     clearStallTimer();
   }, [src, clearStallTimer]);
 
@@ -134,6 +138,7 @@ export default function LazyVideo({
       setStallMessage(null);
       setIsLoading(false);
       setIsWaiting(false);
+      setShowInitialLoader(false);
       onPlayChange?.(true);
     };
 
@@ -235,6 +240,8 @@ export default function LazyVideo({
     setHasError(false);
     setIsLoading(true);
     setStallMessage(null);
+    setLoadProgress(0);
+    setShowInitialLoader(true);
 
     const sep = src.includes("?") ? "&" : "?";
     const newSrc = `${src}${sep}retry=${Date.now()}`;
@@ -248,10 +255,24 @@ export default function LazyVideo({
   };
 
   return (
-    <div className="relative w-full h-full">
+    <div className="relative w-full h-full group">
+      {/* Poster Background مع تأثير التمويه أثناء التحميل */}
+      <div 
+        className={`absolute inset-0 bg-cover bg-center transition-all duration-700 ${
+          isLoading ? 'blur-sm scale-105' : 'blur-0 scale-100'
+        }`}
+        style={{ 
+          backgroundImage: poster ? `url(${poster})` : 'none',
+          backgroundColor: poster ? 'transparent' : '#1a1a2e'
+        }}
+      >
+        {/* طبقة تظليل لتحسين وضوح الفيديو */}
+        {!isLoading && <div className="absolute inset-0 bg-black/20" />}
+      </div>
+
       <video
         ref={videoRef}
-        className="w-full h-full max-w-full max-h-full object-contain bg-black"
+        className="relative w-full h-full max-w-full max-h-full object-contain bg-transparent"
         controls
         preload="metadata"
         poster={poster}
@@ -265,8 +286,22 @@ export default function LazyVideo({
           setHasError(true);
           setIsLoading(false);
           setIsWaiting(false);
+          setShowInitialLoader(false);
         }}
-        onLoadedData={() => setIsLoading(false)}
+        onLoadedData={() => {
+          setIsLoading(false);
+          setShowInitialLoader(false);
+        }}
+        onProgress={(e) => {
+          const video = e.currentTarget;
+          if (video.buffered.length > 0) {
+            const bufferedEnd = video.buffered.end(video.buffered.length - 1);
+            const duration = video.duration;
+            if (duration > 0) {
+              setLoadProgress((bufferedEnd / duration) * 100);
+            }
+          }
+        }}
       >
         <source src={src} type="video/mp4" />
         <p className="text-gray-400 text-sm text-center p-4">
@@ -274,40 +309,121 @@ export default function LazyVideo({
         </p>
       </video>
 
-      {/* Loading / Waiting / Stall overlay */}
+      {/* Loading Overlay - تصميم احترافي */}
       {(isLoading || isWaiting) && !hasError && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/40 backdrop-blur-[2px] pointer-events-none transition-all duration-300">
-          <div className="w-10 h-10 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin shadow-lg" />
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/50 backdrop-blur-sm transition-all duration-300">
+          {/* الـ Spinner الاحترافي */}
+          <div className="relative">
+            {/* الدائرة الخارجية */}
+            <div className="w-20 h-20 border-[3px] border-white/10 rounded-full" />
+            {/* الدائرة المتحركة */}
+            <div className="absolute top-0 left-0 w-20 h-20">
+              <div className="w-full h-full border-[3px] border-transparent border-t-blue-400 border-r-blue-400 rounded-full animate-spin" 
+                   style={{ animationDuration: '1s' }} 
+              />
+            </div>
+            {/* الدائرة الداخلية المتأخرة */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12">
+              <div className="w-full h-full border-[2px] border-transparent border-t-cyan-400 border-r-cyan-400 rounded-full animate-spin" 
+                   style={{ animationDuration: '0.8s', animationDirection: 'reverse' }} 
+              />
+            </div>
+            {/* مركز الدائرة */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-blue-400 rounded-full animate-pulse shadow-lg shadow-blue-400/50" />
+          </div>
+
+          {/* شريط التقدم */}
+          <div className="mt-6 w-48 h-1.5 bg-white/10 rounded-full overflow-hidden backdrop-blur-sm">
+            <div 
+              className="h-full bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-400 rounded-full transition-all duration-300 ease-out"
+              style={{ 
+                width: `${loadProgress}%`,
+                boxShadow: '0 0 10px rgba(96, 165, 250, 0.5)'
+              }}
+            />
+          </div>
+
+          {/* رسالة الحالة */}
           {(isWaiting || stallMessage) && (
-            <p className="mt-3 text-xs text-white/80 font-bold bg-black/40 px-3 py-1 rounded-full border border-white/10 animate-pulse">
-              {stallMessage ?? "جاري التحميل..."}
+            <div className="mt-4 flex flex-col items-center gap-2">
+              <p className="text-sm text-white/90 font-medium bg-black/40 px-4 py-2 rounded-full border border-white/10 backdrop-blur-sm shadow-lg animate-pulse">
+                {stallMessage ?? "جاري التحميل..."}
+              </p>
+              {/* نقاط التحميل */}
+              <div className="flex gap-1">
+                {[0, 1, 2].map((i) => (
+                  <div 
+                    key={i}
+                    className="w-2 h-2 bg-blue-400 rounded-full animate-bounce"
+                    style={{ 
+                      animationDelay: `${i * 0.15}s`,
+                      opacity: 0.7
+                    }}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* نص التحميل الأولي */}
+          {isLoading && !isWaiting && !stallMessage && (
+            <p className="mt-4 text-sm text-white/70 font-light animate-pulse">
+              جاري تحميل الفيديو...
             </p>
           )}
         </div>
       )}
 
-      {/* Error overlay */}
+      {/* Error Overlay - تصميم محسّن */}
       {hasError && (
-        <div className="absolute inset-0 flex items-center justify-center bg-black/60 text-white text-sm sm:text-base p-4 rounded">
-          <div className="text-center">
-            <p>تعذّر تحميل الفيديو من المصدر البعيد.</p>
-            <p className="opacity-80 mt-1">تحقق من اتصالك أو جرّب لاحقًا.</p>
-            <button
-              className="mt-2 inline-block bg-white text-black rounded px-3 py-1 mr-2"
-              onClick={handleManualRetry}
-            >
-              إعادة المحاولة
-            </button>
-            {src && (
-              <a
-                className="inline-block mt-2 underline"
-                href={src}
-                target="_blank"
-                rel="noreferrer"
+        <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-b from-black/70 to-black/90 text-white p-6 backdrop-blur-sm">
+          <div className="text-center max-w-sm">
+            {/* أيقونة الخطأ */}
+            <div className="mb-4 relative">
+              <div className="w-20 h-20 mx-auto bg-red-500/10 rounded-full flex items-center justify-center border border-red-500/20">
+                <svg className="w-10 h-10 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+              </div>
+              <div className="absolute -top-1 -right-1 w-6 h-6 bg-red-500 rounded-full flex items-center justify-center animate-pulse">
+                <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                </svg>
+              </div>
+            </div>
+
+            <h3 className="text-lg font-semibold text-white mb-2">
+              تعذّر تحميل الفيديو
+            </h3>
+            <p className="text-sm text-white/60 mb-6 leading-relaxed">
+              يبدو أن هناك مشكلة في تحميل الفيديو من المصدر البعيد. يرجى التحقق من اتصالك بالإنترنت أو المحاولة لاحقاً.
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <button
+                className="inline-flex items-center justify-center gap-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg px-5 py-2.5 text-sm font-medium transition-all duration-200 hover:shadow-lg hover:shadow-blue-500/30 hover:scale-105 active:scale-95"
+                onClick={handleManualRetry}
               >
-                فتح الرابط الأصلي في نافذة جديدة
-              </a>
-            )}
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                إعادة المحاولة
+              </button>
+              
+              {src && (
+                <a
+                  className="inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 text-white rounded-lg px-5 py-2.5 text-sm font-medium transition-all duration-200 border border-white/10 backdrop-blur-sm"
+                  href={src}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                  </svg>
+                  فتح في نافذة جديدة
+                </a>
+              )}
+            </div>
           </div>
         </div>
       )}
