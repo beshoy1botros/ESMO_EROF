@@ -1198,13 +1198,3 @@ export default function PreparatoryPage() {
     </div>
   );
 }
-
-export function meta() {
-  return [
-    { title: "Coptic Hymns - تمهيدي" },
-    {
-      name: "description",
-      content: "موقع متخصص في تعليم الألحان القبطية للطلاب في مختلف المراحل",
-    },
-  ];
-}

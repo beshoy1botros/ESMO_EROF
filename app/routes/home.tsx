@@ -1,16 +1,6 @@
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 
-export function meta() {
-  return [
-    { title: "Coptic Hymns — الرئيسية" },
-    {
-      name: "description",
-      content: "موقع متخصص في تعليم الألحان القبطية للطلاب في مختلف المراحل",
-    },
-  ];
-}
-
 const verses = [
   {
     text: "ما أجمل التسبيح في الكنيسة بأنغام موزونة؛ فالتسبيح هو عمل الملائكة، وهو الاشتراك الفعلي مع القوات السمائية في تسبيح الله الخالق.",

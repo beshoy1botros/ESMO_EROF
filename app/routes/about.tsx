@@ -203,13 +203,3 @@ export default function About() {
     </div>
   );
 }
-
-export function meta() {
-  return [
-    { title: "Coptic Hymns - طقس اللحن" },
-    {
-      name: "description",
-      content: "موقع متخصص في تعليم الألحان القبطية للطلاب في مختلف المراحل",
-    },
-  ];
-}
