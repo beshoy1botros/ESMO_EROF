@@ -123,7 +123,7 @@ export default function Header() {
             {/* اللوجو */}
             <Link to="/" tabIndex={-1}>
               <img
-                src="/photos/العذراء مريم.ico"
+                src="/photos/favicon-96x96.png"
                 alt=""
                 width={64}
                 height={64}
