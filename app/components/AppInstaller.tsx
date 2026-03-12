@@ -17,13 +17,13 @@ export function trackInstallation(platform: string) {
   installData.total = (installData.total || 0) + 1;
   installData.lastInstall = new Date().toISOString();
   localStorage.setItem("app_installs", JSON.stringify(installData));
-  
+
   // Log for debugging
   console.log("📱 App Installed!", installData);
-  
-  // Also track globally (Firebase)
+
+  // Also track globally
   import("../utils/analytics").then(({ trackGlobalInstallation }) => {
-    trackGlobalInstallation(platform as "Android" | "iOS");
+    trackGlobalInstallation();
   });
 }
 
@@ -32,7 +32,8 @@ export function getInstallStats() {
 }
 
 export function AppInstaller() {
-  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
+  const [deferredPrompt, setDeferredPrompt] =
+    useState<BeforeInstallPromptEvent | null>(null);
   const [isInstallable, setIsInstallable] = useState(false);
   const [isInstalled, setIsInstalled] = useState(false);
   const [showiOSBanner, setShowiOSBanner] = useState(false);
@@ -55,7 +56,8 @@ export function AppInstaller() {
     };
 
     // Check if user previously dismissed the banner
-    const wasDismissed = localStorage.getItem("app-install-dismissed") === "true";
+    const wasDismissed =
+      localStorage.getItem("app-install-dismissed") === "true";
     if (wasDismissed) {
       setDismissed(true);
     }
@@ -63,8 +65,9 @@ export function AppInstaller() {
     if (checkInstalled()) return;
 
     // Detect iOS
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
-    
+    const isIOS =
+      /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
+
     if (isIOS) {
       // Show iOS install banner after a short delay
       setTimeout(() => {
@@ -78,7 +81,7 @@ export function AppInstaller() {
       e.preventDefault();
       setDeferredPrompt(e as BeforeInstallPromptEvent);
       setIsInstallable(true);
-      
+
       // Auto-show the install prompt after a short delay (for Android)
       if (!hasAttemptedInstall.current && !wasDismissed) {
         hasAttemptedInstall.current = true;
@@ -93,13 +96,13 @@ export function AppInstaller() {
       setIsInstallable(false);
       setDeferredPrompt(null);
       setShowiOSBanner(false);
-      
+
       // Track the installation
       const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
       trackInstallation(isIOS ? "iOS" : "Android");
-      
+
       // Also track page visit as backup
-      fetch("https://api.countapi.xyz/hit/esmo-erof-app/downloads")
+      fetch("https://api.countapi.xyz/hit/esmo-erof-v1/downloads")
         .then(() => console.log("Download tracked"))
         .catch(() => {});
     };
@@ -116,7 +119,10 @@ export function AppInstaller() {
     }, 3000);
 
     return () => {
-      window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+      window.removeEventListener(
+        "beforeinstallprompt",
+        handleBeforeInstallPrompt
+      );
       window.removeEventListener("appinstalled", handleAppInstalled);
     };
   }, []);
@@ -168,11 +174,11 @@ export function AppInstaller() {
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-          <img 
-            src="/photos/icon-172.png" 
-            alt="Logo" 
-            width="40" 
-            height="40" 
+          <img
+            src="/photos/icon-172.png"
+            alt="Logo"
+            width="40"
+            height="40"
             style={{ borderRadius: "8px" }}
           />
           <div>
@@ -180,7 +186,7 @@ export function AppInstaller() {
               حمل التطبيق على جهازك
             </div>
             <div style={{ fontSize: "12px", opacity: 0.9 }}>
-              اضغط على { } ثم "أضف إلى الشاشة الرئيسية"
+              اضغط على {} ثم "أضف إلى الشاشة الرئيسية"
             </div>
           </div>
         </div>

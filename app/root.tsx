@@ -196,7 +196,7 @@ export default function App() {
 
   useEffect(() => {
     // Track page visit
-    fetch("https://api.countapi.xyz/hit/esmo-erof-app/visits")
+    fetch("https://api.countapi.xyz/hit/esmo-erof-v1/visits")
       .then(() => console.log("Visit tracked"))
       .catch(() => {});
 

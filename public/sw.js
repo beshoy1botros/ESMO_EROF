@@ -100,6 +100,11 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
+  // تخطي طلبات API الخارجية (countapi)
+  if (url.hostname.includes("api.countapi.xyz")) {
+    return;
+  }
+
   // معالجة الفيديوهات - خزّن عند التحميل
   if (isVideoRequest(request)) {
     event.respondWith(handleVideoRequest(request));

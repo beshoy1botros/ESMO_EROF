@@ -13,18 +13,24 @@ export default function Stats() {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        // First, try to create the counter if it doesn't exist
-        await fetch("https://api.countapi.xyz/create?namespace=esmo-erof-app&key=visits&enable_reset=0");
+        // First, try to create counters if they don't exist
+        const namespace = "esmo-erof-v1";
+        
+        // Create visits counter
+        await fetch(`https://api.countapi.xyz/create?namespace=${namespace}&key=visits&enable_reset=0`);
+        
+        // Create downloads counter  
+        await fetch(`https://api.countapi.xyz/create?namespace=${namespace}&key=downloads&enable_reset=0`);
         
         // Get visits
         const visitsRes = await fetch(
-          "https://api.countapi.xyz/get/esmo-erof-app/visits"
+          `https://api.countapi.xyz/get/${namespace}/visits`
         );
         const visitsData = await visitsRes.json();
         
         // Get downloads
         const downloadsRes = await fetch(
-          "https://api.countapi.xyz/get/esmo-erof-app/downloads"
+          `https://api.countapi.xyz/get/${namespace}/downloads`
         );
         const downloadsData = await downloadsRes.json();
         
@@ -34,7 +40,7 @@ export default function Stats() {
         });
       } catch (err) {
         console.error("Error fetching stats:", err);
-        setError("تعذر تحميل الإحصائيات - تأكد من الاتصال بالإنترنت");
+        setError("تعذر تحميل الإحصائيات");
       }
       setLoading(false);
     };
@@ -63,28 +69,10 @@ export default function Stats() {
           padding: "20px",
           borderRadius: "10px",
           color: "#dc2626",
-          textAlign: "center",
-          marginBottom: "20px"
+          textAlign: "center"
         }}>
           {error}
         </div>
-        <p style={{ textAlign: "center", color: "#64748b" }}>
-          ملاحظة: الإحصائيات ستعمل عند رفع الموقع على Vercel
-        </p>
-        <a 
-          href="/"
-          style={{
-            display: "inline-block",
-            marginTop: "20px",
-            padding: "12px 24px",
-            background: "#1e3a8a",
-            color: "white",
-            borderRadius: "8px",
-            textDecoration: "none"
-          }}
-        >
-          ← العودة للرئيسية
-        </a>
       </div>
     );
   }

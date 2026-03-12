@@ -1,18 +1,18 @@
 // Simple global counter using countapi.xyz (free service)
-const COUNTER_NAMESPACE = "esmo-erof-app";
-const COUNTER_KEY = "downloads";
+const NAMESPACE = "esmo-erof-v1";
 
-interface CounterResult {
-  value: number;
-}
-
-// Get current download count
+// Create counter if not exists and get value
 export async function getGlobalStats() {
   try {
     const response = await fetch(
-      `https://api.countapi.xyz/get/${COUNTER_NAMESPACE}/${COUNTER_KEY}`
+      `https://api.countapi.xyz/get/${NAMESPACE}/downloads`
     );
-    const data: CounterResult = await response.json();
+    if (!response.ok) {
+      // Counter doesn't exist, create it
+      await createCounter();
+      return { total: 0 };
+    }
+    const data = await response.json();
     return { total: data.value };
   } catch (error) {
     console.error("Error getting stats:", error);
@@ -20,13 +20,26 @@ export async function getGlobalStats() {
   }
 }
 
-// Increment download counter (call when app is installed)
-export async function trackGlobalInstallation(platform: "Android" | "iOS") {
+// Create the counter
+async function createCounter() {
   try {
+    await fetch(`https://api.countapi.xyz/create?namespace=${NAMESPACE}&key=downloads&enable_reset=0`);
+  } catch (e) {
+    console.error("Error creating counter:", e);
+  }
+}
+
+// Increment download counter (call when app is installed)
+export async function trackGlobalInstallation() {
+  try {
+    // First ensure counter exists
+    await createCounter();
+    
+    // Then hit/increment it
     const response = await fetch(
-      `https://api.countapi.xyz/create?namespace=${COUNTER_NAMESPACE}&key=${COUNTER_KEY}&enable_reset=0`
+      `https://api.countapi.xyz/hit/${NAMESPACE}/downloads`
     );
-    const data: CounterResult = await response.json();
+    const data = await response.json();
     console.log("📱 Installation tracked! Total:", data.value);
     return data.value;
   } catch (error) {
