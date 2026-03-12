@@ -24,19 +24,19 @@
       "purpose": "any"
     },
     {
-      "src": "/photos/icon-192.png",
+      "src": "/photos/icon-172.png",
       "sizes": "72x72",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/photos/icon-192.png",
+      "src": "/photos/icon-172.png",
       "sizes": "144x144",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/photos/icon-192.png",
+      "src": "/photos/icon-172.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
@@ -58,7 +58,7 @@
       "url": "/melodies",
       "icons": [
         {
-          "src": "/photos/icon-192.png",
+          "src": "/photos/icon-172.png",
           "sizes": "96x96",
           "type": "image/png"
         }
@@ -71,7 +71,7 @@
       "url": "/about",
       "icons": [
         {
-          "src": "/photos/icon-192.png",
+          "src": "/photos/icon-172.png",
           "sizes": "96x96",
           "type": "image/png"
         }
