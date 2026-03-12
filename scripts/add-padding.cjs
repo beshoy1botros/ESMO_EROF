@@ -7,10 +7,10 @@ const outputPath = path.join(__dirname, "../public/photos/icon-172-padded.png");
 sharp(inputPath)
   .resize(172, 172)
   .extend({
-    top: 15,
-    bottom: 15,
-    left: 15,
-    right: 15,
+    top: 14,
+    bottom: 14,
+    left: 14,
+    right: 14,
     background: { r: 0, g: 0, b: 0, alpha: 0 },
   })
   .toFile(outputPath)
