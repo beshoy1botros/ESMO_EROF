@@ -195,11 +195,6 @@ export default function App() {
   const [landscapeEnabled, setLandscapeEnabled] = useState(false);
 
   useEffect(() => {
-    // Track page visit
-    fetch("https://api.countapi.xyz/hit/esmo-erof-v1/visits")
-      .then(() => console.log("Visit tracked"))
-      .catch(() => {});
-
     if (landscapeEnabled) {
       document.body.classList.add("landscape-enabled");
     } else {

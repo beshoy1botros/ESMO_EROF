@@ -9,28 +9,6 @@ interface BeforeInstallPromptEvent extends Event {
   prompt(): Promise<void>;
 }
 
-// Track installation locally
-export function trackInstallation(platform: string) {
-  // Store in localStorage (simple counter per device)
-  const installData = JSON.parse(localStorage.getItem("app_installs") || "{}");
-  installData[platform] = (installData[platform] || 0) + 1;
-  installData.total = (installData.total || 0) + 1;
-  installData.lastInstall = new Date().toISOString();
-  localStorage.setItem("app_installs", JSON.stringify(installData));
-
-  // Log for debugging
-  console.log("📱 App Installed!", installData);
-
-  // Also track globally
-  import("../utils/analytics").then(({ trackGlobalInstallation }) => {
-    trackGlobalInstallation();
-  });
-}
-
-export function getInstallStats() {
-  return JSON.parse(localStorage.getItem("app_installs") || "{}");
-}
-
 export function AppInstaller() {
   const [deferredPrompt, setDeferredPrompt] =
     useState<BeforeInstallPromptEvent | null>(null);
@@ -96,15 +74,6 @@ export function AppInstaller() {
       setIsInstallable(false);
       setDeferredPrompt(null);
       setShowiOSBanner(false);
-
-      // Track the installation
-      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-      trackInstallation(isIOS ? "iOS" : "Android");
-
-      // Also track page visit as backup
-      fetch("https://api.countapi.xyz/hit/esmo-erof-v1/downloads")
-        .then(() => console.log("Download tracked"))
-        .catch(() => {});
     };
 
     window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
