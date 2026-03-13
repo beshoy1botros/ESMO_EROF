@@ -875,8 +875,6 @@ export default function PreparatoryPage() {
                             src={fullscreenLyrics.url}
                             title={fullscreenLyrics.title}
                             startTime={videoTime[fullscreenLyrics.id] || 0}
-                            currentTime={videoTime[fullscreenLyrics.id]}
-                            isActive={true}
                             onTimeUpdate={(time) =>
                               setVideoTime((prev) => ({
                                 ...prev,

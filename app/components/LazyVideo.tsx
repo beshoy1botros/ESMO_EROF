@@ -6,12 +6,11 @@ interface LazyVideoProps {
   title: string;
   poster?: string | undefined;
   startTime?: number;
-  currentTime?: number; // للالتزامن مع فيديوهات أخرى
   onTimeUpdate?: (time: number) => void;
   onPlayChange?: (isPlaying: boolean) => void;
-  isActive?: boolean; // إذا كان هذا الفيديو هو الفيديو النشط (المASTER)
 }
 
+// قائمة بجميع الفيديوهات النشطة
 const videoInstances: HTMLVideoElement[] = [];
 
 // عدد محاولات الاسترداد التلقائي قبل إظهار خطأ للمستخدم
@@ -24,10 +23,8 @@ export default function LazyVideo({
   title,
   poster,
   startTime = 0,
-  currentTime,
   onTimeUpdate,
   onPlayChange,
-  isActive = true,
 }: LazyVideoProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const initialTimeSet = useRef(false);
@@ -39,27 +36,8 @@ export default function LazyVideo({
   const [isLoading, setIsLoading] = useState(true);
   const [isWaiting, setIsWaiting] = useState(false);
   const [stallMessage, setStallMessage] = useState<string | null>(null);
-  const [showMenu, setShowMenu] = useState(false);
   const [loadProgress, setLoadProgress] = useState(0);
   const [showInitialLoader, setShowInitialLoader] = useState(true);
-
-  // التزامن مع فيديو آخر - فقط للفيديو النشط
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video || currentTime === undefined || currentTime === null) return;
-    
-    // فقط حاول التزامن إذا كان الفيديو نشطاً أو إذا كان هناك طلب صريح للتزامن
-    // هذا يمنع الفيديوهات في القائمة من محاولة التزامن تلقائياً
-    if (!isActive) return;
-
-    // انتظر حتى يكون الفيديو جاهزاً للـ seeking
-    if (
-      video.readyState >= 2 &&
-      Math.abs(video.currentTime - currentTime) > 0.5
-    ) {
-      video.currentTime = currentTime;
-    }
-  }, [currentTime, isActive]);
 
   // ── مسح الـ stall timer عند الـ unmount أو تغيير الـ src ──────────────
   const clearStallTimer = useCallback(() => {
@@ -78,9 +56,7 @@ export default function LazyVideo({
     const delay = BASE_RETRY_DELAY * Math.pow(2, stallRetryCount.current % 5); // 2s, 4s, 8s, 16s, 32s
     stallRetryCount.current += 1;
 
-    setStallMessage(
-      `جاري المحاولة... (${stallRetryCount.current})`
-    );
+    setStallMessage(`جاري المحاولة... (${stallRetryCount.current})`);
 
     stallTimer.current = setTimeout(() => {
       const v = videoRef.current;
@@ -134,10 +110,13 @@ export default function LazyVideo({
       initialTimeSet.current = true;
     }
 
-    videoInstances.push(video);
+    // تسجيل الفيديو في قائمة الفيديوهات النشطة
+    if (!videoInstances.includes(video)) {
+      videoInstances.push(video);
+    }
 
     const handlePlay = () => {
-      // أوقف بقية الفيديوهات
+      // أوقف بقية الفيديوهات عند تشغيل هذا الفيديو
       videoInstances.forEach((v) => {
         if (v !== video && !v.paused) v.pause();
       });
@@ -158,10 +137,7 @@ export default function LazyVideo({
 
     const handleTimeUpdate = () => {
       lastCurrentTime.current = video.currentTime;
-      // فقط الفيديو النشط يحدث الـ time
-      if (isActive) {
-        onTimeUpdate?.(video.currentTime);
-      }
+      onTimeUpdate?.(video.currentTime);
     };
 
     const handleWaiting = () => setIsWaiting(true);
@@ -172,6 +148,14 @@ export default function LazyVideo({
       setStallMessage(null);
       setIsLoading(false);
       setIsWaiting(false);
+      // زيادة حجم الـ buffer
+      if (video.buffered.length > 0) {
+        const bufferedEnd = video.buffered.end(video.buffered.length - 1);
+        // إذا كان الـ buffer أقل من 10 ثوانٍ، انتظر حتى يمتلئ
+        if (bufferedEnd - video.currentTime < 10) {
+          setIsWaiting(true);
+        }
+      }
     };
 
     const handleLoadStart = () => setIsLoading(true);
@@ -194,6 +178,16 @@ export default function LazyVideo({
       attemptStalledRecovery();
     };
 
+    const handleProgress = () => {
+      if (video.buffered.length > 0) {
+        const bufferedEnd = video.buffered.end(video.buffered.length - 1);
+        const duration = video.duration;
+        if (duration > 0) {
+          setLoadProgress((bufferedEnd / duration) * 100);
+        }
+      }
+    };
+
     video.addEventListener("play", handlePlay);
     video.addEventListener("pause", handlePause);
     video.addEventListener("timeupdate", handleTimeUpdate);
@@ -203,6 +197,7 @@ export default function LazyVideo({
     video.addEventListener("loadstart", handleLoadStart);
     video.addEventListener("loadeddata", handleLoadedData);
     video.addEventListener("error", handleError);
+    video.addEventListener("progress", handleProgress);
 
     return () => {
       video.removeEventListener("play", handlePlay);
@@ -214,8 +209,10 @@ export default function LazyVideo({
       video.removeEventListener("loadstart", handleLoadStart);
       video.removeEventListener("loadeddata", handleLoadedData);
       video.removeEventListener("error", handleError);
+      video.removeEventListener("progress", handleProgress);
 
       clearStallTimer();
+      // إزالة الفيديو من قائمة الفيديوهات النشطة
       const index = videoInstances.indexOf(video);
       if (index > -1) videoInstances.splice(index, 1);
     };
@@ -225,20 +222,7 @@ export default function LazyVideo({
     clearStallTimer,
     onPlayChange,
     onTimeUpdate,
-    isActive,
   ]);
-
-  // ── إغلاق القائمة عند الضغط خارجها ──────────────────────────────────
-  useEffect(() => {
-    if (!showMenu) return;
-    const handleClickOutside = (e: MouseEvent) => {
-      if (!(e.target as HTMLElement).closest(".video-menu-container")) {
-        setShowMenu(false);
-      }
-    };
-    document.addEventListener("click", handleClickOutside);
-    return () => document.removeEventListener("click", handleClickOutside);
-  }, [showMenu]);
 
   // ── إعادة المحاولة اليدوية (زر المستخدم) ────────────────────────────
   const handleManualRetry = async () => {
@@ -287,7 +271,7 @@ export default function LazyVideo({
         ref={videoRef}
         className="relative w-full h-full max-w-full max-h-full object-contain bg-transparent"
         controls
-        preload="metadata"
+        preload="auto"
         poster={poster}
         playsInline
         crossOrigin="anonymous"
@@ -419,8 +403,16 @@ export default function LazyVideo({
               تحقق من الاتصال بالإنترنت
             </h3>
             <p className="text-sm text-white/60 mb-6 leading-relaxed">
-              يرجى التحقق من اتصالك بالإنترنت وسيتم تحميل الفيديو تلقائياً عند استعادة الاتصال.
+              يرجى التحقق من اتصالك بالإنترنت وسيتم تحميل الفيديو تلقائياً عند
+              استعادة الاتصال.
             </p>
+
+            <button
+              onClick={handleManualRetry}
+              className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-full font-medium transition-colors"
+            >
+              إعادة المحاولة
+            </button>
           </div>
         </div>
       )}

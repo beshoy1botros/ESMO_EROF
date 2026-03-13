@@ -1869,8 +1869,6 @@ export default function MelodiesPage() {
                             src={fullscreenLyrics.url}
                             title={fullscreenLyrics.title}
                             startTime={videoTime[fullscreenLyrics.id] || 0}
-                            currentTime={videoTime[fullscreenLyrics.id]}
-                            isActive={showVideoInModal}
                             onTimeUpdate={(time) =>
                               setVideoTime((prev) => ({
                                 ...prev,
