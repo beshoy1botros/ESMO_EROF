@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
@@ -1076,7 +1076,6 @@ const videoData: VideoData = {
     second: [],
   },
 };
-
 // --- تحديث روابط الفيديوهات بناءً على محتوى مجلد public/videos ---
 // updateVideos.ts
 
@@ -1247,7 +1246,6 @@ for (const stageKey of Object.keys(stageVideoUrls) as Array<
       if (!levelVideos) return;
 
       levelVideos.forEach((video, index) => {
-        // نستخدم رابط Cloudinary إذا كان موجوداً، وإلا نضع نصاً فارغاً
         if (urls[index]) {
           video.url = urls[index];
         } else {
@@ -1271,7 +1269,27 @@ function getVideos(stage: StageKey, levelLabel: string): Video[] {
   return stageData && englishLevel ? stageData[englishLevel] || [] : [];
 }
 
-// --- 4. المكون الرئيسي ---
+// --- 4. أيقونة الترس (Gear Icon SVG Component) ---
+
+function GearIcon({ className = "w-5 h-5" }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.8}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <circle cx="12" cy="12" r="3" />
+      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+    </svg>
+  );
+}
+
+// --- 5. المكون الرئيسي ---
 
 export default function MelodiesPage() {
   const [stage, setStage] = useState<StageKey | "">("");
@@ -1291,7 +1309,6 @@ export default function MelodiesPage() {
   const [showHazzat, setShowHazzat] = useState(false);
   const [showVideoInModal, setShowVideoInModal] = useState(false);
   const [videoTime, setVideoTime] = useState<Record<string, number>>({});
-  // تم إلغاء الڤول-سكرين لصور الهزّات بناءً على طلب المستخدم
 
   const [_rotateFromSidebar, setRotateFromSidebar] = useState(false);
   const [showControlsPanel, setShowControlsPanel] = useState(false);
@@ -1304,6 +1321,35 @@ export default function MelodiesPage() {
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [, setWasJustDragging] = useState(false);
 
+  // ====== Ref للإغلاق الذكي عند النقر خارج القائمة ======
+  const controlsPanelRef = useRef<HTMLDivElement>(null);
+
+  // ====== useEffect للإغلاق الذكي (Click Outside to Close) ======
+  useEffect(() => {
+    if (!showControlsPanel) return;
+
+    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
+      if (
+        controlsPanelRef.current &&
+        !controlsPanelRef.current.contains(event.target as Node)
+      ) {
+        setShowControlsPanel(false);
+      }
+    };
+
+    // تأخير بسيط لتجنب التعارض مع حدث النقر على زر الفتح نفسه
+    const timer = setTimeout(() => {
+      document.addEventListener("mousedown", handleClickOutside);
+      document.addEventListener("touchstart", handleClickOutside);
+    }, 100);
+
+    return () => {
+      clearTimeout(timer);
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
+    };
+  }, [showControlsPanel]);
+
   const levels = stage ? getLevelsForStage(stage as string) : [];
 
   const handleStageChange = (newStage: StageKey) => {
@@ -1311,7 +1357,6 @@ export default function MelodiesPage() {
     setLevel("");
     setVideos([]);
 
-    // إذا كانت المرحلة عرس قانا الجليل، عرض المحتوى مباشرة
     if (newStage === StageKey.WeddingOfCana) {
       const weddingContent = getVideos(newStage, "الأول");
       setVideos(weddingContent);
@@ -1333,7 +1378,6 @@ export default function MelodiesPage() {
   const disabledColumns = 3 - visibleColumns;
   const maxFontSize = 20 + disabledColumns * 2;
 
-  // دوال التحكم في حجم الخط مع حد أقصى ديناميكي حسب عدد اللغات
   const increaseFontSize = () => {
     setFontSize((prev) => Math.min(prev + 1, maxFontSize));
   };
@@ -1344,7 +1388,6 @@ export default function MelodiesPage() {
 
   // ====== دوال تحريك الفيديو ======
   const handleDragStart = (e: React.MouseEvent | React.TouchEvent) => {
-    // لل touch events، نستخدم CSS لمنع التمرير بدلاً من preventDefault
     if (!("touches" in e)) {
       e.preventDefault();
     }
@@ -1365,7 +1408,6 @@ export default function MelodiesPage() {
   const handleDragMove = (e: React.MouseEvent | React.TouchEvent) => {
     if (!isDragging) return;
 
-    // لل touch events، نستخدم CSS لمنع التمرير بدلاً من preventDefault
     if (!("touches" in e)) {
       e.preventDefault();
     }
@@ -1379,13 +1421,11 @@ export default function MelodiesPage() {
     const newX = clientX - dragOffset.x;
     const newY = clientY - dragOffset.y;
 
-    // حساب أبعاد الفيديو بناءً على حالة التصغير
     const videoWidth = isMinimized
       ? 64
       : Math.min(window.innerWidth * 0.85, 320);
     const videoHeight = isMinimized ? 64 : 180;
 
-    // تحديد الحدود لمنع خروج الفيديو من الشاشة
     const padding = 10;
     const maxX = window.innerWidth - videoWidth - padding;
     const maxY = window.innerHeight - videoHeight - padding;
@@ -1404,17 +1444,14 @@ export default function MelodiesPage() {
     setIsDragging(false);
   };
 
-  // دالة توسيع الفيديو مع ضبط الموقع إذا كان عند الحافة
   const handleExpandVideo = () => {
     if (!isMinimized) return;
     if (isDragging) return;
 
-    // حساب حدود الفيديو عند التوسيع
     const videoWidth = Math.min(window.innerWidth * 0.85, 320);
     const videoHeight = 180;
     const padding = 10;
 
-    // التحقق إذا كان الفيديو عند الحافة وتعديل_position
     let newX = videoPosition.x;
     let newY = videoPosition.y;
 
@@ -1435,7 +1472,6 @@ export default function MelodiesPage() {
     setFontSize((prev) => Math.min(prev, maxFontSize));
   }, [maxFontSize]);
 
-  // حساب عدد صور الهزات المتوفرة
   const hazzatImagesCount = fullscreenLyrics
     ? [
         fullscreenLyrics.hazzatImage,
@@ -1444,7 +1480,6 @@ export default function MelodiesPage() {
       ].filter(Boolean).length
     : 0;
 
-  // سخّن روابط الفيديوهات بمجرد تحديد المرحلة/المستوى
   useEffect(() => {
     if (Array.isArray(videos) && videos.length > 0) {
       const urls = videos.map((v) => v.url).filter(Boolean);
@@ -1554,82 +1589,123 @@ export default function MelodiesPage() {
         </div>
       </main>
 
-      {/* --- مودال النصوص المحسّن للهواتف --- */}
+      {/* ================================================================
+          مودال نصوص اللحن
+      ================================================================ */}
       {fullscreenLyrics && (
         <div className="fixed inset-0 z-[100] bg-black flex flex-col overflow-hidden">
+          {/* ============================================================
+              الهيدر المُعدَّل - أيقونة الترس مع الأنيميشن والإغلاق الذكي
+          ============================================================ */}
           <header className="sticky top-0 z-50 p-3 md:p-4 bg-gray-900 border-b border-white/10 flex items-center gap-2">
             <div className="flex items-center gap-2 flex-shrink-0">
-              <div className="relative">
+              {/* حاوية الترس مع الـ Ref للإغلاق الذكي */}
+              <div className="relative" ref={controlsPanelRef}>
+                {/* زر أيقونة الترس مع أنيميشن الدوران */}
                 <button
                   onClick={() => setShowControlsPanel((prev) => !prev)}
-                  className="w-10 h-10 rounded-full bg-gray-900/90 border border-blue-500/30 flex flex-col items-center justify-center gap-1 hover:bg-gray-800 transition-all shadow-[0_0_15px_rgba(59,130,246,0.2)] active:scale-90"
-                  aria-label="إعدادات النص"
+                  className={`w-10 h-10 rounded-full flex items-center justify-center transition-all border active:scale-90 ${
+                    showControlsPanel
+                      ? "bg-blue-600/30 border-blue-400/60 text-blue-300 shadow-[0_0_20px_rgba(59,130,246,0.35)]"
+                      : "bg-gray-900/90 border-blue-500/30 text-blue-400 hover:bg-gray-800 shadow-[0_0_15px_rgba(59,130,246,0.2)]"
+                  }`}
+                  aria-label="إعدادات العرض"
+                  title="إعدادات العرض"
                 >
-                  <motion.span
-                    animate={
-                      showControlsPanel
-                        ? { rotate: 45, y: 6 }
-                        : { rotate: 0, y: 0 }
-                    }
-                    className="w-5 h-0.5 bg-blue-400 rounded-full"
-                  />
-                  <motion.span
-                    animate={
-                      showControlsPanel
-                        ? { opacity: 0, x: -10 }
-                        : { opacity: 1, x: 0 }
-                    }
-                    className="w-5 h-0.5 bg-blue-400 rounded-full"
-                  />
-                  <motion.span
-                    animate={
-                      showControlsPanel
-                        ? { rotate: -45, y: -6 }
-                        : { rotate: 0, y: 0 }
-                    }
-                    className="w-5 h-0.5 bg-blue-400 rounded-full"
-                  />
+                  {/* الترس يدور 90 درجة عند الفتح بـ spring animation */}
+                  <motion.div
+                    animate={{ rotate: showControlsPanel ? 90 : 0 }}
+                    transition={{ type: "spring", damping: 12, stiffness: 180 }}
+                  >
+                    <GearIcon className="w-5 h-5" />
+                  </motion.div>
                 </button>
 
+                {/* القائمة المنسدلة مع التجاوب الكامل رأسي/أفقي */}
                 <AnimatePresence>
                   {showControlsPanel && (
                     <motion.div
-                      initial={{ opacity: 0, scale: 0.9, y: -20, x: 10 }}
+                      initial={{ opacity: 0, scale: 0.92, y: -16, x: 8 }}
                       animate={{ opacity: 1, scale: 1, y: 0, x: 0 }}
-                      exit={{ opacity: 0, scale: 0.9, y: -20, x: 10 }}
+                      exit={{ opacity: 0, scale: 0.92, y: -16, x: 8 }}
                       transition={{
                         type: "spring",
-                        damping: 20,
-                        stiffness: 300,
+                        damping: 22,
+                        stiffness: 320,
                       }}
-                      className="absolute top-full mt-3 right-0 w-64 max-w-[90vw] z-30 bg-gray-900/98 border border-blue-500/20 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex flex-col gap-5 p-5 backdrop-blur-xl"
+                      className="
+                        absolute top-full mt-3 right-0 z-30
+                        bg-gray-900/98 border border-blue-500/20 rounded-2xl
+                        shadow-[0_20px_60px_rgba(0,0,0,0.6)] backdrop-blur-xl
+
+                        flex flex-col gap-5 p-5
+                        w-72 max-w-[92vw]
+
+                        [@media(orientation:landscape)]:flex-row
+                        [@media(orientation:landscape)]:gap-4
+                        [@media(orientation:landscape)]:p-4
+                        [@media(orientation:landscape)]:w-[92vw]
+                        [@media(orientation:landscape)]:max-w-[820px]
+                        [@media(orientation:landscape)]:items-start
+                        [@media(orientation:landscape)]:overflow-x-auto
+                      "
                     >
-                      <div className="flex items-center justify-between border-b border-white/5 pb-3">
+                      {/* رأس القائمة */}
+                      <div
+                        className="
+                        flex items-center justify-between border-b border-white/5 pb-3
+                        [@media(orientation:landscape)]:border-b-0
+                        [@media(orientation:landscape)]:border-r
+                        [@media(orientation:landscape)]:pb-0
+                        [@media(orientation:landscape)]:pr-4
+                        [@media(orientation:landscape)]:flex-col
+                        [@media(orientation:landscape)]:items-start
+                        [@media(orientation:landscape)]:gap-2
+                        [@media(orientation:landscape)]:flex-shrink-0
+                      "
+                      >
                         <div className="flex items-center gap-2">
-                          <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
-                          <span className="text-sm font-bold text-gray-100 tracking-wide">
+                          {/* ترس صغير يدور باستمرار في رأس القائمة */}
+                          <motion.div
+                            animate={{ rotate: 360 }}
+                            transition={{
+                              duration: 4,
+                              repeat: Infinity,
+                              ease: "linear",
+                            }}
+                          >
+                            <GearIcon className="w-3.5 h-3.5 text-blue-400" />
+                          </motion.div>
+                          <span className="text-sm font-bold text-gray-100 tracking-wide whitespace-nowrap">
                             إعدادات العرض
                           </span>
                         </div>
                         <button
                           onClick={() => setShowControlsPanel(false)}
-                          className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-800 hover:bg-red-900/40 hover:text-red-400 transition-colors text-gray-400"
+                          className="w-7 h-7 flex items-center justify-center rounded-full bg-gray-800 hover:bg-red-900/40 hover:text-red-400 transition-colors text-gray-400 text-xs"
                         >
                           ✕
                         </button>
                       </div>
 
-                      <div className="flex flex-col gap-3">
+                      {/* --- قسم حجم الخط --- */}
+                      <div
+                        className="
+                        flex flex-col gap-3
+                        [@media(orientation:landscape)]:flex-shrink-0
+                        [@media(orientation:landscape)]:min-w-[140px]
+                      "
+                      >
                         <label className="text-[11px] uppercase tracking-widest text-blue-400 font-bold px-1">
                           حجم الخط
                         </label>
                         <div className="flex items-center gap-3 bg-gray-800/50 p-1.5 rounded-xl border border-white/5">
                           <button
                             onClick={decreaseFontSize}
-                            className="w-10 h-10 bg-gray-700 hover:bg-gray-600 active:scale-95 rounded-lg flex items-center justify-center transition-all shadow-lg"
+                            className="w-10 h-10 bg-gray-700 hover:bg-gray-600 active:scale-95 rounded-lg flex items-center justify-center transition-all shadow-lg flex-shrink-0"
                           >
                             <span className="text-xl font-bold text-blue-400">
-                              -
+                              −
                             </span>
                           </button>
                           <div className="flex-1 text-center">
@@ -1642,7 +1718,7 @@ export default function MelodiesPage() {
                           </div>
                           <button
                             onClick={increaseFontSize}
-                            className="w-10 h-10 bg-gray-700 hover:bg-gray-600 active:scale-95 rounded-lg flex items-center justify-center transition-all shadow-lg"
+                            className="w-10 h-10 bg-gray-700 hover:bg-gray-600 active:scale-95 rounded-lg flex items-center justify-center transition-all shadow-lg flex-shrink-0"
                           >
                             <span className="text-xl font-bold text-blue-400">
                               +
@@ -1651,7 +1727,13 @@ export default function MelodiesPage() {
                         </div>
                       </div>
 
-                      <div className="flex flex-col gap-3">
+                      {/* --- قسم اللغات --- */}
+                      <div
+                        className="
+                        flex flex-col gap-3 flex-1
+                        [@media(orientation:landscape)]:min-w-[170px]
+                      "
+                      >
                         <label className="text-[11px] uppercase tracking-widest text-emerald-400 font-bold px-1">
                           اللغات المفعلة
                         </label>
@@ -1669,7 +1751,7 @@ export default function MelodiesPage() {
                             {
                               state: showCopticArabic,
                               setter: setShowCopticArabic,
-                              label: "قبطي معرب",
+                              label: "قبطي معرَّب",
                               activeClass:
                                 "bg-emerald-600/20 border-emerald-500/50 text-emerald-400 shadow-[inset_0_0_20px_rgba(0,0,0,0.2)]",
                               dotClass:
@@ -1688,7 +1770,7 @@ export default function MelodiesPage() {
                             <button
                               key={lang.label}
                               onClick={() => lang.setter(!lang.state)}
-                              className={`group relative flex items-center justify-between px-4 py-3 rounded-xl font-bold text-xs transition-all duration-300 border ${
+                              className={`flex items-center justify-between px-4 py-2.5 rounded-xl font-bold text-xs transition-all duration-300 border ${
                                 lang.state
                                   ? lang.activeClass
                                   : "bg-gray-800/40 border-gray-700/50 text-gray-500 hover:bg-gray-800 hover:border-gray-600"
@@ -1696,24 +1778,39 @@ export default function MelodiesPage() {
                             >
                               <span>{lang.label}</span>
                               <div
-                                className={`w-2 h-2 rounded-full transition-all duration-300 ${lang.state ? lang.dotClass : "bg-gray-700"}`}
+                                className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                                  lang.state ? lang.dotClass : "bg-gray-700"
+                                }`}
                               />
                             </button>
                           ))}
                         </div>
                       </div>
 
-                      <div className="flex flex-col gap-2 pt-2 border-t border-white/5">
+                      {/* --- قسم الأدوات --- */}
+                      <div
+                        className="
+                        flex flex-col gap-2 pt-2 border-t border-white/5
+                        [@media(orientation:landscape)]:border-t-0
+                        [@media(orientation:landscape)]:pt-0
+                        [@media(orientation:landscape)]:flex-shrink-0
+                        [@media(orientation:landscape)]:min-w-[150px]
+                      "
+                      >
+                        <label className="text-[11px] uppercase tracking-widest text-orange-400 font-bold px-1">
+                          الأدوات
+                        </label>
+
                         {hazzatImagesCount > 0 && (
                           <button
                             onClick={() => setShowHazzat(!showHazzat)}
-                            className={`w-full px-4 py-3 rounded-xl font-bold text-xs flex items-center justify-center gap-3 transition-all duration-500 ${
+                            className={`w-full px-4 py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all duration-500 ${
                               showHazzat
                                 ? "bg-yellow-600 text-white shadow-lg shadow-yellow-900/20"
                                 : "bg-gradient-to-r from-purple-600 to-indigo-600 text-white hover:scale-[1.02] active:scale-95"
                             }`}
                           >
-                            <span className="text-base animate-bounce">🎵</span>
+                            <span className="text-sm animate-bounce">🎵</span>
                             <span>
                               {showHazzat ? "إخفاء الهزات" : "عرض هزات اللحن"}
                             </span>
@@ -1730,9 +1827,9 @@ export default function MelodiesPage() {
                               setRotateFromSidebar((prev) => !prev);
                             }
                           }}
-                          className="w-full px-4 py-3 rounded-xl font-bold text-xs bg-gray-800 hover:bg-gray-700 border border-gray-700 text-gray-300 transition-all flex items-center justify-center gap-3"
+                          className="w-full px-4 py-2.5 rounded-xl font-bold text-xs bg-gray-800 hover:bg-gray-700 border border-gray-700 text-gray-300 transition-all flex items-center justify-center gap-2"
                         >
-                          <span className="text-base">🔄</span>
+                          <span className="text-sm">🔄</span>
                           تدوير الشاشة
                         </button>
                       </div>
@@ -1740,8 +1837,9 @@ export default function MelodiesPage() {
                   )}
                 </AnimatePresence>
               </div>
+              {/* نهاية حاوية الترس */}
 
-              {/* زر تشغيل الفيديو المدمج - وضع عائم افتراضي */}
+              {/* زر تشغيل الفيديو المدمج */}
               {fullscreenLyrics.url && (
                 <div className="flex items-center gap-1">
                   <button
@@ -1781,6 +1879,9 @@ export default function MelodiesPage() {
               ✕
             </button>
           </header>
+          {/* ============================================================
+              نهاية الهيدر
+          ============================================================ */}
 
           <div className="relative flex flex-1 overflow-hidden">
             <div className="flex-1 overflow-y-auto bg-gray-950 p-2 md:p-6 relative scroll-smooth">
@@ -1790,10 +1891,7 @@ export default function MelodiesPage() {
                     <motion.div
                       layout
                       initial={{ opacity: 0, scale: 0.5 }}
-                      animate={{
-                        opacity: 1,
-                        scale: 1,
-                      }}
+                      animate={{ opacity: 1, scale: 1 }}
                       exit={{
                         opacity: 0,
                         scale: 0.5,
@@ -1840,7 +1938,6 @@ export default function MelodiesPage() {
                           isMinimized ? "aspect-square" : "aspect-video"
                         }`}
                       >
-                        {/* مؤشر التحريك - يظهر عند السحب */}
                         {!isMinimized && (
                           <div
                             className={`absolute top-2 right-2 z-20 opacity-50 hover:opacity-80 transition-opacity cursor-move ${
@@ -1881,7 +1978,6 @@ export default function MelodiesPage() {
 
                         {!isMinimized ? (
                           <>
-                            {/* أزرار تحكم سريعة فوق الفيديو - ظاهرة دائماً */}
                             <div className="absolute top-2 left-2 flex gap-2 z-10">
                               <button
                                 onClick={(e) => {
@@ -1952,6 +2048,7 @@ export default function MelodiesPage() {
                     </motion.div>
                   )}
                 </AnimatePresence>
+
                 {(() => {
                   const coptic = (fullscreenLyrics.copticcoptic || "").split(
                     /\n\s*\n/
@@ -1968,7 +2065,6 @@ export default function MelodiesPage() {
                     arabic.length
                   );
 
-                  // دالة لاستخراج الرقم من العنوان العربي (مثلاً: القطعة الثانية -> 2)
                   const getNumberFromTitle = (title: string) => {
                     if (!title) return null;
                     const digitMatch = title.match(/\d+/);
@@ -2005,13 +2101,11 @@ export default function MelodiesPage() {
 
                   let currentQuarter = 0;
 
-                  // ✅ الكود الجديد المحسن - فائق الشمول والrobustness
                   const allLyricsText =
                     (fullscreenLyrics.arabicTranslation || "") +
                     (fullscreenLyrics.copticArabic || "") +
                     (fullscreenLyrics.copticcoptic || "");
 
-                  // تعبير نمطي فائق الشمول لمرد "اف ايراناف" يتعامل مع كافة تنوعات الهمزات والمسافات
                   const afEranavRegex =
                     /ايراناف|إيراناف|راناف|ⲣⲁⲛⲁϥ|يليق\s*ل[اإأآ]لهنا/i;
 
@@ -2024,12 +2118,10 @@ export default function MelodiesPage() {
                     const caText = (copticAr[i] || "").trim();
                     const cText = (coptic[i] || "").trim();
 
-                    // تخطي الأسطر الفارغة تماماً التي قد تنتج عن تقسيم النص
                     if (!arText && !caText && !cText) return null;
 
                     const combinedRowText = `${arText} ${caText} ${cText}`;
 
-                    // ✅ التعرف على "اف ايراناف" بمرونة باستخدام Regex في النص المدمج لكل ربع
                     const isAfEranav = afEranavRegex.test(combinedRowText);
 
                     const headerSource = arText || caText || cText;
@@ -2051,14 +2143,10 @@ export default function MelodiesPage() {
                         ? null
                         : currentQuarter;
 
-                    // تحديد رقم العنصر للتلوين (سواء كان ربع أو عنوان قسم)
                     const colorReferenceNumber = isSectionHeader
                       ? getNumberFromTitle(arabic[i] || "")
                       : quarterNumber;
 
-                    // تحديد لون الربع بناءً على رقمه
-                    // الوضع الافتراضي: فردي بلون وزوجي بلون
-                    // وضع الإبصالية: كل ربعين بنفس اللون (1-2 بلون، 3-4 بلون، إلخ)
                     const isPsali =
                       fullscreenLyrics.title &&
                       (fullscreenLyrics.title.includes("ابصالية") ||
@@ -2067,11 +2155,9 @@ export default function MelodiesPage() {
                     let isEvenRow = false;
                     if (colorReferenceNumber !== null) {
                       if (isPsali) {
-                        // منطق الإبصالية: الربع 1 و 2 (فردي)، الربع 3 و 4 (زوجي)
                         isEvenRow =
                           Math.floor((colorReferenceNumber - 1) / 2) % 2 === 1;
                       } else {
-                        // المنطق العادي: فردي وزوجي
                         isEvenRow = colorReferenceNumber % 2 === 0;
                       }
                     }
