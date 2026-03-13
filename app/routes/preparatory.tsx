@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
@@ -149,7 +149,7 @@ const preparatoryVideos: StageVideos = {
       title: "ذكصولوجية شهر كيهك كي غار (كاملة)",
       url: `${BASE_URL}/Talta_rabaa-1-1_kom2c4.mp4`,
       copticArabic:
-        "كيه غار أيشان صاجي إثفيتي : أوبي هارما إن شيرووبيميكون : بالاس ناخيسي أن إينيه : تين إيرماكاريزين إممو \n\n جيه أوندوس غارتي نا شيني : شا ني أفليوو إنتيه إبئي إن دافيد : إنطاتشني إنؤو إسمي إيفول هيتوتف : إثري صاجي إمبيه طايو \n\n جيه أه إفنوتي أوهي إيراتف خين ني ثوش إنتيه تي يوذيآه : أفتي إنتيف إسمي خين أوثيليل : أه إتفيلي إن يوذا شوبف إيروس \n\n إتفيلي إن يوذا تي تي بارثينوس : ثي إيطاس ميسي إمبين صوتير : أووه أون مين إنصا إثريه ماسف : أسؤهي إسؤى إمبارثينوس \n\n إيفول غارهيتين تي فوني : إنتيه غاربييل بي أنجيلوس : تين تي نيه إمبي شيريه تيزموس : أوتي ثيؤطوكوس ماريا \n\n شيري ني إيفول هيتين إفنوتي : شيري ني إيفول هيتين غابرييل : شيري ني إيفول هيطوتين : جي شيري ني تين تشيسي إممو \n\n بي أنجيلوس إثؤواب غابرييل : أفهي شين نوفي إنتي بارثينوس : مين إنصا بي أسبازموس : أفطاجرو إمموس خين بيف صاجي \n\n جي إمبير إيرهوتي ماريام : أري جيمي غار إن أو إهموت : خاتين إفنوتي هيبي غار تيرا إيرفوكي : أووه إنتي ميسي إن أو شيري \n\n إف إيه تي ناف إنجي إبتشويس إفنوتي : إمبي إثرنوس إنتي دافيد بيف يوت : إفنا إيه أورو إيجين إبئى إن ياكوب : شا إينيه إنتي بي إينيه \n\n إثفيه فاي تين تي أوأوو ني : هوس ثيؤطوكوس إنسيو نيفين : ماتيهو إي إبتشويس إإهري إيجون : إنتيف كانين نوفي نان إيفول \n\n شيري ني أو تي بارثينوس  : تي أوورو إممي إن أليثيني  : شيري إبشوشو إنتي بين جينوس  : أري إجفو نان إن إممانوئيل \n\n تين تيهو أري بين ميفئي  : أوتي بروستاتيس إتينهوت  : ناهرين بين تشويس إيسوس بي خريستوس  : إنتيف كا نين نوفي نان إيفول",
+        "كيه غار أيشان صاجي إثفيتي : أوبي هارما إن شيرووبيميكون : بالاس ناخيسي أن إينيه : تين إيرماكاريزين إممو \n\n جيه أوندوس غارتي نا شيني : شا ني أفليوو إنتيه إبئى إن دافيد : إنطاتشني إنؤو إسمي إيفول هيتوتف : إثري صاجي إمبيه طايو \n\n جيه أه إفنوتي أوهي إيراتف خين ني ثوش إنتيه تي يوذيآه : أفتي إنتيف إسمي خين أوثيليل : أه إتفيلي إن يوذا شوبف إيروس \n\n إتفيلي إن يوذا تي تي بارثينوس : ثي إيطاس ميسي إمبين صوتير : أووه أون مين إنصا إثريه ماسف : أسؤهي إسؤى إمبارثينوس \n\n إيفول غارهيتين تي فوني : إنتيه غاربييل بي أنجيلوس : تين تي نيه إمبي شيريه تيزموس : أوتي ثيؤطوكوس ماريا \n\n شيري ني إيفول هيتين إفنوتي : شيري ني إيفول هيتين غابرييل : شيري ني إيفول هيطوتين : جي شيري ني تين تشيسي إممو \n\n بي أنجيلوس إثؤواب غابرييل : أفهي شين نوفي إنتي بارثينوس : مين إنصا بي أسبازموس : أفطاجرو إمموس خين بيف صاجي \n\n جي إمبير إيرهوتي ماريام : أري جيمي غار إن أو إهموت : خاتين إفنوتي هيبي غار تيرا إيرفوكي : أووه إنتي ميسي إن أو شيري \n\n إف إيه تي ناف إنجي إبتشويس إفنوتي : إمبي إثرنوس إنتي دافيد بيف يوت : إفنا إيه أورو إيجين إبئى إن ياكوب : شا إينيه إنتي بي إينيه \n\n إثفيه فاي تين تي أوأوو ني : هوس ثيؤطوكوس إنسيو نيفين : ماتيهو إي إبتشويس إإهري إيجون : إنتيف كانين نوفي نان إيفول \n\n شيري ني أو تي بارثينوس  : تي أوورو إممي إن أليثيني  : شيري إبشوشو إنتي بين جينوس  : أري إجفو نان إن إممانوئيل \n\n تين تيهو أري بين ميفئي  : أوتي بروستاتيس إتينهوت  : ناهرين بين تشويس إيسوس بي خريستوس  : إنتيف كا نين نوفي نان إيفول",
       copticcoptic:
         "+ Ⲕⲉ ⲅⲁⲣ ⲁⲓϣⲁⲛⲥ­ⲁϫⲓ ⲉⲑⲃⲏϯ : ⲱ̀ ⲡⲓϩⲁⲣⲙⲁ ⲛ̀ⲭⲉⲣⲟⲩⲃ­ⲓⲙⲓⲕⲟⲛ : ⲡⲁⲗⲁⲥ ⲛⲁϧⲓⲥⲓ ⲁⲛ ⲉ̀ⲛⲉϩ : ⲧⲉⲛⲉⲣⲙ­ⲁⲕⲁⲣⲓⲍ­ⲓⲛ ⲙ̀ⲙⲟ.\n\n+ Ϫⲉ ⲟⲛⲧⲱⲥ ⲅⲁⲣ ϯⲛⲁϣⲉⲛ­ⲏⲓ : ϣⲁ ⲛⲓⲁⲩⲗⲉ­ⲏⲟⲩ ⲛ̀ⲧⲉ ⲡ̀ⲏⲓ ⲛ̀Ⲇⲁ̅ⲇ̅ : ⲛ̀ⲧⲁϭⲓ ⲛ̀ⲟⲩⲥ̀ⲙⲏ ⲉ̀ⲃⲟⲗ ϩⲓⲧⲟⲧϥ : ⲉⲑⲣⲓⲥⲁ­ϫⲓ ⲙ̀ⲡⲉⲧⲁⲓⲟ.\n\n+ Ϫⲉ ⲁ̀ Ⲫϯ ⲟ̀ϩⲓ ⲉ̀ⲣⲁⲧϥ : ϧⲉⲛ ⲛⲓⲑⲱϣ ⲛ̀ⲧⲉ Ϯⲓⲟⲩⲇⲉⲁ̀ : ⲁϥϯ ⲛ̀ⲧⲉϥⲥ̀ⲙⲏ ϧⲉⲛ ⲟⲩⲑⲉⲗⲏⲗ : ⲁ̀ ⲧ̀ⲫⲩⲗⲏ ⲛ̀Ⲓⲟⲩⲇⲁ ϣⲟⲡϥ ⲉ̀ⲣⲟⲥ.\n\n+ Ⲧ̀ⲫⲩⲗⲏ ⲛ̀Ⲓⲟⲩⲇⲁ ⲧⲉ Ϯⲡ̅ⲁ̅ⲣ̅ⲑ̅ : ⲑⲏⲉ̀ⲧⲁⲥⲙⲓⲥⲓ ⲙ̀Ⲡⲉⲛⲥ̅ⲱ̅ⲣ̅ : ⲟⲩⲟϩ ⲟⲛ ⲙⲉⲛⲉⲛⲥⲁ ⲑ̀ⲣⲉⲥⲙⲁⲥϥ : ⲁⲥⲟ̀ϩⲓ ⲉⲥⲟⲓ ⲙ̀ⲡ̅ⲁ̅ⲣ̅ⲑ̅.\n\n+ Ⲉ̀ⲃⲟⲗ ⲅⲁⲣ ϩⲓⲧⲉⲛ ϯⲫⲱⲛⲏ : ⲛ̀ⲧⲉ Ⲅⲁⲃⲣⲓⲏⲗ ⲡⲓⲁⲅⲅⲉ­ⲗⲟⲥ : ⲧⲉⲛϯ ⲛⲉ ⲙ̀ⲡⲓⲬⲉ̅­ⲧⲓⲥⲙⲟⲥ : ⲱ̀ Ϯⲑⲉⲟ̀ⲧⲟⲕⲟⲥ Ⲙⲁⲣⲓⲁ.\n\n+ Ⲭⲉ̅ ⲛⲉ ⲉ̀ⲃⲟⲗ ϩⲓⲧⲉⲛ Ⲫϯ : Ⲭⲉ̅ ⲛⲉ ⲉ̀ⲃⲟⲗ ϩⲓⲧⲉⲛ Ⲅⲁⲃⲣⲓⲏⲗ : Ⲭⲉ̅ ⲛⲉ ⲉ̀ⲃⲟⲗ ϩⲓⲧⲟⲧⲉⲛ : ϫⲉ Ⲭⲉ̅ ⲛⲉ ⲧⲉⲛϭⲓⲥⲓ ⲙ̀ⲙⲟ.\n\n+ Ⲡⲓⲁⲅⲅⲉ­ⲗⲟⲥ ⲉ̅ⲑ̅ⲩ̅ Ⲅⲁⲃⲣⲓⲏⲗ : ⲁϥϩⲓϣⲉ­ⲛⲛⲟⲩϥⲓ ⲛ̀Ϯⲡ̅ⲁ̅ⲣ̅ⲑ̅ : ⲙⲉⲛⲉⲛⲥⲁ ⲡⲓⲁⲥⲡⲁ­ⲥⲙⲟⲥ : ⲁϥⲧⲁϫⲣⲟ ⲙ̀ⲙⲟⲥ ϧⲉⲛ ⲡⲉϥⲥⲁϫⲓ.\n\n+ Ϫⲉ ⲙ̀ⲡⲉⲣⲉⲣϩ­ⲟϯ Ⲙⲁⲣⲓⲁⲙ : ⲁ̀ⲣⲉϫⲓⲙⲓ ⲅⲁⲣ ⲛ̀ⲟⲩϩ̀ⲙⲟⲧ : ϧⲁⲧⲉⲛ Ⲫϯ ϩⲏⲡⲡⲉ ⲅⲁⲣ ⲧⲉⲣⲁⲉⲣ­ⲃⲟⲕⲓ : ⲟⲩⲟϩ ⲛ̀ⲧⲉⲙⲓⲥⲓ ⲛ̀Ⲟⲩϣⲏⲣⲓ.\n\n+ Ⲉϥⲉ̀ϯ ⲛⲁϥ ⲛ̀ϫⲉ Ⲡ̀⳪ Ⲫϯ : ⲙ̀ⲡⲓⲑ̀ⲣⲟⲛⲟⲥ ⲛ̀ⲧⲉ Ⲇⲁ̅ⲇ̅ ⲡⲉϥⲓⲱⲧ : ϥ̀ⲛⲁⲉⲣⲟⲩ­ⲣⲟ ⲉ̀ϫⲉⲛ ⲡ̀ⲏⲓ ⲛ̀Ⲓⲁⲕⲱⲃ : ϣⲁ ⲉ̀ⲛⲉϩ ⲛ̀ⲧⲉ ⲡⲓⲉ̀ⲛⲉϩ.\n\n+ Ⲉⲑⲃⲉ ⲫⲁⲓ ⲧⲉⲛϯⲱ̀ⲟⲩ ⲛⲉ : ϩⲱⲥ Ⲑⲉⲟ̀ⲧⲟⲕⲟⲥ ⲛ̀ⲥⲏⲟⲩ ⲛⲓⲃⲉⲛ : ⲙⲁϯϩⲟ ⲉ̀Ⲡ̀⳪ ⲉ̀ϩ̀ⲣⲏⲓ ⲉ̀ϫⲱⲛ : ⲛ̀ⲧⲉϥⲭⲁ ⲛⲉⲛⲛⲟⲃⲓ ⲛⲁⲛ ⲉ̀ⲃⲟⲗ.\n\n+ Ⲭⲉ̅ ⲛⲉ ⲱ̀ Ϯⲡ̅ⲁ̅ⲣ̅ⲑ̅ : ϯⲟⲩⲣⲱ ⲙ̀ⲙⲏⲓ ⲛ̀ⲁ̀ⲗⲏⲑⲓⲛⲏ : Ⲭⲉ̅ ⲡ̀ϣⲟⲩϣⲟⲩ ⲛ̀ⲧⲉ ⲡⲉⲛⲅⲉⲛ­ⲟⲥ : ⲁ̀ⲣⲉϫ̀ⲫⲟ ⲛⲁⲛ ⲛ̀Ⲉⲙⲙⲁⲛⲟ­ⲩⲏⲗ.\n\n+ Ⲧⲉⲛϯϩⲟ ⲁ̀ⲣⲉⲡⲉⲛⲙ­ⲉⲩⲓ̀ : ⲱ̀ ϯⲡ̀ⲣⲟⲥⲧⲁⲧ­ⲏⲥ ⲉ̀ⲧⲉⲛϩⲟⲧ : ⲛⲁϩⲣⲉⲛ Ⲡⲉⲛ⳪ Ⲓⲏ̅ⲥ̅ Ⲡⲭ̅ⲥ̅ : ⲛ̀ⲧⲉϥⲭⲁ ⲛⲉⲛⲛⲟⲃⲓ ⲛⲁⲛ ⲉ̀ⲃⲟⲗ.",
       arabicTranslation:
@@ -208,6 +208,27 @@ const preparatoryVideos: StageVideos = {
   ],
 };
 
+// ======================================================================
+// أيقونة الترس (Gear Icon SVG Component)
+// ======================================================================
+function GearIcon({ className = "w-5 h-5" }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.8}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <circle cx="12" cy="12" r="3" />
+      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+    </svg>
+  );
+}
+
 // --- المكون الرئيسي ---
 export default function PreparatoryPage() {
   const [selectedStage, setSelectedStage] = useState<string>("");
@@ -222,7 +243,7 @@ export default function PreparatoryPage() {
   const [_rotateFromSidebar, setRotateFromSidebar] = useState(false);
   const [showControlsPanel, setShowControlsPanel] = useState(false);
 
-  // حالات جديدة لمودال الفيديو
+  // حالات مودال الفيديو
   const [showVideoInModal, setShowVideoInModal] = useState(false);
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
@@ -236,6 +257,34 @@ export default function PreparatoryPage() {
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [, setWasJustDragging] = useState(false);
+
+  // ====== Ref للإغلاق الذكي عند النقر خارج القائمة ======
+  const controlsPanelRef = useRef<HTMLDivElement>(null);
+
+  // ====== useEffect للإغلاق الذكي (Click Outside to Close) ======
+  useEffect(() => {
+    if (!showControlsPanel) return;
+
+    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
+      if (
+        controlsPanelRef.current &&
+        !controlsPanelRef.current.contains(event.target as Node)
+      ) {
+        setShowControlsPanel(false);
+      }
+    };
+
+    const timer = setTimeout(() => {
+      document.addEventListener("mousedown", handleClickOutside);
+      document.addEventListener("touchstart", handleClickOutside);
+    }, 100);
+
+    return () => {
+      clearTimeout(timer);
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
+    };
+  }, [showControlsPanel]);
 
   const hazzatImagesCount = useMemo(() => {
     if (!fullscreenLyrics) return 0;
@@ -256,7 +305,7 @@ export default function PreparatoryPage() {
 
   const handleStageSelect = (stageKey: string) => {
     setSelectedStage(stageKey);
-    setViewMode("videos"); // Reset view mode when stage changes
+    setViewMode("videos");
   };
 
   const stageKey = useMemo(() => {
@@ -269,8 +318,6 @@ export default function PreparatoryPage() {
 
   const riteContent = useMemo(() => {
     if (viewMode === "rites" && stageKey && preparatoryData[stageKey]) {
-      // Assuming we want to show the 'first' level of rites for simplicity.
-      // This can be expanded later if needed.
       return preparatoryData[stageKey].first || [];
     }
     return [];
@@ -285,17 +332,12 @@ export default function PreparatoryPage() {
 
   // ====== دوال تحريك الفيديو ======
   const handleDragStart = (e: React.MouseEvent | React.TouchEvent) => {
-    // لل touch events، نستخدم CSS لمنع التمرير بدلاً من preventDefault
-    if (!("touches" in e)) {
-      e.preventDefault();
-    }
+    if (!("touches" in e)) e.preventDefault();
     e.stopPropagation();
-
     const clientX =
       "touches" in e ? e.touches[0].clientX : (e as React.MouseEvent).clientX;
     const clientY =
       "touches" in e ? e.touches[0].clientY : (e as React.MouseEvent).clientY;
-
     setDragOffset({
       x: clientX - videoPosition.x,
       y: clientY - videoPosition.y,
@@ -305,35 +347,28 @@ export default function PreparatoryPage() {
 
   const handleDragMove = (e: React.MouseEvent | React.TouchEvent) => {
     if (!isDragging) return;
-
-    // لل touch events، نستخدم CSS لمنع التمرير بدلاً من preventDefault
-    if (!("touches" in e)) {
-      e.preventDefault();
-    }
+    if (!("touches" in e)) e.preventDefault();
     e.stopPropagation();
-
     const clientX =
       "touches" in e ? e.touches[0].clientX : (e as React.MouseEvent).clientX;
     const clientY =
       "touches" in e ? e.touches[0].clientY : (e as React.MouseEvent).clientY;
-
     const newX = clientX - dragOffset.x;
     const newY = clientY - dragOffset.y;
-
-    // حساب أبعاد الفيديو بناءً على حالة التصغير
     const videoWidth = isMinimized
       ? 64
       : Math.min(window.innerWidth * 0.85, 320);
     const videoHeight = isMinimized ? 64 : 180;
-
-    // تحديد الحدود لمنع خروج الفيديو من الشاشة
     const padding = 10;
-    const maxX = window.innerWidth - videoWidth - padding;
-    const maxY = window.innerHeight - videoHeight - padding;
-
     setVideoPosition({
-      x: Math.max(padding, Math.min(newX, maxX)),
-      y: Math.max(padding, Math.min(newY, maxY)),
+      x: Math.max(
+        padding,
+        Math.min(newX, window.innerWidth - videoWidth - padding)
+      ),
+      y: Math.max(
+        padding,
+        Math.min(newY, window.innerHeight - videoHeight - padding)
+      ),
     });
   };
 
@@ -345,40 +380,27 @@ export default function PreparatoryPage() {
     setIsDragging(false);
   };
 
-  // دالة توسيع الفيديو مع ضبط الموقع إذا كان عند الحافة
   const handleExpandVideo = () => {
-    if (!isMinimized) return;
-    if (isDragging) return;
-
-    // حساب حدود الفيديو عند التوسيع
+    if (!isMinimized || isDragging) return;
     const videoWidth = Math.min(window.innerWidth * 0.85, 320);
     const videoHeight = 180;
     const padding = 10;
-
-    // التحقق إذا كان الفيديو عند الحافة وتعديل_position
-    let newX = videoPosition.x;
-    let newY = videoPosition.y;
-
-    const maxX = window.innerWidth - videoWidth - padding;
-    const maxY = window.innerHeight - videoHeight - padding;
-
-    if (newX > maxX) newX = maxX;
-    if (newY > maxY) newY = maxY;
-
-    if (newX !== videoPosition.x || newY !== videoPosition.y) {
+    let newX = Math.min(
+      videoPosition.x,
+      window.innerWidth - videoWidth - padding
+    );
+    let newY = Math.min(
+      videoPosition.y,
+      window.innerHeight - videoHeight - padding
+    );
+    if (newX !== videoPosition.x || newY !== videoPosition.y)
       setVideoPosition({ x: newX, y: newY });
-    }
-
     setIsMinimized(false);
   };
 
-  const increaseFontSize = () => {
+  const increaseFontSize = () =>
     setFontSize((prev) => Math.min(prev + 1, maxFontSize));
-  };
-
-  const decreaseFontSize = () => {
-    setFontSize((prev) => Math.max(prev - 1, 14));
-  };
+  const decreaseFontSize = () => setFontSize((prev) => Math.max(prev - 1, 14));
 
   useEffect(() => {
     setFontSize((prev) => Math.min(prev, maxFontSize));
@@ -395,7 +417,6 @@ export default function PreparatoryPage() {
       <main className="flex-1 page-bg-setup bg-melodies relative">
         <div className="bg-overlay" />
         <div className="relative z-10 pb-10">
-          {/* Header Section */}
           <div className="bg-gradient-to-b from-blue-900/30 to-transparent py-10 px-4 text-center">
             <h1 className="text-4xl font-bold text-blue-400 mb-3">
               المنهج التمهيدي
@@ -455,7 +476,6 @@ export default function PreparatoryPage() {
 
             {/* Content Area */}
             {!selectedStage ? (
-              /* Empty state */
               <div className="flex flex-col items-center justify-center py-24 text-center">
                 <div className="text-7xl mb-6 opacity-30">🎵</div>
                 <p className="text-gray-500 text-xl">
@@ -463,7 +483,6 @@ export default function PreparatoryPage() {
                 </p>
               </div>
             ) : viewMode === "videos" ? (
-              /* Videos Grid */
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {preparatoryVideos[selectedStage]?.map((video) => (
                   <div
@@ -505,7 +524,6 @@ export default function PreparatoryPage() {
                 ))}
               </div>
             ) : (
-              /* Rites Content */
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {riteContent.length === 0 ? (
                   <div className="col-span-full text-center p-8 bg-gray-800 rounded-xl border border-blue-500/30">
@@ -522,7 +540,6 @@ export default function PreparatoryPage() {
                         <h3 className="text-xl font-bold text-blue-400 mb-6 min-h-[3.5rem] flex items-center">
                           {item.title}
                         </h3>
-
                         <button
                           onClick={() =>
                             setExpandedIndices((prev) => ({
@@ -540,7 +557,6 @@ export default function PreparatoryPage() {
                             ? "إخفاء طقس اللحن"
                             : "عرض طقس اللحن"}
                         </button>
-
                         {expandedIndices[index] && item.content && (
                           <div className="animate-in fade-in slide-in-from-top-2 duration-300">
                             <div className="h-px bg-white/10 mb-4" />
@@ -560,82 +576,123 @@ export default function PreparatoryPage() {
         </div>
       </main>
 
-      {/* --- مودال النصوص المحسّن للهواتف --- */}
+      {/* ================================================================
+          مودال نصوص اللحن
+      ================================================================ */}
       {fullscreenLyrics && (
         <div className="fixed inset-0 z-[100] bg-black flex flex-col overflow-hidden">
+          {/* ============================================================
+              الهيدر - أيقونة الترس مع الأنيميشن والإغلاق الذكي
+          ============================================================ */}
           <header className="sticky top-0 z-50 p-3 md:p-4 bg-gray-900 border-b border-white/10 flex items-center gap-2">
             <div className="flex items-center gap-2 flex-shrink-0">
-              <div className="relative">
+              {/* حاوية الترس مع الـ Ref للإغلاق الذكي */}
+              <div className="relative" ref={controlsPanelRef}>
+                {/* زر أيقونة الترس مع أنيميشن الدوران */}
                 <button
                   onClick={() => setShowControlsPanel((prev) => !prev)}
-                  className="w-10 h-10 rounded-full bg-gray-900/90 border border-blue-500/30 flex flex-col items-center justify-center gap-1 hover:bg-gray-800 transition-all shadow-[0_0_15px_rgba(59,130,246,0.2)] active:scale-90"
-                  aria-label="إعدادات النص"
+                  className={`w-10 h-10 rounded-full flex items-center justify-center transition-all border active:scale-90 ${
+                    showControlsPanel
+                      ? "bg-blue-600/30 border-blue-400/60 text-blue-300 shadow-[0_0_20px_rgba(59,130,246,0.35)]"
+                      : "bg-gray-900/90 border-blue-500/30 text-blue-400 hover:bg-gray-800 shadow-[0_0_15px_rgba(59,130,246,0.2)]"
+                  }`}
+                  aria-label="إعدادات العرض"
+                  title="إعدادات العرض"
                 >
-                  <motion.span
-                    animate={
-                      showControlsPanel
-                        ? { rotate: 45, y: 6 }
-                        : { rotate: 0, y: 0 }
-                    }
-                    className="w-5 h-0.5 bg-blue-400 rounded-full"
-                  />
-                  <motion.span
-                    animate={
-                      showControlsPanel
-                        ? { opacity: 0, x: -10 }
-                        : { opacity: 1, x: 0 }
-                    }
-                    className="w-5 h-0.5 bg-blue-400 rounded-full"
-                  />
-                  <motion.span
-                    animate={
-                      showControlsPanel
-                        ? { rotate: -45, y: -6 }
-                        : { rotate: 0, y: 0 }
-                    }
-                    className="w-5 h-0.5 bg-blue-400 rounded-full"
-                  />
+                  {/* الترس يدور 90 درجة عند الفتح بـ spring animation */}
+                  <motion.div
+                    animate={{ rotate: showControlsPanel ? 90 : 0 }}
+                    transition={{ type: "spring", damping: 12, stiffness: 180 }}
+                  >
+                    <GearIcon className="w-5 h-5" />
+                  </motion.div>
                 </button>
 
+                {/* القائمة المنسدلة مع التجاوب الكامل رأسي/أفقي */}
                 <AnimatePresence>
                   {showControlsPanel && (
                     <motion.div
-                      initial={{ opacity: 0, scale: 0.9, y: -20, x: 10 }}
+                      initial={{ opacity: 0, scale: 0.92, y: -16, x: 8 }}
                       animate={{ opacity: 1, scale: 1, y: 0, x: 0 }}
-                      exit={{ opacity: 0, scale: 0.9, y: -20, x: 10 }}
+                      exit={{ opacity: 0, scale: 0.92, y: -16, x: 8 }}
                       transition={{
                         type: "spring",
-                        damping: 20,
-                        stiffness: 300,
+                        damping: 22,
+                        stiffness: 320,
                       }}
-                      className="absolute top-full mt-3 right-0 w-64 max-w-[90vw] z-30 bg-gray-900/98 border border-blue-500/20 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex flex-col gap-5 p-5 backdrop-blur-xl"
+                      className="
+                        absolute top-full mt-3 right-0 z-30
+                        bg-gray-900/98 border border-blue-500/20 rounded-2xl
+                        shadow-[0_20px_60px_rgba(0,0,0,0.6)] backdrop-blur-xl
+
+                        flex flex-col gap-5 p-5
+                        w-72 max-w-[92vw]
+
+                        [@media(orientation:landscape)]:flex-row
+                        [@media(orientation:landscape)]:gap-4
+                        [@media(orientation:landscape)]:p-4
+                        [@media(orientation:landscape)]:w-[92vw]
+                        [@media(orientation:landscape)]:max-w-[820px]
+                        [@media(orientation:landscape)]:items-start
+                        [@media(orientation:landscape)]:overflow-x-auto
+                      "
                     >
-                      <div className="flex items-center justify-between border-b border-white/5 pb-3">
+                      {/* رأس القائمة */}
+                      <div
+                        className="
+                        flex items-center justify-between border-b border-white/5 pb-3
+                        [@media(orientation:landscape)]:border-b-0
+                        [@media(orientation:landscape)]:border-r
+                        [@media(orientation:landscape)]:pb-0
+                        [@media(orientation:landscape)]:pr-4
+                        [@media(orientation:landscape)]:flex-col
+                        [@media(orientation:landscape)]:items-start
+                        [@media(orientation:landscape)]:gap-2
+                        [@media(orientation:landscape)]:flex-shrink-0
+                      "
+                      >
                         <div className="flex items-center gap-2">
-                          <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
-                          <span className="text-sm font-bold text-gray-100 tracking-wide">
+                          {/* ترس صغير يدور باستمرار في رأس القائمة */}
+                          <motion.div
+                            animate={{ rotate: 360 }}
+                            transition={{
+                              duration: 4,
+                              repeat: Infinity,
+                              ease: "linear",
+                            }}
+                          >
+                            <GearIcon className="w-3.5 h-3.5 text-blue-400" />
+                          </motion.div>
+                          <span className="text-sm font-bold text-gray-100 tracking-wide whitespace-nowrap">
                             إعدادات العرض
                           </span>
                         </div>
                         <button
                           onClick={() => setShowControlsPanel(false)}
-                          className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-800 hover:bg-red-900/40 hover:text-red-400 transition-colors text-gray-400"
+                          className="w-7 h-7 flex items-center justify-center rounded-full bg-gray-800 hover:bg-red-900/40 hover:text-red-400 transition-colors text-gray-400 text-xs"
                         >
                           ✕
                         </button>
                       </div>
 
-                      <div className="flex flex-col gap-3">
+                      {/* --- قسم حجم الخط --- */}
+                      <div
+                        className="
+                        flex flex-col gap-3
+                        [@media(orientation:landscape)]:flex-shrink-0
+                        [@media(orientation:landscape)]:min-w-[140px]
+                      "
+                      >
                         <label className="text-[11px] uppercase tracking-widest text-blue-400 font-bold px-1">
                           حجم الخط
                         </label>
                         <div className="flex items-center gap-3 bg-gray-800/50 p-1.5 rounded-xl border border-white/5">
                           <button
                             onClick={decreaseFontSize}
-                            className="w-10 h-10 bg-gray-700 hover:bg-gray-600 active:scale-95 rounded-lg flex items-center justify-center transition-all shadow-lg"
+                            className="w-10 h-10 bg-gray-700 hover:bg-gray-600 active:scale-95 rounded-lg flex items-center justify-center transition-all shadow-lg flex-shrink-0"
                           >
                             <span className="text-xl font-bold text-blue-400">
-                              -
+                              −
                             </span>
                           </button>
                           <div className="flex-1 text-center">
@@ -648,7 +705,7 @@ export default function PreparatoryPage() {
                           </div>
                           <button
                             onClick={increaseFontSize}
-                            className="w-10 h-10 bg-gray-700 hover:bg-gray-600 active:scale-95 rounded-lg flex items-center justify-center transition-all shadow-lg"
+                            className="w-10 h-10 bg-gray-700 hover:bg-gray-600 active:scale-95 rounded-lg flex items-center justify-center transition-all shadow-lg flex-shrink-0"
                           >
                             <span className="text-xl font-bold text-blue-400">
                               +
@@ -657,7 +714,13 @@ export default function PreparatoryPage() {
                         </div>
                       </div>
 
-                      <div className="flex flex-col gap-3">
+                      {/* --- قسم اللغات --- */}
+                      <div
+                        className="
+                        flex flex-col gap-3 flex-1
+                        [@media(orientation:landscape)]:min-w-[170px]
+                      "
+                      >
                         <label className="text-[11px] uppercase tracking-widest text-emerald-400 font-bold px-1">
                           اللغات المفعلة
                         </label>
@@ -675,7 +738,7 @@ export default function PreparatoryPage() {
                             {
                               state: showCopticArabic,
                               setter: setShowCopticArabic,
-                              label: "قبطي معرب",
+                              label: "قبطي معرَّب",
                               activeClass:
                                 "bg-emerald-600/20 border-emerald-500/50 text-emerald-400 shadow-[inset_0_0_20px_rgba(0,0,0,0.2)]",
                               dotClass:
@@ -694,7 +757,7 @@ export default function PreparatoryPage() {
                             <button
                               key={lang.label}
                               onClick={() => lang.setter(!lang.state)}
-                              className={`group relative flex items-center justify-between px-4 py-3 rounded-xl font-bold text-xs transition-all duration-300 border ${
+                              className={`flex items-center justify-between px-4 py-2.5 rounded-xl font-bold text-xs transition-all duration-300 border ${
                                 lang.state
                                   ? lang.activeClass
                                   : "bg-gray-800/40 border-gray-700/50 text-gray-500 hover:bg-gray-800 hover:border-gray-600"
@@ -702,24 +765,39 @@ export default function PreparatoryPage() {
                             >
                               <span>{lang.label}</span>
                               <div
-                                className={`w-2 h-2 rounded-full transition-all duration-300 ${lang.state ? lang.dotClass : "bg-gray-700"}`}
+                                className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                                  lang.state ? lang.dotClass : "bg-gray-700"
+                                }`}
                               />
                             </button>
                           ))}
                         </div>
                       </div>
 
-                      <div className="flex flex-col gap-2 pt-2 border-t border-white/5">
+                      {/* --- قسم الأدوات --- */}
+                      <div
+                        className="
+                        flex flex-col gap-2 pt-2 border-t border-white/5
+                        [@media(orientation:landscape)]:border-t-0
+                        [@media(orientation:landscape)]:pt-0
+                        [@media(orientation:landscape)]:flex-shrink-0
+                        [@media(orientation:landscape)]:min-w-[150px]
+                      "
+                      >
+                        <label className="text-[11px] uppercase tracking-widest text-orange-400 font-bold px-1">
+                          الأدوات
+                        </label>
+
                         {hazzatImagesCount > 0 && (
                           <button
                             onClick={() => setShowHazzat(!showHazzat)}
-                            className={`w-full px-4 py-3 rounded-xl font-bold text-xs flex items-center justify-center gap-3 transition-all duration-500 ${
+                            className={`w-full px-4 py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all duration-500 ${
                               showHazzat
                                 ? "bg-yellow-600 text-white shadow-lg shadow-yellow-900/20"
                                 : "bg-gradient-to-r from-purple-600 to-indigo-600 text-white hover:scale-[1.02] active:scale-95"
                             }`}
                           >
-                            <span className="text-base animate-bounce">🎵</span>
+                            <span className="text-sm animate-bounce">🎵</span>
                             <span>
                               {showHazzat ? "إخفاء الهزات" : "عرض هزات اللحن"}
                             </span>
@@ -736,9 +814,9 @@ export default function PreparatoryPage() {
                               setRotateFromSidebar((prev) => !prev);
                             }
                           }}
-                          className="w-full px-4 py-3 rounded-xl font-bold text-xs bg-gray-800 hover:bg-gray-700 border border-gray-700 text-gray-300 transition-all flex items-center justify-center gap-3"
+                          className="w-full px-4 py-2.5 rounded-xl font-bold text-xs bg-gray-800 hover:bg-gray-700 border border-gray-700 text-gray-300 transition-all flex items-center justify-center gap-2"
                         >
-                          <span className="text-base">🔄</span>
+                          <span className="text-sm">🔄</span>
                           تدوير الشاشة
                         </button>
                       </div>
@@ -746,8 +824,9 @@ export default function PreparatoryPage() {
                   )}
                 </AnimatePresence>
               </div>
+              {/* نهاية حاوية الترس */}
 
-              {/* زر تشغيل الفيديو المدمج - وضع عائم افتراضي */}
+              {/* زر تشغيل الفيديو المدمج */}
               {fullscreenLyrics.url && (
                 <div className="flex items-center gap-1">
                   <button
@@ -787,6 +866,9 @@ export default function PreparatoryPage() {
               ✕
             </button>
           </header>
+          {/* ============================================================
+              نهاية الهيدر
+          ============================================================ */}
 
           <div className="relative flex flex-1 overflow-hidden">
             <div className="flex-1 overflow-y-auto bg-gray-950 p-2 md:p-6 relative scroll-smooth">
@@ -796,10 +878,7 @@ export default function PreparatoryPage() {
                     <motion.div
                       layout
                       initial={{ opacity: 0, scale: 0.5 }}
-                      animate={{
-                        opacity: 1,
-                        scale: 1,
-                      }}
+                      animate={{ opacity: 1, scale: 1 }}
                       exit={{
                         opacity: 0,
                         scale: 0.5,
@@ -846,7 +925,6 @@ export default function PreparatoryPage() {
                           isMinimized ? "aspect-square" : "aspect-video"
                         }`}
                       >
-                        {/* مؤشر التحريك - يظهر عند السحب */}
                         {!isMinimized && (
                           <div
                             className={`absolute top-2 right-2 z-20 opacity-50 hover:opacity-80 transition-opacity cursor-move ${
@@ -886,55 +964,52 @@ export default function PreparatoryPage() {
                         </div>
 
                         {!isMinimized ? (
-                          <>
-                            {/* أزرار تحكم سريعة فوق الفيديو - ظاهرة دائماً */}
-                            <div className="absolute top-2 left-2 flex gap-2 z-10">
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  setIsMinimized(true);
-                                }}
-                                className="w-10 h-10 md:w-8 md:h-8 rounded-full bg-blue-600/80 md:bg-blue-600/60 backdrop-blur-md flex items-center justify-center text-white border border-white/20 hover:bg-blue-600/80 transition-colors"
-                                title="تصغير"
+                          <div className="absolute top-2 left-2 flex gap-2 z-10">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setIsMinimized(true);
+                              }}
+                              className="w-10 h-10 md:w-8 md:h-8 rounded-full bg-blue-600/80 md:bg-blue-600/60 backdrop-blur-md flex items-center justify-center text-white border border-white/20 hover:bg-blue-600/80 transition-colors"
+                              title="تصغير"
+                            >
+                              <svg
+                                className="w-5 h-5 md:w-4 md:h-4"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
                               >
-                                <svg
-                                  className="w-5 h-5 md:w-4 md:h-4"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  viewBox="0 0 24 24"
-                                >
-                                  <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
-                                  />
-                                </svg>
-                              </button>
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  setShowVideoInModal(false);
-                                }}
-                                className="w-10 h-10 md:w-8 md:h-8 rounded-full bg-red-600/80 md:bg-red-600/60 backdrop-blur-md flex items-center justify-center text-white border border-white/20 hover:bg-red-600/80 transition-colors"
-                                title="إغلاق"
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+                                />
+                              </svg>
+                            </button>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setShowVideoInModal(false);
+                              }}
+                              className="w-10 h-10 md:w-8 md:h-8 rounded-full bg-red-600/80 md:bg-red-600/60 backdrop-blur-md flex items-center justify-center text-white border border-white/20 hover:bg-red-600/80 transition-colors"
+                              title="إغلاق"
+                            >
+                              <svg
+                                className="w-5 h-5 md:w-4 md:h-4"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
                               >
-                                <svg
-                                  className="w-5 h-5 md:w-4 md:h-4"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  viewBox="0 0 24 24"
-                                >
-                                  <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M6 18L18 6M6 6l12 12"
-                                  />
-                                </svg>
-                              </button>
-                            </div>
-                          </>
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M6 18L18 6M6 6l12 12"
+                                />
+                              </svg>
+                            </button>
+                          </div>
                         ) : (
                           <div
                             className={`w-full h-full flex items-center justify-center transition-colors duration-300 ${
@@ -958,6 +1033,7 @@ export default function PreparatoryPage() {
                     </motion.div>
                   )}
                 </AnimatePresence>
+
                 {(() => {
                   const coptic = (fullscreenLyrics.copticcoptic || "").split(
                     /\n\s*\n/
@@ -974,12 +1050,10 @@ export default function PreparatoryPage() {
                     arabic.length
                   );
 
-                  // دالة لاستخراج الرقم من العنوان العربي (مثلاً: القطعة الثانية -> 2)
                   const getNumberFromTitle = (title: string) => {
                     if (!title) return null;
                     const digitMatch = title.match(/\d+/);
                     if (digitMatch) return parseInt(digitMatch[0]);
-
                     const arabicNumbers: Record<string, number> = {
                       الأولى: 1,
                       الأول: 1,
@@ -1002,7 +1076,6 @@ export default function PreparatoryPage() {
                       العاشرة: 10,
                       العاشر: 10,
                     };
-
                     for (const [key, value] of Object.entries(arabicNumbers)) {
                       if (title.includes(key)) return value;
                     }
@@ -1048,14 +1121,10 @@ export default function PreparatoryPage() {
                         ? null
                         : currentQuarter;
 
-                    // تحديد رقم العنصر للتلوين (سواء كان ربع أو عنوان قسم)
                     const colorReferenceNumber = isSectionHeader
                       ? getNumberFromTitle(arabic[i] || "")
                       : quarterNumber;
 
-                    // تحديد لون الربع بناءً على رقمه
-                    // الوضع الافتراضي: فردي بلون وزوجي بلون
-                    // وضع الإبصالية: كل ربعين بنفس اللون (1-2 بلون، 3-4 بلون، إلخ)
                     const isPsali =
                       fullscreenLyrics.title &&
                       (fullscreenLyrics.title.includes("ابصالية") ||
@@ -1064,11 +1133,9 @@ export default function PreparatoryPage() {
                     let isEvenRow = false;
                     if (colorReferenceNumber !== null) {
                       if (isPsali) {
-                        // منطق الإبصالية: الربع 1 و 2 (فردي)، الربع 3 و 4 (زوجي)
                         isEvenRow =
                           Math.floor((colorReferenceNumber - 1) / 2) % 2 === 1;
                       } else {
-                        // المنطق العادي: فردي وزوجي
                         isEvenRow = colorReferenceNumber % 2 === 0;
                       }
                     }
@@ -1154,34 +1221,38 @@ export default function PreparatoryPage() {
                     <div className="mt-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
                       <div className="bg-gradient-to-r from-purple-900/30 to-yellow-900/30 border border-purple-500/30 rounded-xl p-4 mb-6">
                         <h3 className="text-2xl font-bold text-center text-yellow-400 flex items-center justify-center gap-3">
-                          <span>🎵</span> هزات اللحن <span>🎵</span>
+                          <span className="text-3xl">🎵</span>
+                          هزات اللحن
+                          <span className="text-3xl">🎵</span>
                         </h3>
                       </div>
-                      <div className="flex flex-col items-stretch">
-                        {fullscreenLyrics.hazzatImage && (
-                          <img
-                            src={fullscreenLyrics.hazzatImage}
-                            alt="هزات اللحن 1"
-                            className="block w-full"
-                            draggable={false}
-                          />
-                        )}
-                        {fullscreenLyrics.hazzatImage2 && (
-                          <img
-                            src={fullscreenLyrics.hazzatImage2}
-                            alt="هزات اللحن 2"
-                            className="block w-full"
-                            draggable={false}
-                          />
-                        )}
-                        {fullscreenLyrics.hazzatImage3 && (
-                          <img
-                            src={fullscreenLyrics.hazzatImage3}
-                            alt="هزات اللحن 3"
-                            className="block w-full"
-                            draggable={false}
-                          />
-                        )}
+                      <div className="w-full overflow-hidden">
+                        <div className="flex flex-col items-stretch m-0 p-0 leading-none text-[0]">
+                          {fullscreenLyrics.hazzatImage && (
+                            <img
+                              src={fullscreenLyrics.hazzatImage}
+                              alt="هزات اللحن - الصورة الأولى"
+                              className="block w-full h-auto object-contain m-0 p-0 select-none pointer-events-none align-top -mt-px first:mt-0"
+                              draggable={false}
+                            />
+                          )}
+                          {fullscreenLyrics.hazzatImage2 && (
+                            <img
+                              src={fullscreenLyrics.hazzatImage2}
+                              alt="هزات اللحن - الصورة الثانية"
+                              className="block w-full h-auto object-contain m-0 p-0 select-none pointer-events-none align-top -mt-px first:mt-0"
+                              draggable={false}
+                            />
+                          )}
+                          {fullscreenLyrics.hazzatImage3 && (
+                            <img
+                              src={fullscreenLyrics.hazzatImage3}
+                              alt="هزات اللحن - الصورة الثالثة"
+                              className="block w-full h-auto object-contain m-0 p-0 select-none pointer-events-none align-top -mt-px first:mt-0"
+                              draggable={false}
+                            />
+                          )}
+                        </div>
                       </div>
                     </div>
                   )}
