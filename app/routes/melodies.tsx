@@ -1528,7 +1528,6 @@ export default function MelodiesPage() {
                         src={v.url}
                         title={v.title}
                         startTime={videoTime[v.id] || 0}
-                        currentTime={videoTime[v.id]}
                         onTimeUpdate={(time) =>
                           setVideoTime((prev) => ({ ...prev, [v.id]: time }))
                         }

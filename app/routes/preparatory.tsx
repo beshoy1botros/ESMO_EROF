@@ -476,7 +476,6 @@ export default function PreparatoryPage() {
                           src={video.url}
                           title={video.title}
                           startTime={videoTime[video.id] || 0}
-                          currentTime={videoTime[video.id]}
                           onTimeUpdate={(time) =>
                             setVideoTime((prev) => ({
                               ...prev,

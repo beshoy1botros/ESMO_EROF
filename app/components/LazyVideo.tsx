@@ -43,10 +43,14 @@ export default function LazyVideo({
   const [loadProgress, setLoadProgress] = useState(0);
   const [showInitialLoader, setShowInitialLoader] = useState(true);
 
-  // التزامن مع فيديو آخر
+  // التزامن مع فيديو آخر - فقط للفيديو النشط
   useEffect(() => {
     const video = videoRef.current;
     if (!video || currentTime === undefined || currentTime === null) return;
+    
+    // فقط حاول التزامن إذا كان الفيديو نشطاً أو إذا كان هناك طلب صريح للتزامن
+    // هذا يمنع الفيديوهات في القائمة من محاولة التزامن تلقائياً
+    if (!isActive) return;
 
     // انتظر حتى يكون الفيديو جاهزاً للـ seeking
     if (
@@ -55,7 +59,7 @@ export default function LazyVideo({
     ) {
       video.currentTime = currentTime;
     }
-  }, [currentTime]);
+  }, [currentTime, isActive]);
 
   // ── مسح الـ stall timer عند الـ unmount أو تغيير الـ src ──────────────
   const clearStallTimer = useCallback(() => {
