@@ -6,6 +6,7 @@ import LazyVideo from "../components/LazyVideo";
 import "../styles/melodies.css";
 import "../styles/mobile-improvements.css";
 import { prewarmVideos } from "../utils/swClient";
+import { SUPABASE_VIDEO_BASE_URL } from "../utils/supabase";
 import {
   preparatoryData,
   type PreparatoryItem,
@@ -55,8 +56,7 @@ const STAGES = [
   { key: "اعدادي وثانوي", label: "إعدادي وثانوي" },
 ];
 
-const BASE_URL =
-  "https://res.cloudinary.com/dzetwllwd/video/upload/v1771085727";
+const BASE_URL = SUPABASE_VIDEO_BASE_URL;
 
 // --- بيانات الفيديوهات ---
 const preparatoryVideos: StageVideos = {

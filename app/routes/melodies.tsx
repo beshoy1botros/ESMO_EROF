@@ -7,6 +7,7 @@ import { getLevelsForStage, isValidStageLevel } from "../utils/stageUtils";
 import "../styles/melodies.css";
 import "../styles/mobile-improvements.css";
 import { prewarmVideos } from "../utils/swClient";
+import { SUPABASE_VIDEO_BASE_URL } from "../utils/supabase";
 
 // --- 1. التعريفات البرمجية (Types & Enums) ---
 
@@ -1080,8 +1081,7 @@ const videoData: VideoData = {
 // updateVideos.ts
 
 // --- 1. الإعدادات والروابط الأساسية ---
-const BASE_URL =
-  "https://res.cloudinary.com/dzetwllwd/video/upload/v1771085727";
+const BASE_URL = SUPABASE_VIDEO_BASE_URL;
 
 const stageVideoUrls = {
   [StageKey.Kindergarten]: {

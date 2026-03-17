@@ -22,7 +22,7 @@ export const links: Route.LinksFunction = () => [
     href: "https://fonts.gstatic.com",
     crossOrigin: "anonymous",
   },
-  { rel: "preconnect", href: "https://res.cloudinary.com" },
+  { rel: "preconnect", href: "https://xbsgkyikyxwakmszmnsg.supabase.co" },
   {
     rel: "stylesheet",
     href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Noto+Sans+Coptic&display=swap",
