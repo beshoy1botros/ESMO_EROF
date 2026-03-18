@@ -34,10 +34,7 @@ export default function LazyVideo({
 
   const [hasError, setHasError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [isWaiting, setIsWaiting] = useState(false);
   const [stallMessage, setStallMessage] = useState<string | null>(null);
-  const [loadProgress, setLoadProgress] = useState(0);
-  const [showInitialLoader, setShowInitialLoader] = useState(true);
 
   // ── مسح الـ stall timer عند الـ unmount أو تغيير الـ src ──────────────
   const clearStallTimer = useCallback(() => {
@@ -93,10 +90,7 @@ export default function LazyVideo({
     stallRetryCount.current = 0;
     setHasError(false);
     setIsLoading(true);
-    setIsWaiting(false);
     setStallMessage(null);
-    setLoadProgress(0);
-    setShowInitialLoader(true);
     clearStallTimer();
   }, [src, clearStallTimer]);
 
@@ -124,9 +118,6 @@ export default function LazyVideo({
       clearStallTimer();
       stallRetryCount.current = 0;
       setStallMessage(null);
-      setIsLoading(false);
-      setIsWaiting(false);
-      setShowInitialLoader(false);
       onPlayChange?.(true);
     };
 
@@ -140,33 +131,16 @@ export default function LazyVideo({
       onTimeUpdate?.(video.currentTime);
     };
 
-    const handleWaiting = () => setIsWaiting(true);
-
     const handleCanPlay = () => {
       clearStallTimer();
       stallRetryCount.current = 0;
       setStallMessage(null);
-      setIsLoading(false);
-      setIsWaiting(false);
-      // زيادة حجم الـ buffer
-      if (video.buffered.length > 0) {
-        const bufferedEnd = video.buffered.end(video.buffered.length - 1);
-        // إذا كان الـ buffer أقل من 10 ثوانٍ، انتظر حتى يمتلئ
-        if (bufferedEnd - video.currentTime < 10) {
-          setIsWaiting(true);
-        }
-      }
     };
-
-    const handleLoadStart = () => setIsLoading(true);
-
-    const handleLoadedData = () => setIsLoading(false);
 
     const handleStalled = () => {
       // "stalled" = المتصفح طلب بيانات لكنها ما جاتش
       // نبدأ محاولة استرداد تلقائي فقط لو الفيديو كان شغّال
       if (!video.paused) {
-        setIsWaiting(true);
         attemptStalledRecovery();
       }
     };
@@ -174,42 +148,23 @@ export default function LazyVideo({
     const handleError = () => {
       // بدلاً من إظهار خطأ، استمر في المحاولة
       setStallMessage("جاري التحقق من الاتصال بالإنترنت...");
-      setIsWaiting(true);
       attemptStalledRecovery();
-    };
-
-    const handleProgress = () => {
-      if (video.buffered.length > 0) {
-        const bufferedEnd = video.buffered.end(video.buffered.length - 1);
-        const duration = video.duration;
-        if (duration > 0) {
-          setLoadProgress((bufferedEnd / duration) * 100);
-        }
-      }
     };
 
     video.addEventListener("play", handlePlay);
     video.addEventListener("pause", handlePause);
     video.addEventListener("timeupdate", handleTimeUpdate);
-    video.addEventListener("waiting", handleWaiting);
     video.addEventListener("canplay", handleCanPlay);
     video.addEventListener("stalled", handleStalled);
-    video.addEventListener("loadstart", handleLoadStart);
-    video.addEventListener("loadeddata", handleLoadedData);
     video.addEventListener("error", handleError);
-    video.addEventListener("progress", handleProgress);
 
     return () => {
       video.removeEventListener("play", handlePlay);
       video.removeEventListener("pause", handlePause);
       video.removeEventListener("timeupdate", handleTimeUpdate);
-      video.removeEventListener("waiting", handleWaiting);
       video.removeEventListener("canplay", handleCanPlay);
       video.removeEventListener("stalled", handleStalled);
-      video.removeEventListener("loadstart", handleLoadStart);
-      video.removeEventListener("loadeddata", handleLoadedData);
       video.removeEventListener("error", handleError);
-      video.removeEventListener("progress", handleProgress);
 
       clearStallTimer();
       // إزالة الفيديو من قائمة الفيديوهات النشطة
@@ -237,8 +192,6 @@ export default function LazyVideo({
     setHasError(false);
     setIsLoading(true);
     setStallMessage(null);
-    setLoadProgress(0);
-    setShowInitialLoader(true);
 
     const sep = src.includes("?") ? "&" : "?";
     const newSrc = `${src}${sep}retry=${Date.now()}`;
@@ -253,18 +206,15 @@ export default function LazyVideo({
 
   return (
     <div className="relative w-full h-full group">
-      {/* Poster Background مع تأثير التمويه أثناء التحميل */}
+      {/* Poster Background - removed loading overlay */}
       <div
-        className={`absolute inset-0 bg-cover bg-center transition-all duration-700 ${
-          isLoading ? "blur-sm scale-105" : "blur-0 scale-100"
-        }`}
+        className="absolute inset-0 bg-cover bg-center transition-all duration-700 blur-0 scale-100"
         style={{
           backgroundImage: poster ? `url(${poster})` : "none",
           backgroundColor: poster ? "transparent" : "#1a1a2e",
         }}
       >
-        {/* طبقة تظليل لتحسين وضوح الفيديو */}
-        {!isLoading && <div className="absolute inset-0 bg-black/20" />}
+        <div className="absolute inset-0 bg-black/20" />
       </div>
 
       <video
@@ -276,28 +226,16 @@ export default function LazyVideo({
         playsInline
         crossOrigin="anonymous"
         disablePictureInPicture={false}
-        aria-label={title}
+        aria-label={`${title}${isLoading ? " (جارٍ التحميل)" : ""}${stallMessage ? " - " + stallMessage : ""}`}
         title={title}
         onError={() => {
           // بدلاً من إظهار خطأ، استمر في المحاولة
           setStallMessage("جاري التحقق من الاتصال بالإنترنت...");
-          setIsWaiting(true);
           setIsLoading(true);
           attemptStalledRecovery();
         }}
         onLoadedData={() => {
           setIsLoading(false);
-          setShowInitialLoader(false);
-        }}
-        onProgress={(e) => {
-          const video = e.currentTarget;
-          if (video.buffered.length > 0) {
-            const bufferedEnd = video.buffered.end(video.buffered.length - 1);
-            const duration = video.duration;
-            if (duration > 0) {
-              setLoadProgress((bufferedEnd / duration) * 100);
-            }
-          }
         }}
       >
         <source src={src} type="video/mp4" />
@@ -305,76 +243,6 @@ export default function LazyVideo({
           متصفحك لا يدعم تشغيل الفيديو. الرجاء تحديث المتصفح.
         </p>
       </video>
-
-      {/* Loading Overlay - تصميم احترافي */}
-      {(isLoading || isWaiting) && !hasError && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/50 backdrop-blur-sm transition-all duration-300">
-          {/* الـ Spinner الاحترافي */}
-          <div className="relative">
-            {/* الدائرة الخارجية */}
-            <div className="w-20 h-20 border-[3px] border-white/10 rounded-full" />
-            {/* الدائرة المتحركة */}
-            <div className="absolute top-0 left-0 w-20 h-20">
-              <div
-                className="w-full h-full border-[3px] border-transparent border-t-blue-400 border-r-blue-400 rounded-full animate-spin"
-                style={{ animationDuration: "1s" }}
-              />
-            </div>
-            {/* الدائرة الداخلية المتأخرة */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12">
-              <div
-                className="w-full h-full border-[2px] border-transparent border-t-cyan-400 border-r-cyan-400 rounded-full animate-spin"
-                style={{
-                  animationDuration: "0.8s",
-                  animationDirection: "reverse",
-                }}
-              />
-            </div>
-            {/* مركز الدائرة */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-blue-400 rounded-full animate-pulse shadow-lg shadow-blue-400/50" />
-          </div>
-
-          {/* شريط التقدم */}
-          <div className="mt-6 w-48 h-1.5 bg-white/10 rounded-full overflow-hidden backdrop-blur-sm">
-            <div
-              className="h-full bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-400 rounded-full transition-all duration-300 ease-out"
-              style={{
-                width: `${loadProgress}%`,
-                boxShadow: "0 0 10px rgba(96, 165, 250, 0.5)",
-              }}
-            />
-          </div>
-
-          {/* رسالة الحالة */}
-          {(isWaiting || stallMessage) && (
-            <div className="mt-4 flex flex-col items-center gap-2">
-              <p className="text-sm text-white/90 font-medium bg-black/40 px-4 py-2 rounded-full border border-white/10 backdrop-blur-sm shadow-lg animate-pulse">
-                {stallMessage ?? "جاري التحميل..."}
-              </p>
-              {/* نقاط التحميل */}
-              <div className="flex gap-1">
-                {[0, 1, 2].map((i) => (
-                  <div
-                    key={i}
-                    className="w-2 h-2 bg-blue-400 rounded-full animate-bounce"
-                    style={{
-                      animationDelay: `${i * 0.15}s`,
-                      opacity: 0.7,
-                    }}
-                  />
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* نص التحميل الأولي */}
-          {isLoading && !isWaiting && !stallMessage && (
-            <p className="mt-4 text-sm text-white/70 font-light animate-pulse">
-              جاري تحميل الفيديو...
-            </p>
-          )}
-        </div>
-      )}
 
       {/* Error Overlay - تصميم محسّن */}
       {hasError && (

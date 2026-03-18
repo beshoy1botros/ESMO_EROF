@@ -34,7 +34,7 @@ for (const stageKey of Object.keys(stageVideoUrls) as Array<
           video.url = "";
         }
       });
-    }
+    },
   );
 }
 
@@ -83,7 +83,8 @@ export default function MelodiesPage() {
   const [showCoptic, setShowCoptic] = useState(true);
 
   // ====== خاصية التحكم في حجم الخط ======
-  const [fontSize, setFontSize] = useState(16);
+  // يبدأ بحجم أصغر، ويمكن تصغيره حتى 10px (بدلاً من 14px سابقاً)
+  const [fontSize, setFontSize] = useState(12);
 
   // ====== خاصية التحكم في صور الهزات ======
   const [showHazzat, setShowHazzat] = useState(false);
@@ -152,20 +153,20 @@ export default function MelodiesPage() {
         setVideos(getVideos(stage as StageKey, newLevel));
       } else setVideos([]);
     },
-    [stage]
+    [stage],
   );
 
   // ====== Memoized computed values ======
   const visibleColumns = useMemo(
     () => [showCopticArabic, showArabic, showCoptic].filter(Boolean).length,
-    [showCopticArabic, showArabic, showCoptic]
+    [showCopticArabic, showArabic, showCoptic],
   );
 
   const disabledColumns = useMemo(() => 3 - visibleColumns, [visibleColumns]);
 
   const maxFontSize = useMemo(
     () => 20 + disabledColumns * 2,
-    [disabledColumns]
+    [disabledColumns],
   );
 
   const increaseFontSize = useCallback(() => {
@@ -173,7 +174,7 @@ export default function MelodiesPage() {
   }, [maxFontSize]);
 
   const decreaseFontSize = useCallback(() => {
-    setFontSize((prev) => Math.max(prev - 1, 14));
+    setFontSize((prev) => Math.max(prev - 1, 10));
   }, []);
 
   // ====== دوال تحريك الفيديو ======
@@ -259,7 +260,8 @@ export default function MelodiesPage() {
   };
 
   useEffect(() => {
-    setFontSize((prev) => Math.min(prev, maxFontSize));
+    // حافظ على حجم الخط داخل النطاق المسموح به
+    setFontSize((prev) => Math.min(Math.max(prev, 10), maxFontSize));
   }, [maxFontSize]);
 
   const hazzatImagesCount = fullscreenLyrics
@@ -610,7 +612,7 @@ export default function MelodiesPage() {
                         <button
                           onClick={() => {
                             const btn = document.getElementById(
-                              "landscape-toggle-button"
+                              "landscape-toggle-button",
                             ) as HTMLButtonElement | null;
                             if (btn) {
                               btn.click();
@@ -841,10 +843,10 @@ export default function MelodiesPage() {
 
                 {(() => {
                   const coptic = (fullscreenLyrics.copticcoptic || "").split(
-                    /\n\s*\n/
+                    /\n\s*\n/,
                   );
                   const copticAr = (fullscreenLyrics.copticArabic || "").split(
-                    /\n\s*\n/
+                    /\n\s*\n/,
                   );
                   const arabic = (
                     fullscreenLyrics.arabicTranslation || ""
@@ -852,7 +854,7 @@ export default function MelodiesPage() {
                   const maxParts = Math.max(
                     coptic.length,
                     copticAr.length,
-                    arabic.length
+                    arabic.length,
                   );
 
                   const getNumberFromTitle = (title: string) => {
@@ -933,9 +935,12 @@ export default function MelodiesPage() {
                         ? null
                         : currentQuarter;
 
+                    // استخدم آخر رقم معروف لتلوين الصفوف حتى لو لم نعرض رقم الربع (مثل حالات (اف ايراناف))
                     const colorReferenceNumber = isSectionHeader
                       ? getNumberFromTitle(arabic[i] || "")
-                      : quarterNumber;
+                      : isAfEranav
+                        ? currentQuarter || 1
+                        : quarterNumber;
 
                     const isPsali =
                       fullscreenLyrics.title &&
@@ -952,12 +957,9 @@ export default function MelodiesPage() {
                       }
                     }
 
-                    const quarterColorClass =
-                      colorReferenceNumber === null
-                        ? ""
-                        : isEvenRow
-                          ? "lyrics-row-even"
-                          : "lyrics-row-odd";
+                    const quarterColorClass = isEvenRow
+                      ? "lyrics-row-even"
+                      : "lyrics-row-odd";
 
                     return (
                       <div
@@ -973,11 +975,13 @@ export default function MelodiesPage() {
                           }
                         }
                       >
-                        {quarterNumber !== null && (
+                        {(quarterNumber !== null || isAfEranav) && (
                           <div className="lyrics-quarter">
-                            <div className="lyrics-quarter-badge">
-                              {quarterNumber}
-                            </div>
+                            {quarterNumber !== null && (
+                              <div className="lyrics-quarter-badge">
+                                {quarterNumber}
+                              </div>
+                            )}
                           </div>
                         )}
 
