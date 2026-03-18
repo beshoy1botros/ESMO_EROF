@@ -15,13 +15,6 @@ const navLinks = [
   { to: "/preparatory", label: "تمهيدي", icon: FaGraduationCap },
 ];
 
-const NAV_DELAY_CLASSES = [
-  "nav-item-delay-0",
-  "nav-item-delay-1",
-  "nav-item-delay-2",
-  "nav-item-delay-3",
-];
-
 export default function Header() {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -86,7 +79,7 @@ export default function Header() {
                 space-y-1.5
               "
               aria-label={isMenuOpen ? "إغلاق القائمة" : "فتح القائمة"}
-              aria-expanded={isMenuOpen ? "true" : "false"}
+              aria-expanded={isMenuOpen}
               aria-controls="mobile-nav"
             >
               <span
