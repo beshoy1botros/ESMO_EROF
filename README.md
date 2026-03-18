@@ -57,10 +57,10 @@
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-org/esmo-erof.git
+git clone https://github.com/beshoy1botros/ESMO_EROF
 
 # Navigate to project directory
-cd esmo-erof
+cd ESMO_EROF
 
 # Install dependencies
 npm install
@@ -88,7 +88,7 @@ The application will be available at [http://localhost:5173](http://localhost:51
 ## 📁 Project Structure
 
 ```
-esmo-erof/
+ESMO_EROF/
 ├── app/
 │   ├── components/          # React components
 │   │   ├── AppInstaller.tsx
@@ -216,10 +216,10 @@ for insert to anon using (true) with check (true);
 
 ```bash
 # Build the Docker image
-docker build -t esmo-erof .
+docker build -t ESMO_EROF
 
 # Run the container
-docker run -p 3000:3000 esmo-erof
+docker run -p 3000:3000 ESMO_EROF
 ```
 
 ### Manual Build
