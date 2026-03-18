@@ -116,7 +116,7 @@ export default function Header() {
                 text-center tracking-wide
               "
               >
-                ✦ Cmou ; Erof ;✦
+                # Cmou ; Erof ;#
               </h1>
             </Link>
 
