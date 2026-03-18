@@ -1,76 +1,182 @@
-# ⲥⲙⲟⲩ ⲉⲣⲟϥ - تطبيق الألحان القبطية
+# Coptic Hymns
 
-تطبيق ويب تفاعلي لتعليم الألحان القبطية وطقس اللحن للمراحل التعليمية المختلفة.
+> An interactive web application for learning Coptic Orthodox hymns and liturgical chants.
 
-## ✨ المميزات
+[![React](https://img.shields.io/badge/React-19.1-blue)](https://react.dev)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue)](https://www.typescriptlang.org)
+[![Vite](https://img.shields.io/badge/Vite-6.3-blue)](https://vitejs.dev)
+[![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
 
-- 🎵 **الألحان القبطية**: مجموعة شاملة من الألحان لجميع المراحل التعليمية
-- 📖 **طقس اللحن**: شرح مفصل لطقوس الألحان القبطية
-- 🎓 **التمهيدي**: محتوى تعليمي خاص للمراحل التمهيدية
-- 📱 **متجاوب**: يعمل على جميع الأجهزة (هواتف، أجهزة لوحية، كمبيوتر)
-- 🎨 **تصميم حديث**: واجهة مستخدم جميلة وسهلة الاستخدام
-- 🚀 **أداء عالي**: بناء على React Router v7 و TypeScript
+<div align="center">
 
-## 🚀 التغييرات والتحسينات الأخيرة
+![Coptic Hymns](public/photos/icon-512.png)
 
-### ⚡ تحسينات الأداء
-- **Lazy Loading للفيديوهات**: تحميل الفيديوهات فقط عند الحاجة لتوفير البيانات والذاكرة
-- **تقسيم الكود**: تحميل أجزاء التطبيق بشكل منفصل لسرعة أكبر
-- **ضغط الملفات**: تقليل أحجام الملفات مع الحفاظ على الجودة
-- **إزالة الثغرات الأمنية**: تم حل جميع المشاكل الأمنية (34 ثغرة)
+**Learn and explore Coptic Orthodox hymns with ease**
 
-### 📱 العمل بدون إنترنت
-- تم أرشفة كود `serviceWorker.ts` لعدم استخدامه حاليًا وتفادي التعقيد. الملف موجود في `__backup__/2026-02-17/app/utils/`. يمكن إعادته لاحقًا إن دعت الحاجة.
+[🌐 Live Demo](https://esmo-erof.vercel.app) • [📖 Documentation](#getting-started) • [🐛 Report Bug](issues)
 
-### 🎯 تحسينات تجربة المستخدم
-- **تحميل تدريجي**: مؤشرات تحميل جميلة ومعلومات واضحة
-- **معالجة الأخطاء**: رسائل خطأ مفيدة مع إمكانية إعادة المحاولة
-- **تحسين الكود**: إصلاح مشاكل TypeScript وتحسين الأداء
+</div>
 
-### 🔧 إصلاحات تقنية
-- **اختبارات**: تهيئة Vitest وReact Testing Library مع بيئة `jsdom` وملف إعداد `app/test/setupTests.ts`.
-- **سير العمل مع React Router أثناء الاختبار**: تعطيل `reactRouter()` فقط أثناء Vitest لتفادي حقن preamble داخل بيئة الاختبار.
-- **تنظيف**: نقل الملفات اليتيمة إلى مجلد النسخ الاحتياطي `__backup__/2026-02-17/` (مثل: `OptimizedImage.tsx`, أنماط محسّنة قديمة, `serviceWorker.ts`).
-- **تشخيصات IDE**: إضافة `app/test/global.d.ts` وربط أنواع Vitest/Jest-DOM واستبعاد مجلد `__backup__` من `tsconfig.json`.
+---
 
-### 🎥 تحسين تجربة الفيديو
-- **معالجة فشل التحميل**: عند تعذر تحميل الفيديو البعيد، يظهر تراكب ودّي يُبلغ بالفشل مع رابط لفتح المصدر في تبويب جديد. هذا يخفّض ضجيج الأخطاء الناتجة عن الشبكات أو القيود في المعاينة.
+## ✨ Features
 
-## Getting Started
+### Core Functionality
+- 📚 **Comprehensive Hymn Collection** — Extensive library of Coptic hymns organized by educational stages
+- 🎓 **Preparatory Program** — Special educational content for preliminary learning stages
+- 📖 **Liturgical Guide** — Detailed explanations of Coptic Orthodox liturgical rituals
+- 🎵 **Video Tutorials** — Watch and learn hymns with video demonstrations
+- 🔍 **Search & Browse** — Easy navigation through hymn categories
+
+### Technical Features
+- ⚡ **High Performance** — Built on React Router v7 with TypeScript
+- 📱 **Progressive Web App (PWA)** — Installable on mobile devices, works offline
+- 🎨 **Modern UI/UX** — Beautiful, responsive interface with smooth animations
+- 🌍 **RTL Support** — Full Arabic language support with right-to-left layout
+- 🌙 **Dark Mode** — Automatic theme switching based on system preferences
+
+### Performance Optimizations
+- Lazy loading for videos and heavy content
+- Intelligent code splitting
+- Service Worker caching for offline access
+- Image optimization
+- Production minification with Terser
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+| Requirement | Version |
+|-------------|---------|
+| Node.js | 18+ |
+| npm | 9+ |
 
 ### Installation
 
-Install the dependencies:
-
 ```bash
+# Clone the repository
+git clone https://github.com/your-org/esmo-erof.git
+
+# Navigate to project directory
+cd esmo-erof
+
+# Install dependencies
 npm install
-```
 
-### Development
-
-Start the development server with HMR:
-
-```bash
+# Start development server
 npm run dev
 ```
 
-Your application will be available at `http://localhost:5173`.
+The application will be available at [http://localhost:5173](http://localhost:5173)
 
-إذا ظهرت أخطاء تحميل فيديوهات خارجية في المعاينة (مثل `net::ERR_ABORTED`) فهي مرتبطة بالشبكة/البيئة، وليست خطأً وظيفيًا في التطبيق. واجهة العرض ستظهر رسالة ودية بدل الكسر.
+### Available Scripts
 
-## Building for Production
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start development server with HMR |
+| `npm run build` | Build for production |
+| `npm run start` | Start production server |
+| `npm run typecheck` | Run TypeScript type checking |
+| `npm run test` | Run tests |
+| `npm run test:watch` | Run tests in watch mode |
+| `npm run test:ui` | Run tests with UI |
 
-## Centralized Analytics (Supabase)
+---
 
-Set these environment variables on Vercel:
-- SUPABASE_URL
-- SUPABASE_SERVICE_ROLE_KEY
-- MGMT_SECRET (a random long string used by management UI when calling /api/events)
+## 📁 Project Structure
 
-Run the SQL below in Supabase SQL Editor to create the table and policies.
+```
+esmo-erof/
+├── app/
+│   ├── components/          # React components
+│   │   ├── AppInstaller.tsx
+│   │   ├── Footer.tsx
+│   │   ├── Header.tsx
+│   │   └── LazyVideo.tsx
+│   ├── routes/             # Route components
+│   │   ├── home.tsx
+│   │   ├── melodies.tsx
+│   │   ├── about.tsx
+│   │   └── preparatory.tsx
+│   ├── styles/             # CSS stylesheets
+│   ├── utils/             # Utility functions
+│   ├── data/              # Static data
+│   ├── root.tsx           # Root component
+│   └── routes.ts          # Route definitions
+├── public/
+│   ├── photos/            # Images and icons
+│   ├── videos/            # Video files
+│   ├── fonts/             # Custom fonts
+│   ├── scripts/          # Client-side scripts
+│   ├── sw.js              # Service Worker
+│   └── manifest.json      # PWA manifest
+├── scripts/               # Build scripts
+├── package.json
+├── vite.config.ts
+└── tsconfig.json
+```
+
+---
+
+## 🛠️ Technology Stack
+
+| Category | Technology |
+|----------|------------|
+| Framework | [React](https://react.dev) 19.1 |
+| Routing | [React Router](https://reactrouter.com) v7 |
+| Language | [TypeScript](https://www.typescriptlang.org) 5.9 |
+| Build Tool | [Vite](https://vitejs.dev) 6.3 |
+| Styling | [Tailwind CSS](https://tailwindcss.com) 4.1 |
+| Animation | [Framer Motion](https://www.framer.com/motion/) 12 |
+| Testing | [Vitest](https://vitest.dev) + [React Testing Library](https://testing-library.com) |
+| Analytics | [Supabase](https://supabase.com) |
+| Deployment | [Vercel](https://vercel.com) |
+
+---
+
+## 📱 PWA Configuration
+
+The application supports installation as a standalone app on mobile devices.
+
+### Installation
+
+**iOS (Safari):**
+1. Open the website in Safari
+2. Tap the Share button
+3. Select "Add to Home Screen"
+
+**Android (Chrome):**
+1. Open the website in Chrome
+2. Tap the menu (⋮)
+3. Select "Add to Home Screen"
+
+### Offline Support
+
+The Service Worker (`public/sw.js`) provides:
+- Static asset caching
+- Video caching for offline playback
+- Background sync capabilities
+
+---
+
+## 🔧 Environment Variables
+
+For production deployment with analytics:
+
+```env
+SUPABASE_URL=your_supabase_url
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+MGMT_SECRET=your_management_secret
+```
+
+### Supabase Setup
+
+Run the following SQL in the Supabase SQL Editor:
 
 ```sql
--- 1) Table
+-- Create events table
 create table if not exists public.events (
   id uuid primary key,
   timestamp bigint not null,
@@ -89,76 +195,95 @@ create table if not exists public.events (
   watchedSeconds numeric
 );
 
--- Helpful indexes
+-- Create indexes
 create index if not exists idx_events_timestamp on public.events (timestamp desc);
 create index if not exists idx_events_device on public.events (deviceId);
 create index if not exists idx_events_session on public.events (sessionId);
 
--- 2) RLS
+-- Enable RLS
 alter table public.events enable row level security;
 
--- Insert allowed for anon (optional). If you prefer to route inserts via server only, skip this policy.
+-- Allow anonymous inserts
 create policy if not exists events_insert_anon on public.events
 for insert to anon using (true) with check (true);
-
--- Deny select to anon by not creating a select policy for anon
--- Select is allowed only via Service Role key from the server (api/events).
 ```
-
-## Management UI protection
-Set MGMT_SECRET in Vercel env. The dashboard fetches `/api/events` with header `x-mgmt-secret: MGMT_SECRET`.
-
-
-Create a production build:
-
-```bash
-npm run build
-```
-
-## Deployment
-
-### Docker Deployment
-
-To build and run using Docker:
-
-```bash
-docker build -t my-app .
-
-# Run the container
-docker run -p 3000:3000 my-app
-```
-
-The containerized application can be deployed to any platform that supports Docker, including:
-
-- AWS ECS
-- Google Cloud Run
-- Azure Container Apps
-- Digital Ocean App Platform
-- Fly.io
-- Railway
-
-### DIY Deployment
-
-If you're familiar with deploying Node applications, the built-in app server is production-ready.
-
-Make sure to deploy the output of `npm run build`
-
-```
-├── package.json
-├── package-lock.json (or pnpm-lock.yaml, or bun.lockb)
-├── build/
-│   ├── client/    # Static assets
-│   └── server/    # Server-side code
-```
-
-## Styling
-
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever CSS framework you prefer.
 
 ---
 
-Built with ❤️ using React Router.
+## 🐳 Deployment
 
-## 📁 ملاحظات حول النسخ الاحتياطي
-- تم نقل الملفات غير المستخدمة حاليًا إلى: `__backup__/2026-02-17/` دون حذف نهائي، بما يتيح الرجوع بسهولة.
-- في حال الرغبة بإعادة أي ملف، أعِده إلى مساره الأصلي ثم عدّل الواردات إن لزم.
+### Docker
+
+```bash
+# Build the Docker image
+docker build -t esmo-erof .
+
+# Run the container
+docker run -p 3000:3000 esmo-erof
+```
+
+### Manual Build
+
+```bash
+# Build for production
+npm run build
+
+# The output will be in the build/ directory
+# - build/client/    # Static assets
+# - build/server/   # Server-side code
+
+# Start the production server
+npm run start
+```
+
+### Supported Platforms
+
+- ✅ Vercel
+- ✅ Docker
+- ✅ AWS ECS
+- ✅ Google Cloud Run
+- ✅ Azure Container Apps
+- ✅ Digital Ocean App Platform
+- ✅ Fly.io
+- ✅ Railway
+
+---
+
+## 🧪 Testing
+
+The project uses Vitest with React Testing Library for testing.
+
+```bash
+# Run all tests
+npm run test
+
+# Run tests in watch mode
+npm run test:watch
+
+# Run tests with UI
+npm run test:ui
+```
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## 🙏 Acknowledgments
+
+- **Coptic Orthodox Church** — For preserving this rich heritage
+- **Karaz (Crisis) Festival** — For the inspiration and educational content
+- **Eparchy of Eastern & 10th of Ramadan** — For supporting this project
+
+---
+
+<div align="center">
+
+Made with ❤️ for the Coptic Orthodox Community
+
+*"Tell it out among the nations: The Lord reigns!"* — Psalm 96:10
+
+</div>
