@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useMemo } from "react";
+import { useEffect, useRef, useState, useMemo, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
@@ -303,10 +303,11 @@ export default function PreparatoryPage() {
     }
   }, [selectedStage]);
 
-  const handleStageSelect = (stageKey: string) => {
+  // ====== Memoized handlers for performance ======
+  const handleStageSelect = useCallback((stageKey: string) => {
     setSelectedStage(stageKey);
     setViewMode("videos");
-  };
+  }, []);
 
   const stageKey = useMemo(() => {
     if (!selectedStage) return null;
@@ -323,11 +324,13 @@ export default function PreparatoryPage() {
     return [];
   }, [viewMode, stageKey]);
 
-  const visibleColumns = [showCopticArabic, showArabic, showCoptic].filter(
-    Boolean
-  ).length;
+  // ====== Memoized computed values ======
+  const visibleColumns = useMemo(
+    () => [showCopticArabic, showArabic, showCoptic].filter(Boolean).length,
+    [showCopticArabic, showArabic, showCoptic]
+  );
 
-  const disabledColumns = 3 - visibleColumns;
+  const disabledColumns = useMemo(() => 3 - visibleColumns, [visibleColumns]);
   const maxFontSize = 20 + disabledColumns * 2;
 
   // ====== دوال تحريك الفيديو ======
@@ -1234,6 +1237,8 @@ export default function PreparatoryPage() {
                               alt="هزات اللحن - الصورة الأولى"
                               className="block w-full h-auto object-contain m-0 p-0 select-none pointer-events-none align-top -mt-px first:mt-0"
                               draggable={false}
+                              loading="lazy"
+                              decoding="async"
                             />
                           )}
                           {fullscreenLyrics.hazzatImage2 && (
@@ -1242,6 +1247,8 @@ export default function PreparatoryPage() {
                               alt="هزات اللحن - الصورة الثانية"
                               className="block w-full h-auto object-contain m-0 p-0 select-none pointer-events-none align-top -mt-px first:mt-0"
                               draggable={false}
+                              loading="lazy"
+                              decoding="async"
                             />
                           )}
                           {fullscreenLyrics.hazzatImage3 && (
@@ -1250,6 +1257,8 @@ export default function PreparatoryPage() {
                               alt="هزات اللحن - الصورة الثالثة"
                               className="block w-full h-auto object-contain m-0 p-0 select-none pointer-events-none align-top -mt-px first:mt-0"
                               draggable={false}
+                              loading="lazy"
+                              decoding="async"
                             />
                           )}
                         </div>

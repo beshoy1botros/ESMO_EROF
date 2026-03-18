@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
@@ -1350,7 +1350,8 @@ export default function MelodiesPage() {
 
   const levels = stage ? getLevelsForStage(stage as string) : [];
 
-  const handleStageChange = (newStage: StageKey) => {
+  // ====== Memoized handlers for performance ======
+  const handleStageChange = useCallback((newStage: StageKey) => {
     setStage(newStage);
     setLevel("");
     setVideos([]);
@@ -1360,29 +1361,35 @@ export default function MelodiesPage() {
       setVideos(weddingContent);
       setLevel("الأول");
     }
-  };
+  }, []);
 
-  const handleLevelChange = (newLevel: string) => {
+  const handleLevelChange = useCallback((newLevel: string) => {
     setLevel(newLevel);
     if (stage && newLevel && isValidStageLevel(stage, newLevel)) {
       setVideos(getVideos(stage as StageKey, newLevel));
     } else setVideos([]);
-  };
+  }, [stage]);
 
-  const visibleColumns = [showCopticArabic, showArabic, showCoptic].filter(
-    Boolean
-  ).length;
+  // ====== Memoized computed values ======
+  const visibleColumns = useMemo(
+    () => [showCopticArabic, showArabic, showCoptic].filter(Boolean).length,
+    [showCopticArabic, showArabic, showCoptic]
+  );
 
-  const disabledColumns = 3 - visibleColumns;
-  const maxFontSize = 20 + disabledColumns * 2;
+  const disabledColumns = useMemo(() => 3 - visibleColumns, [visibleColumns]);
 
-  const increaseFontSize = () => {
+  const maxFontSize = useMemo(
+    () => 20 + disabledColumns * 2,
+    [disabledColumns]
+  );
+
+  const increaseFontSize = useCallback(() => {
     setFontSize((prev) => Math.min(prev + 1, maxFontSize));
-  };
+  }, [maxFontSize]);
 
-  const decreaseFontSize = () => {
+  const decreaseFontSize = useCallback(() => {
     setFontSize((prev) => Math.max(prev - 1, 14));
-  };
+  }, []);
 
   // ====== دوال تحريك الفيديو ======
   const handleDragStart = (e: React.MouseEvent | React.TouchEvent) => {
@@ -2273,6 +2280,8 @@ export default function MelodiesPage() {
                             alt="هزات اللحن - الصورة الأولى"
                             className="block w-full h-auto object-contain m-0 p-0 select-none pointer-events-none align-top -mt-px first:mt-0"
                             draggable={false}
+                            loading="lazy"
+                            decoding="async"
                           />
                         )}
                         {fullscreenLyrics.hazzatImage2 && (
@@ -2281,6 +2290,8 @@ export default function MelodiesPage() {
                             alt="هزات اللحن - الصورة الثانية"
                             className="block w-full h-auto object-contain m-0 p-0 select-none pointer-events-none align-top -mt-px first:mt-0"
                             draggable={false}
+                            loading="lazy"
+                            decoding="async"
                           />
                         )}
                         {fullscreenLyrics.hazzatImage3 && (
@@ -2289,6 +2300,8 @@ export default function MelodiesPage() {
                             alt="هزات اللحن - الصورة الثالثة"
                             className="block w-full h-auto object-contain m-0 p-0 select-none pointer-events-none align-top -mt-px first:mt-0"
                             draggable={false}
+                            loading="lazy"
+                            decoding="async"
                           />
                         )}
                         {fullscreenLyrics.hazzatImage4 && (
@@ -2297,6 +2310,8 @@ export default function MelodiesPage() {
                             alt="هزات اللحن - الصورة الرابعة"
                             className="block w-full h-auto object-contain m-0 p-0 select-none pointer-events-none align-top -mt-px first:mt-0"
                             draggable={false}
+                            loading="lazy"
+                            decoding="async"
                           />
                         )}
                         {fullscreenLyrics.hazzatImage5 && (
@@ -2305,6 +2320,8 @@ export default function MelodiesPage() {
                             alt="هزات اللحن - الصورة الخامسة"
                             className="block w-full h-auto object-contain m-0 p-0 select-none pointer-events-none align-top -mt-px first:mt-0"
                             draggable={false}
+                            loading="lazy"
+                            decoding="async"
                           />
                         )}
                         {fullscreenLyrics.hazzatImage6 && (
@@ -2313,6 +2330,8 @@ export default function MelodiesPage() {
                             alt="هزات اللحن - الصورة السادسة"
                             className="block w-full h-auto object-contain m-0 p-0 select-none pointer-events-none align-top -mt-px first:mt-0"
                             draggable={false}
+                            loading="lazy"
+                            decoding="async"
                           />
                         )}
                         {fullscreenLyrics.hazzatImage7 && (
@@ -2321,6 +2340,8 @@ export default function MelodiesPage() {
                             alt="هزات اللحن - الصورة السابعة"
                             className="block w-full h-auto object-contain m-0 p-0 select-none pointer-events-none align-top -mt-px first:mt-0"
                             draggable={false}
+                            loading="lazy"
+                            decoding="async"
                           />
                         )}
                         {fullscreenLyrics.hazzatImage8 && (
@@ -2329,6 +2350,8 @@ export default function MelodiesPage() {
                             alt="هزات اللحن - الصورة الثامنة"
                             className="block w-full h-auto object-contain m-0 p-0 select-none pointer-events-none align-top -mt-px first:mt-0"
                             draggable={false}
+                            loading="lazy"
+                            decoding="async"
                           />
                         )}
                         {fullscreenLyrics.hazzatImage9 && (
@@ -2337,6 +2360,8 @@ export default function MelodiesPage() {
                             alt="هزات اللحن - الصورة التاسعة"
                             className="block w-full h-auto object-contain m-0 p-0 select-none pointer-events-none align-top -mt-px first:mt-0"
                             draggable={false}
+                            loading="lazy"
+                            decoding="async"
                           />
                         )}
                         {fullscreenLyrics.hazzatImage10 && (
@@ -2345,6 +2370,8 @@ export default function MelodiesPage() {
                             alt="هزات اللحن - الصورة العاشرة"
                             className="block w-full h-auto object-contain m-0 p-0 select-none pointer-events-none align-top -mt-px first:mt-0"
                             draggable={false}
+                            loading="lazy"
+                            decoding="async"
                           />
                         )}
                       </div>
