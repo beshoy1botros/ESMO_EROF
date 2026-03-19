@@ -15,11 +15,36 @@ const navLinks = [
   { to: "/preparatory", label: "تمهيدي", icon: FaGraduationCap },
 ];
 
+interface FloatingDot {
+  width: string;
+  height: string;
+  top: string;
+  right: string;
+  opacity: number;
+  animation: string;
+  animationDelay: string;
+}
+
 export default function Header() {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [floatingDots, setFloatingDots] = useState<FloatingDot[]>([]);
   const menuRef = useRef<HTMLDivElement>(null);
+
+  // Generate random floating dots only on client to avoid hydration mismatch
+  useEffect(() => {
+    const dots: FloatingDot[] = [...Array(18)].map(() => ({
+      width: Math.random() * 2 + 1 + "px",
+      height: Math.random() * 2 + 1 + "px",
+      top: Math.random() * 100 + "%",
+      right: Math.random() * 100 + "%",
+      opacity: Math.random() * 0.4 + 0.1,
+      animation: `float-dot ${2 + Math.random() * 3}s ease-in-out infinite`,
+      animationDelay: Math.random() * 3 + "s",
+    }));
+    setFloatingDots(dots);
+  }, []);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -216,19 +241,11 @@ export default function Header() {
           className="absolute inset-0 overflow-hidden pointer-events-none"
           aria-hidden
         >
-          {[...Array(18)].map((_, i) => (
+          {floatingDots.map((dot, i) => (
             <div
               key={i}
               className="absolute rounded-full bg-blue-400"
-              style={{
-                width: Math.random() * 2 + 1 + "px",
-                height: Math.random() * 2 + 1 + "px",
-                top: Math.random() * 100 + "%",
-                right: Math.random() * 100 + "%",
-                opacity: Math.random() * 0.4 + 0.1,
-                animation: `float-dot ${2 + Math.random() * 3}s ease-in-out infinite`,
-                animationDelay: Math.random() * 3 + "s",
-              }}
+              style={dot}
             />
           ))}
           {/* توهج جانبي */}
