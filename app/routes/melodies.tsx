@@ -12,33 +12,36 @@ import { prewarmVideos } from "../utils/swClient";
 
 // --- مصفوفة البيانات (الألحان) - محدثة حسب المنهج 2026 ---
 
-// --- 2. منطق تحديث البيانات (The Loop) ---
-
-for (const stageKey of Object.keys(stageVideoUrls) as Array<
-  keyof typeof stageVideoUrls
->) {
-  const stageVideos = videoData[stageKey];
-  const stageUrls = stageVideoUrls[stageKey];
-
-  (Object.keys(stageUrls) as Array<keyof typeof stageUrls>).forEach(
-    (levelKey) => {
-      const urls = stageUrls[levelKey];
-      const levelVideos = stageVideos[levelKey];
-
-      if (!levelVideos) return;
-
-      levelVideos.forEach((video, index) => {
-        if (urls[index]) {
-          video.url = urls[index];
-        } else {
-          video.url = "";
-        }
-      });
-    },
-  );
-}
-
 // --- 3. الدوال المساعدة ---
+
+function getVideoUrl(
+  video: Video,
+  stage: StageKey,
+  level: string,
+): string | undefined {
+  const levelMap: Record<string, keyof LevelVideos> = {
+    الأول: "first",
+    الثاني: "second",
+    الموهوبين: "gifted",
+  };
+  const englishLevel = levelMap[level];
+  if (!englishLevel) return undefined;
+
+  const stageUrls = stageVideoUrls[stage];
+  if (!stageUrls || !(englishLevel in stageUrls)) return undefined;
+
+  const urls = stageUrls[englishLevel as keyof typeof stageUrls];
+  if (!urls) return undefined;
+
+  const stageVideos = videoData[stage];
+  if (!stageVideos) return undefined;
+
+  const levelVideos = stageVideos[englishLevel];
+  if (!levelVideos) return undefined;
+
+  const index = levelVideos.findIndex((v) => v.id === video.id);
+  return urls[index] || undefined;
+}
 
 function getVideos(stage: StageKey, levelLabel: string): Video[] {
   const levelMap: Record<string, keyof LevelVideos> = {
@@ -267,17 +270,19 @@ export default function MelodiesPage() {
   const hazzatImagesCount = fullscreenLyrics
     ? [
         fullscreenLyrics.hazzatImage,
-        fullscreenLyrics.hazzatImage2,
-        fullscreenLyrics.hazzatImage3,
+        fullscreenLyrics.hazzatImage٢,
+        fullscreenLyrics.hazzatImage٣,
       ].filter(Boolean).length
     : 0;
 
   useEffect(() => {
-    if (Array.isArray(videos) && videos.length > 0) {
-      const urls = videos.map((v) => v.url).filter(Boolean);
+    if (Array.isArray(videos) && videos.length > 0 && stage && level) {
+      const urls = videos
+        .map((v) => getVideoUrl(v, stage as StageKey, level))
+        .filter((url): url is string => Boolean(url));
       prewarmVideos(urls);
     }
-  }, [videos]);
+  }, [videos, stage, level]);
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-950 text-white font-sans">
@@ -350,9 +355,9 @@ export default function MelodiesPage() {
                   className="bg-gray-900 rounded-3xl overflow-hidden border border-white/5 shadow-2xl"
                 >
                   <div className="aspect-video bg-black relative">
-                    {v.url ? (
+                    {getVideoUrl(v, stage as StageKey, level) ? (
                       <LazyVideo
-                        src={v.url}
+                        src={getVideoUrl(v, stage as StageKey, level)!}
                         title={v.title}
                         startTime={videoTime[v.id] || 0}
                         onTimeUpdate={(time) =>
@@ -632,7 +637,7 @@ export default function MelodiesPage() {
               {/* نهاية حاوية الترس */}
 
               {/* زر تشغيل الفيديو المدمج */}
-              {fullscreenLyrics.url && (
+              {getVideoUrl(fullscreenLyrics, stage as StageKey, level) && (
                 <div className="flex items-center gap-1">
                   <button
                     onClick={() => setShowVideoInModal((prev) => !prev)}
@@ -679,166 +684,174 @@ export default function MelodiesPage() {
             <div className="flex-1 overflow-y-auto bg-gray-950 p-2 md:p-6 relative scroll-smooth">
               <div className="w-full max-w-7xl mx-auto">
                 <AnimatePresence mode="popLayout">
-                  {showVideoInModal && fullscreenLyrics?.url && (
-                    <motion.div
-                      layout
-                      initial={{ opacity: 0, scale: 0.5 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{
-                        opacity: 0,
-                        scale: 0.5,
-                        transition: { duration: 0.2 },
-                      }}
-                      transition={{
-                        type: "spring",
-                        damping: 30,
-                        stiffness: 150,
-                      }}
-                      className={`fixed z-[60] shadow-2xl ${
-                        isMinimized
-                          ? "w-16 h-16 rounded-full cursor-pointer overflow-hidden border-2 border-blue-500 hover:scale-110 transition-all duration-300"
-                          : "w-[70vw] max-w-[320px] md:max-w-[400px]"
-                      } ${
-                        isMinimized
-                          ? isVideoPlaying
-                            ? "animate-video-pulse-active"
-                            : "animate-video-pulse-paused"
-                          : ""
-                      }`}
-                      style={{
-                        left: videoPosition.x,
-                        top: videoPosition.y,
-                        transition: isDragging ? "none" : "all 0.3s ease",
-                        cursor: isDragging
-                          ? "grabbing"
-                          : isMinimized
-                            ? "pointer"
-                            : "grab",
-                      }}
-                      onMouseDown={handleDragStart}
-                      onMouseMove={handleDragMove}
-                      onMouseUp={handleDragEnd}
-                      onMouseLeave={handleDragEnd}
-                      onTouchStart={handleDragStart}
-                      onTouchMove={handleDragMove}
-                      onTouchEnd={handleDragEnd}
-                      onClick={handleExpandVideo}
-                      onTap={handleExpandVideo}
-                    >
-                      <div
-                        className={`relative rounded-2xl overflow-hidden border border-blue-500/30 bg-black shadow-[0_0_30px_rgba(0,0,0,0.5)] group ${
-                          isMinimized ? "aspect-square" : "aspect-video"
+                  {showVideoInModal &&
+                    getVideoUrl(fullscreenLyrics!, stage as StageKey, level) &&
+                    fullscreenLyrics && (
+                      <motion.div
+                        layout
+                        initial={{ opacity: 0, scale: 0.5 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{
+                          opacity: 0,
+                          scale: 0.5,
+                          transition: { duration: 0.2 },
+                        }}
+                        transition={{
+                          type: "spring",
+                          damping: 30,
+                          stiffness: 150,
+                        }}
+                        className={`fixed z-[60] shadow-2xl ${
+                          isMinimized
+                            ? "w-16 h-16 rounded-full cursor-pointer overflow-hidden border-2 border-blue-500 hover:scale-110 transition-all duration-300"
+                            : "w-[70vw] max-w-[320px] md:max-w-[400px]"
+                        } ${
+                          isMinimized
+                            ? isVideoPlaying
+                              ? "animate-video-pulse-active"
+                              : "animate-video-pulse-paused"
+                            : ""
                         }`}
+                        style={{
+                          left: videoPosition.x,
+                          top: videoPosition.y,
+                          transition: isDragging ? "none" : "all 0.3s ease",
+                          cursor: isDragging
+                            ? "grabbing"
+                            : isMinimized
+                              ? "pointer"
+                              : "grab",
+                        }}
+                        onMouseDown={handleDragStart}
+                        onMouseMove={handleDragMove}
+                        onMouseUp={handleDragEnd}
+                        onMouseLeave={handleDragEnd}
+                        onTouchStart={handleDragStart}
+                        onTouchMove={handleDragMove}
+                        onTouchEnd={handleDragEnd}
+                        onClick={handleExpandVideo}
+                        onTap={handleExpandVideo}
                       >
-                        {!isMinimized && (
-                          <div
-                            className={`absolute top-2 right-2 z-20 opacity-50 hover:opacity-80 transition-opacity cursor-move ${
-                              isDragging ? "opacity-80" : ""
-                            }`}
-                            title="اسحب لتحريك الفيديو"
-                          >
-                            <svg
-                              className="w-5 h-5 text-white/70"
-                              fill="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
-                            </svg>
-                          </div>
-                        )}
                         <div
-                          className={`w-full h-full ${
-                            isMinimized
-                              ? "absolute opacity-0 pointer-events-none"
-                              : "block"
+                          className={`relative rounded-2xl overflow-hidden border border-blue-500/30 bg-black shadow-[0_0_30px_rgba(0,0,0,0.5)] group ${
+                            isMinimized ? "aspect-square" : "aspect-video"
                           }`}
                         >
-                          <LazyVideo
-                            key={fullscreenLyrics.id}
-                            src={fullscreenLyrics.url}
-                            title={fullscreenLyrics.title}
-                            startTime={videoTime[fullscreenLyrics.id] || 0}
-                            onTimeUpdate={(time) =>
-                              setVideoTime((prev) => ({
-                                ...prev,
-                                [fullscreenLyrics.id]: time,
-                              }))
-                            }
-                            onPlayChange={setIsVideoPlaying}
-                          />
-                        </div>
-
-                        {!isMinimized ? (
-                          <>
-                            <div className="absolute top-2 left-2 flex gap-2 z-10">
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  setIsMinimized(true);
-                                }}
-                                className="w-10 h-10 md:w-8 md:h-8 rounded-full bg-blue-600/80 md:bg-blue-600/60 backdrop-blur-md flex items-center justify-center text-white border border-white/20 hover:bg-blue-600/80 transition-colors"
-                                title="تصغير"
+                          {!isMinimized && (
+                            <div
+                              className={`absolute top-2 right-2 z-20 opacity-50 hover:opacity-80 transition-opacity cursor-move ${
+                                isDragging ? "opacity-80" : ""
+                              }`}
+                              title="اسحب لتحريك الفيديو"
+                            >
+                              <svg
+                                className="w-5 h-5 text-white/70"
+                                fill="currentColor"
+                                viewBox="0 0 24 24"
                               >
-                                <svg
-                                  className="w-5 h-5 md:w-4 md:h-4"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  viewBox="0 0 24 24"
-                                >
-                                  <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
-                                  />
-                                </svg>
-                              </button>
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  setShowVideoInModal(false);
-                                }}
-                                className="w-10 h-10 md:w-8 md:h-8 rounded-full bg-red-600/80 md:bg-red-600/60 backdrop-blur-md flex items-center justify-center text-white border border-white/20 hover:bg-red-600/80 transition-colors"
-                                title="إغلاق"
-                              >
-                                <svg
-                                  className="w-5 h-5 md:w-4 md:h-4"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  viewBox="0 0 24 24"
-                                >
-                                  <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M6 18L18 6M6 6l12 12"
-                                  />
-                                </svg>
-                              </button>
+                                <path d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
+                              </svg>
                             </div>
-                          </>
-                        ) : (
+                          )}
                           <div
-                            className={`w-full h-full flex items-center justify-center transition-colors duration-300 ${
-                              isVideoPlaying
-                                ? "bg-blue-600/30"
-                                : "bg-gray-800/80 grayscale"
+                            className={`w-full h-full ${
+                              isMinimized
+                                ? "absolute opacity-0 pointer-events-none"
+                                : "block"
                             }`}
                           >
-                            <span
-                              className={`text-2xl transition-transform duration-300 ${
+                            <LazyVideo
+                              key={fullscreenLyrics.id}
+                              src={
+                                getVideoUrl(
+                                  fullscreenLyrics,
+                                  stage as StageKey,
+                                  level,
+                                )!
+                              }
+                              title={fullscreenLyrics.title}
+                              startTime={videoTime[fullscreenLyrics.id] || 0}
+                              onTimeUpdate={(time) =>
+                                setVideoTime((prev) => ({
+                                  ...prev,
+                                  [fullscreenLyrics.id]: time,
+                                }))
+                              }
+                              onPlayChange={setIsVideoPlaying}
+                            />
+                          </div>
+
+                          {!isMinimized ? (
+                            <>
+                              <div className="absolute top-2 left-2 flex gap-2 z-10">
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setIsMinimized(true);
+                                  }}
+                                  className="w-10 h-10 md:w-8 md:h-8 rounded-full bg-blue-600/80 md:bg-blue-600/60 backdrop-blur-md flex items-center justify-center text-white border border-white/20 hover:bg-blue-600/80 transition-colors"
+                                  title="تصغير"
+                                >
+                                  <svg
+                                    className="w-5 h-5 md:w-4 md:h-4"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth={2}
+                                      d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+                                    />
+                                  </svg>
+                                </button>
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setShowVideoInModal(false);
+                                  }}
+                                  className="w-10 h-10 md:w-8 md:h-8 rounded-full bg-red-600/80 md:bg-red-600/60 backdrop-blur-md flex items-center justify-center text-white border border-white/20 hover:bg-red-600/80 transition-colors"
+                                  title="إغلاق"
+                                >
+                                  <svg
+                                    className="w-5 h-5 md:w-4 md:h-4"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth={2}
+                                      d="M6 18L18 6M6 6l12 12"
+                                    />
+                                  </svg>
+                                </button>
+                              </div>
+                            </>
+                          ) : (
+                            <div
+                              className={`w-full h-full flex items-center justify-center transition-colors duration-300 ${
                                 isVideoPlaying
-                                  ? "scale-110"
-                                  : "scale-90 opacity-50"
+                                  ? "bg-blue-600/30"
+                                  : "bg-gray-800/80 grayscale"
                               }`}
                             >
-                              {isVideoPlaying ? "🎶" : "▶️"}
-                            </span>
-                          </div>
-                        )}
-                      </div>
-                    </motion.div>
-                  )}
+                              <span
+                                className={`text-2xl transition-transform duration-300 ${
+                                  isVideoPlaying
+                                    ? "scale-110"
+                                    : "scale-90 opacity-50"
+                                }`}
+                              >
+                                {isVideoPlaying ? "🎶" : "▶️"}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      </motion.div>
+                    )}
                 </AnimatePresence>
 
                 {(() => {
@@ -1073,9 +1086,9 @@ export default function MelodiesPage() {
                             decoding="async"
                           />
                         )}
-                        {fullscreenLyrics.hazzatImage2 && (
+                        {fullscreenLyrics.hazzatImage٢ && (
                           <img
-                            src={fullscreenLyrics.hazzatImage2}
+                            src={fullscreenLyrics.hazzatImage٢}
                             alt="هزات اللحن - الصورة الثانية"
                             className="block w-full h-auto object-contain m-0 p-0 select-none pointer-events-none align-top -mt-px first:mt-0"
                             draggable={false}
@@ -1083,9 +1096,9 @@ export default function MelodiesPage() {
                             decoding="async"
                           />
                         )}
-                        {fullscreenLyrics.hazzatImage3 && (
+                        {fullscreenLyrics.hazzatImage٣ && (
                           <img
-                            src={fullscreenLyrics.hazzatImage3}
+                            src={fullscreenLyrics.hazzatImage٣}
                             alt="هزات اللحن - الصورة الثالثة"
                             className="block w-full h-auto object-contain m-0 p-0 select-none pointer-events-none align-top -mt-px first:mt-0"
                             draggable={false}
@@ -1093,9 +1106,9 @@ export default function MelodiesPage() {
                             decoding="async"
                           />
                         )}
-                        {fullscreenLyrics.hazzatImage4 && (
+                        {fullscreenLyrics.hazzatImage٤ && (
                           <img
-                            src={fullscreenLyrics.hazzatImage4}
+                            src={fullscreenLyrics.hazzatImage٤}
                             alt="هزات اللحن - الصورة الرابعة"
                             className="block w-full h-auto object-contain m-0 p-0 select-none pointer-events-none align-top -mt-px first:mt-0"
                             draggable={false}
@@ -1103,9 +1116,9 @@ export default function MelodiesPage() {
                             decoding="async"
                           />
                         )}
-                        {fullscreenLyrics.hazzatImage5 && (
+                        {fullscreenLyrics.hazzatImage٥ && (
                           <img
-                            src={fullscreenLyrics.hazzatImage5}
+                            src={fullscreenLyrics.hazzatImage٥}
                             alt="هزات اللحن - الصورة الخامسة"
                             className="block w-full h-auto object-contain m-0 p-0 select-none pointer-events-none align-top -mt-px first:mt-0"
                             draggable={false}
@@ -1113,9 +1126,9 @@ export default function MelodiesPage() {
                             decoding="async"
                           />
                         )}
-                        {fullscreenLyrics.hazzatImage6 && (
+                        {fullscreenLyrics.hazzatImage٦ && (
                           <img
-                            src={fullscreenLyrics.hazzatImage6}
+                            src={fullscreenLyrics.hazzatImage٦}
                             alt="هزات اللحن - الصورة السادسة"
                             className="block w-full h-auto object-contain m-0 p-0 select-none pointer-events-none align-top -mt-px first:mt-0"
                             draggable={false}
@@ -1123,9 +1136,9 @@ export default function MelodiesPage() {
                             decoding="async"
                           />
                         )}
-                        {fullscreenLyrics.hazzatImage7 && (
+                        {fullscreenLyrics.hazzatImage٧ && (
                           <img
-                            src={fullscreenLyrics.hazzatImage7}
+                            src={fullscreenLyrics.hazzatImage٧}
                             alt="هزات اللحن - الصورة السابعة"
                             className="block w-full h-auto object-contain m-0 p-0 select-none pointer-events-none align-top -mt-px first:mt-0"
                             draggable={false}
@@ -1133,9 +1146,9 @@ export default function MelodiesPage() {
                             decoding="async"
                           />
                         )}
-                        {fullscreenLyrics.hazzatImage8 && (
+                        {fullscreenLyrics.hazzatImage٨ && (
                           <img
-                            src={fullscreenLyrics.hazzatImage8}
+                            src={fullscreenLyrics.hazzatImage٨}
                             alt="هزات اللحن - الصورة الثامنة"
                             className="block w-full h-auto object-contain m-0 p-0 select-none pointer-events-none align-top -mt-px first:mt-0"
                             draggable={false}
@@ -1143,9 +1156,9 @@ export default function MelodiesPage() {
                             decoding="async"
                           />
                         )}
-                        {fullscreenLyrics.hazzatImage9 && (
+                        {fullscreenLyrics.hazzatImage٩ && (
                           <img
-                            src={fullscreenLyrics.hazzatImage9}
+                            src={fullscreenLyrics.hazzatImage٩}
                             alt="هزات اللحن - الصورة التاسعة"
                             className="block w-full h-auto object-contain m-0 p-0 select-none pointer-events-none align-top -mt-px first:mt-0"
                             draggable={false}
@@ -1153,9 +1166,9 @@ export default function MelodiesPage() {
                             decoding="async"
                           />
                         )}
-                        {fullscreenLyrics.hazzatImage10 && (
+                        {fullscreenLyrics.hazzatImage١٠ && (
                           <img
-                            src={fullscreenLyrics.hazzatImage10}
+                            src={fullscreenLyrics.hazzatImage١٠}
                             alt="هزات اللحن - الصورة العاشرة"
                             className="block w-full h-auto object-contain m-0 p-0 select-none pointer-events-none align-top -mt-px first:mt-0"
                             draggable={false}
