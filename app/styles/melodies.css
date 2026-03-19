@@ -295,4 +295,5 @@
   unicode-bidi: bidi-override;
   font-weight: 500;
   letter-spacing: 0.05em;
+  flex: 1.25;
 }
