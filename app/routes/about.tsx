@@ -154,8 +154,10 @@ export default function About() {
               stage &&
               (stage === STAGE_KEYS.WEDDING_OF_CANA || level) ? (
                 <div className="col-span-full text-center p-8 bg-gray-800 rounded-xl border border-blue-500/30">
-                  <div className="text-5xl mb-4">📖</div>
-                  <p className="text-gray-400">لا يوجد محتوى لهذه المرحلة</p>
+                  <div className="text-5xl mb-4">⏳</div>
+                  <p className="text-gray-400">
+                    طقس هذا المستوى لم يُضاف بعد، سيتم عرضه قريباً.
+                  </p>
                 </div>
               ) : (
                 content.map((item, index) => (
@@ -169,16 +171,24 @@ export default function About() {
                       </h3>
 
                       <button
-                        onClick={() => toggleRite(index)}
+                        onClick={
+                          item.content ? () => toggleRite(index) : undefined
+                        }
+                        disabled={!item.content}
+                        aria-disabled={!item.content}
                         className={`w-full py-3 rounded-xl font-bold transition-all mb-4 ${
-                          expandedIndices[index]
-                            ? "bg-blue-600 text-white shadow-lg"
-                            : "bg-blue-600/10 text-blue-400 border border-blue-600/30 hover:bg-blue-600/20"
+                          item.content
+                            ? expandedIndices[index]
+                              ? "bg-blue-600 text-white shadow-lg"
+                              : "bg-blue-600/10 text-blue-400 border border-blue-600/30 hover:bg-blue-600/20"
+                            : "bg-blue-600/10 text-blue-400 border border-blue-600/30 opacity-60 cursor-not-allowed"
                         }`}
                       >
-                        {expandedIndices[index]
-                          ? "إخفاء طقس اللحن"
-                          : "عرض طقس اللحن"}
+                        {item.content
+                          ? expandedIndices[index]
+                            ? "إخفاء طقس اللحن"
+                            : "عرض طقس اللحن"
+                          : "⏳ قريباً"}
                       </button>
 
                       {expandedIndices[index] && item.content && (
