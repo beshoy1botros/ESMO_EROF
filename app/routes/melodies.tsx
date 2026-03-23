@@ -10,6 +10,20 @@ import "../styles/melodies.css";
 import "../styles/mobile-improvements.css";
 import { prewarmVideos } from "../utils/swClient";
 
+// دالة لاستخراج روابط الفيديو لمرحلة محددة
+function getStageVideoUrls(stageKey: StageKey): string[] {
+  const urls: string[] = [];
+  const stageUrls = stageVideoUrls[stageKey];
+  if (stageUrls) {
+    Object.values(stageUrls).forEach((levelUrls) => {
+      if (Array.isArray(levelUrls)) {
+        urls.push(...levelUrls.filter(Boolean));
+      }
+    });
+  }
+  return urls;
+}
+
 // --- مصفوفة البيانات (الألحان) - محدثة حسب المنهج 2026 ---
 
 // --- 3. الدوال المساعدة ---
@@ -107,6 +121,18 @@ export default function MelodiesPage() {
 
   // ====== Ref للإغلاق الذكي عند النقر خارج القائمة ======
   const controlsPanelRef = useRef<HTMLDivElement>(null);
+
+  // ====== useEffect لتحميل الفيديوهات مسبقاً عند اختيار مرحلة ======
+  useEffect(() => {
+    if (stage) {
+      const stageKey = stage as StageKey;
+      const urls = getStageVideoUrls(stageKey);
+      if (urls.length > 0) {
+        console.log("[Melodies] تخزين فيديوهات المرحلة:", stage, urls.length, "فيديو");
+        prewarmVideos(urls);
+      }
+    }
+  }, [stage]);
 
   // ====== useEffect للإغلاق الذكي (Click Outside to Close) ======
   useEffect(() => {

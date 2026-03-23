@@ -160,7 +160,7 @@ export const stageVideoUrls = {
     ],
     gifted: [
       `${BASE_URL}/High-3-1_hyh2jz.mp4`,
-      `${BASE_URL}/High-3-2_dduwis`,
+      `${BASE_URL}/High-3-2_dduwis.mp4`,
       `${BASE_URL}/High-3-3_nojczl.mp4`,
     ],
   },

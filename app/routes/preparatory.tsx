@@ -295,11 +295,20 @@ export default function PreparatoryPage() {
     ].filter(Boolean).length;
   }, [fullscreenLyrics]);
 
+  // --- دالة لاستخراج روابط الفيديو لمرحلة محددة ---
+  const getStageVideoUrls = (stageKey: string): string[] => {
+    const videos = preparatoryVideos[stageKey] || [];
+    return videos.map((v) => v.url).filter(Boolean);
+  };
+
+  // تخزين مسبق للفيديوهات عند اختيار مرحلة
   useEffect(() => {
     if (selectedStage) {
-      const list = preparatoryVideos[selectedStage] || [];
-      const urls = list.map((v) => v.url).filter(Boolean);
-      prewarmVideos(urls);
+      const urls = getStageVideoUrls(selectedStage);
+      if (urls.length > 0) {
+        console.log("[Preparatory] تخزين فيديوهات المرحلة:", selectedStage, urls.length, "فيديو");
+        prewarmVideos(urls);
+      }
     }
   }, [selectedStage]);
 

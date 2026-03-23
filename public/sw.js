@@ -1,16 +1,31 @@
 // Service Worker - استراتيجية محسّنة للعمل بدون نت (مع تخزين الفيديوهات)
-const CACHE_VERSION = "esmo-erof-v3";
+const CACHE_VERSION = "esmo-erof-v4";
 const STATIC_CACHE = `${CACHE_VERSION}-static`;
 const FONT_CACHE = `${CACHE_VERSION}-fonts`;
 const IMAGE_CACHE = `${CACHE_VERSION}-images`;
 const VIDEO_CACHE = `${CACHE_VERSION}-videos`;
+
+// ✅ قائمة الكاشات الصالحة - تُستخدم لحذف القديمة بشكل صحيح
+const VALID_CACHES = [STATIC_CACHE, FONT_CACHE, IMAGE_CACHE, VIDEO_CACHE];
+
+// الصفحات المطلوبة للتخزين المسبق (Pre-caching)
+const PAGES_TO_PRECACHE = [
+  "/",
+  "/melodies",
+  "/about",
+  "/preparatory",
+  "/index.html",
+  "/melodies/index.html",
+  "/about/index.html",
+  "/preparatory/index.html",
+];
 
 // الملفات الأساسية - يجب تخزينها عند التثبيت
 const CRITICAL_ASSETS = ["/", "/index.html"];
 
 // Google Fonts URLs للتخزين المؤقت
 const GOOGLE_FONTS = [
-  "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Noto+Sans+Coptic&display=swap",
+  "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Coptic&family=Noto+Sans+Arabic:wght@400;700&display=swap",
 ];
 
 // أحجام التخزين المؤقت (بالبايت)
@@ -18,6 +33,14 @@ const MAX_VIDEO_CACHE_SIZE = 2 * 1024 * 1024 * 1024; // 2GB للفيديوهات
 const MAX_IMAGE_CACHE_SIZE = 100 * 1024 * 1024; // 100MB للصور
 const MAX_STATIC_CACHE_SIZE = 50 * 1024 * 1024; // 50MB للملفات الثابتة
 const MAX_FONT_CACHE_SIZE = 10 * 1024 * 1024; // 10MB للخطوط
+
+// ✅ تتبع أحجام الكاش في الذاكرة لتجنب إعادة الحساب المكلفة
+const cacheSizeTracker = {
+  [STATIC_CACHE]: 0,
+  [FONT_CACHE]: 0,
+  [IMAGE_CACHE]: 0,
+  [VIDEO_CACHE]: 0,
+};
 
 // تثبيت Service Worker
 self.addEventListener("install", (event) => {
@@ -47,7 +70,18 @@ self.addEventListener("install", (event) => {
       }),
     ]).then(() => {
       console.log("Service Worker: تم التثبيت بنجاح");
-      return self.skipWaiting();
+      return caches.open(STATIC_CACHE).then(async (cache) => {
+        for (const page of PAGES_TO_PRECACHE) {
+          try {
+            await cache.add(page);
+            console.log("Service Worker: تم تخزين:", page);
+          } catch (e) {
+            console.warn("Service Worker: فشل تخزين:", page, e);
+          }
+        }
+        console.log("Service Worker: اكتمل تخزين الصفحات");
+        return self.skipWaiting();
+      });
     })
   );
 });
@@ -62,13 +96,8 @@ self.addEventListener("activate", (event) => {
       .then((cacheNames) => {
         return Promise.all(
           cacheNames.map((cacheName) => {
-            // حذف التخزين المؤقت القديم
-            if (
-              !cacheName.includes(CACHE_VERSION) &&
-              cacheName !== FONT_CACHE &&
-              cacheName !== IMAGE_CACHE &&
-              cacheName !== VIDEO_CACHE
-            ) {
+            // ✅ إصلاح: احذف أي كاش غير موجود في القائمة الصالحة الحالية
+            if (!VALID_CACHES.includes(cacheName)) {
               console.log(
                 "Service Worker: حذف الذاكرة المؤقتة القديمة:",
                 cacheName
@@ -78,7 +107,9 @@ self.addEventListener("activate", (event) => {
           })
         );
       })
-      .then(() => {
+      .then(async () => {
+        // ✅ احسب الأحجام الحالية عند البدء باستخدام storage.estimate
+        await refreshCacheSizeEstimate();
         console.log("Service Worker: تم التفعيل بنجاح");
         return self.clients.claim();
       })
@@ -90,28 +121,15 @@ self.addEventListener("fetch", (event) => {
   const { request } = event;
   const url = new URL(request.url);
 
-  // تخطي الطلبات غير HTTP/HTTPS
-  if (!url.protocol.startsWith("http")) {
-    return;
-  }
+  if (!url.protocol.startsWith("http")) return;
+  if (url.pathname.includes("manifest.json")) return;
+  if (url.hostname.includes("api.countapi.xyz")) return;
 
-  // تخطي manifest.json لتجنب مشاكل الحقوق
-  if (url.pathname.includes("manifest.json")) {
-    return;
-  }
-
-  // تخطي طلبات API الخارجية (countapi)
-  if (url.hostname.includes("api.countapi.xyz")) {
-    return;
-  }
-
-  // معالجة الفيديوهات - خزّن عند التحميل
   if (isVideoRequest(request)) {
     event.respondWith(handleVideoRequest(request));
     return;
   }
 
-  // Google Fonts - استراتيجية خاصة
   if (
     url.hostname.includes("fonts.googleapis.com") ||
     url.hostname.includes("fonts.gstatic.com")
@@ -120,37 +138,30 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // الصور - خزّن عند التحميل
   if (isImageRequest(request)) {
     event.respondWith(handleImageRequest(request));
     return;
   }
 
-  // الملفات الثابتة (CSS, JS) - استراتيجية stale-while-revalidate
   if (isStaticAsset(request)) {
     event.respondWith(handleStaticRequest(request));
     return;
   }
 
-  // HTML pages و routes - استراتيجية Network First لضمان العمل بدون نت
   if (request.method === "GET" && isPageRequest(request)) {
     event.respondWith(handlePageRequest(request));
     return;
   }
 
-  // باقي الطلبات - حاول الإنترنت أولاً
   event.respondWith(handleGenericRequest(request));
 });
 
 // ============= معالجات الطلبات =============
 
-// معالجة صفحات HTML/routes
 async function handlePageRequest(request) {
   try {
-    // حاول من الإنترنت أولاً
     const response = await fetch(request);
     if (response.ok) {
-      // احفظ الصفحة للاستخدام بدون نت
       const cache = await caches.open(STATIC_CACHE);
       cache.put(request, response.clone());
       return response;
@@ -159,24 +170,21 @@ async function handlePageRequest(request) {
     console.warn("Service Worker: فشل جلب الصفحة من الإنترنت:", request.url);
   }
 
-  // إذا فشل الإنترنت، استخدم النسخة المخزنة
   const cachedResponse = await caches.match(request);
   if (cachedResponse) {
     console.log("Service Worker: خدمة الصفحة من الذاكرة المؤقتة:", request.url);
     return cachedResponse;
   }
 
-  // إذا لم نملك نسخة مخزنة، أرجع الصفحة الرئيسية كـ fallback
   const homeResponse = await caches.match("/");
   return homeResponse || new Response("الصفحة غير متاحة", { status: 503 });
 }
 
-// معالجة الفيديوهات مع دعم Range وتجنّب تخزين الاستجابات الجزئية
 async function handleVideoRequest(request) {
   const hasRange = request.headers && request.headers.get("range");
   const cache = await caches.open(VIDEO_CACHE);
 
-  // عند وجود Range: مرّر الطلب مباشرة للشبكة ولا تخزّنه
+  // عند وجود Range: مرّر الطلب مباشرة ولا تخزّن
   if (hasRange) {
     try {
       return await fetch(request);
@@ -186,12 +194,10 @@ async function handleVideoRequest(request) {
     }
   }
 
-  // ابحث في الكاش بطلب URL فقط حتى نتجنّب مشاكل رؤوس المطابقة
   const urlOnlyReq = new Request(request.url, { method: "GET" });
   const cachedResponse = await cache.match(urlOnlyReq);
 
   if (cachedResponse) {
-    // لا نستخدم استجابة جزئية 206، احذفها ثم واصل للشبكة
     if (
       cachedResponse.status === 206 ||
       cachedResponse.headers.get("content-range")
@@ -207,17 +213,18 @@ async function handleVideoRequest(request) {
     console.log("Service Worker: تحميل الفيديو من الإنترنت:", request.url);
     const response = await fetch(request);
 
-    // خزّن فقط الاستجابة الكاملة 200 بدون Content-Range
     if (
       response &&
       response.ok &&
       response.status === 200 &&
       !response.headers.get("content-range")
     ) {
-      const cacheSize = await getCacheSize(VIDEO_CACHE);
-      if (cacheSize < MAX_VIDEO_CACHE_SIZE) {
+      // ✅ استخدم storage.estimate بدلاً من حساب blob لكل ملف
+      const withinLimit = await isWithinCacheLimit(MAX_VIDEO_CACHE_SIZE);
+      if (withinLimit) {
         await cache.put(urlOnlyReq, response.clone());
         console.log("Service Worker: تم تخزين الفيديو:", request.url);
+        await refreshCacheSizeEstimate();
       } else {
         console.warn("Service Worker: ذاكرة الفيديو امتلأت:", request.url);
       }
@@ -230,30 +237,26 @@ async function handleVideoRequest(request) {
   }
 }
 
-// معالجة خطوط Google بكفاءة
 async function handleFontRequest(request) {
   const cache = await caches.open(FONT_CACHE);
   const cachedResponse = await cache.match(request);
 
   if (cachedResponse) {
-    // أرجع من الذاكرة وحاول التحديث في الخلفية
     fetch(request)
       .then((response) => {
-        if (response.ok) {
-          cache.put(request, response);
-        }
+        if (response.ok) cache.put(request, response);
       })
       .catch(() => {});
     return cachedResponse;
   }
 
-  // لم نجد في الذاكرة، حاول من الإنترنت
   try {
     const response = await fetch(request);
     if (response.ok) {
-      const cacheSize = await getCacheSize(FONT_CACHE);
-      if (cacheSize < MAX_FONT_CACHE_SIZE) {
+      const withinLimit = await isWithinCacheLimit(MAX_FONT_CACHE_SIZE);
+      if (withinLimit) {
         cache.put(request, response.clone());
+        await refreshCacheSizeEstimate();
       }
       return response;
     }
@@ -261,29 +264,24 @@ async function handleFontRequest(request) {
     console.warn("Service Worker: فشل تحميل الخط:", request.url);
   }
 
-  // في حالة الفشل، أرجع استجابة فارغة
   return new Response("", { status: 504 });
 }
 
-// معالجة الصور بكفاءة
 async function handleImageRequest(request) {
   const cache = await caches.open(IMAGE_CACHE);
   const cachedResponse = await cache.match(request);
 
-  if (cachedResponse) {
-    return cachedResponse;
-  }
+  if (cachedResponse) return cachedResponse;
 
   try {
     const response = await fetch(request);
-
     if (response.ok) {
-      const cacheSize = await getCacheSize(IMAGE_CACHE);
-      if (cacheSize < MAX_IMAGE_CACHE_SIZE) {
+      const withinLimit = await isWithinCacheLimit(MAX_IMAGE_CACHE_SIZE);
+      if (withinLimit) {
         cache.put(request, response.clone());
+        await refreshCacheSizeEstimate();
       }
     }
-
     return response;
   } catch (error) {
     console.warn("Service Worker: فشل تحميل الصورة:", request.url);
@@ -299,7 +297,6 @@ async function handleImageRequest(request) {
   }
 }
 
-// معالجة الملفات الثابتة (CSS, JS)
 async function handleStaticRequest(request) {
   const cache = await caches.open(STATIC_CACHE);
 
@@ -313,16 +310,12 @@ async function handleStaticRequest(request) {
     console.warn("Service Worker: فشل جلب ملف ثابت:", request.url);
   }
 
-  // استخدم النسخة المخزنة
   const cachedResponse = await cache.match(request);
-  if (cachedResponse) {
-    return cachedResponse;
-  }
+  if (cachedResponse) return cachedResponse;
 
   return new Response("ملف غير متاح", { status: 503 });
 }
 
-// معالجة الطلبات العامة
 async function handleGenericRequest(request) {
   try {
     return await fetch(request);
@@ -334,44 +327,22 @@ async function handleGenericRequest(request) {
 
 // ============= وظائف مساعدة =============
 
-// التحقق من نوع الطلب
 function isVideoRequest(request) {
-  return (
-    request.url.includes(".mp4") ||
-    request.url.includes(".webm") ||
-    request.url.includes(".ogg") ||
-    request.url.includes(".mov") ||
-    request.url.includes(".avi") ||
-    request.url.includes(".mkv")
-  );
+  return /\.(mp4|webm|ogg|mov|avi|mkv)(\?|$)/i.test(request.url);
 }
 
 function isImageRequest(request) {
-  return (
-    request.url.includes(".jpg") ||
-    request.url.includes(".jpeg") ||
-    request.url.includes(".png") ||
-    request.url.includes(".webp") ||
-    request.url.includes(".gif") ||
-    request.url.includes(".svg") ||
-    request.url.includes(".ico")
-  );
+  return /\.(jpg|jpeg|png|webp|gif|svg|ico)(\?|$)/i.test(request.url);
 }
 
 function isStaticAsset(request) {
   return (
-    request.url.includes(".css") ||
-    request.url.includes(".js") ||
-    request.url.includes(".woff") ||
-    request.url.includes(".woff2") ||
-    request.url.includes(".ttf") ||
-    request.url.includes(".eot") ||
+    /\.(css|js|woff|woff2|ttf|eot)(\?|$)/i.test(request.url) ||
     request.url.includes("/assets/")
   );
 }
 
 function isPageRequest(request) {
-  // تتحقق من أن الطلب هو HTML page وليس asset
   const url = new URL(request.url);
   return (
     request.headers.get("accept")?.includes("text/html") ||
@@ -383,7 +354,33 @@ function isPageRequest(request) {
   );
 }
 
-// حساب حجم الذاكرة المؤقتة بسرعة
+// ✅ استخدم storage.estimate() للتحقق من الحد بدلاً من حساب كل blob
+async function isWithinCacheLimit(maxBytes) {
+  try {
+    if (self.navigator?.storage?.estimate) {
+      const { usage, quota } = await self.navigator.storage.estimate();
+      const available = (quota || 0) - (usage || 0);
+      return available > maxBytes * 0.1; // تأكد من وجود 10% على الأقل
+    }
+    return true; // إذا لم تكن estimate متاحة، اسمح بالتخزين
+  } catch {
+    return true;
+  }
+}
+
+// ✅ تحديث تقدير الحجم الكلي بكفاءة عبر storage.estimate
+async function refreshCacheSizeEstimate() {
+  try {
+    if (self.navigator?.storage?.estimate) {
+      const { usage } = await self.navigator.storage.estimate();
+      cacheSizeTracker._totalEstimate = usage || 0;
+    }
+  } catch {
+    // تجاهل
+  }
+}
+
+// ✅ حساب حجم كاش معين (يُستخدم فقط عند الحاجة لعرض التفاصيل للمستخدم)
 async function getCacheSize(cacheName) {
   try {
     const cache = await caches.open(cacheName);
@@ -412,20 +409,19 @@ async function enforceCacheLimit(cacheName, maxBytes) {
     if (size <= maxBytes) return;
     const cache = await caches.open(cacheName);
     const keys = await cache.keys();
-    // احذف الأقدم أولاً حتى نصبح تحت الحد
     for (const key of keys) {
       await cache.delete(key);
       size = await getCacheSize(cacheName);
       if (size <= maxBytes) break;
     }
-  } catch (e) {
+  } catch {
     // no-op
   }
 }
 
-// حالة تسخين الفيديوهات: طابور متسلسل لتفادي الضغط على السيرفر
+// حالة تسخين الفيديوهات
 const PREWARM_STATE = {
-  queue: [], // قائمة عناوين الفيديو المطلوب تسخينها
+  queue: [],
   running: false,
 };
 
@@ -447,10 +443,9 @@ async function processPrewarmQueue() {
             await enforceCacheLimit(VIDEO_CACHE, MAX_VIDEO_CACHE_SIZE);
           }
         }
-      } catch (_) {
-        // تجاهل أخطاء الطلب الفردي وتابع
+      } catch {
+        // تجاهل أخطاء الطلب الفردي
       }
-      // مهلة قصيرة بين كل عنصر لتخفيف الحمل
       await new Promise((r) => setTimeout(r, 300));
     }
   } finally {
@@ -460,37 +455,33 @@ async function processPrewarmQueue() {
 
 // رسائل من التطبيق
 self.addEventListener("message", (event) => {
-  if (event.data && event.data.type === "SKIP_WAITING") {
+  if (event.data?.type === "SKIP_WAITING") {
     self.skipWaiting();
   }
 
-  if (event.data && event.data.type === "CLEAR_CACHES") {
+  if (event.data?.type === "CLEAR_CACHES") {
     clearAllCaches();
   }
 
-  if (event.data && event.data.type === "PREWARM_VIDEOS" && event.data.urls) {
+  if (event.data?.type === "PREWARM_VIDEOS" && event.data.urls) {
     const urls = Array.isArray(event.data.urls)
       ? event.data.urls.filter((u) => typeof u === "string")
       : [];
     if (urls.length) {
       event.waitUntil(
         (async () => {
-          try {
-            // أدخل العناوين في طابور التسخين بالترتيب، مع إزالة التكرارات البسيطة
-            for (const u of urls) {
-              if (!PREWARM_STATE.queue.includes(u)) {
-                PREWARM_STATE.queue.push(u);
-              }
+          for (const u of urls) {
+            if (!PREWARM_STATE.queue.includes(u)) {
+              PREWARM_STATE.queue.push(u);
             }
-            await processPrewarmQueue();
-          } catch (_) {}
+          }
+          await processPrewarmQueue();
         })()
       );
     }
   }
 
-  // حذف فيديو محدد من كاش الفيديوهات
-  if (event.data && event.data.type === "EVICT_VIDEO" && event.data.url) {
+  if (event.data?.type === "EVICT_VIDEO" && event.data.url) {
     const urlToEvict = event.data.url;
     event.waitUntil(
       (async () => {
@@ -502,7 +493,10 @@ self.addEventListener("message", (event) => {
             keys.map(async (req) => {
               try {
                 const rUrl = new URL(req.url);
-                if (rUrl.origin === target.origin && rUrl.pathname === target.pathname) {
+                if (
+                  rUrl.origin === target.origin &&
+                  rUrl.pathname === target.pathname
+                ) {
                   await cache.delete(req);
                 }
               } catch {}
@@ -513,7 +507,8 @@ self.addEventListener("message", (event) => {
     );
   }
 
-  if (event.data && event.data.type === "GET_CACHE_SIZE") {
+  if (event.data?.type === "GET_CACHE_SIZE") {
+    // ✅ احسب الأحجام بالتوازي وأرسلها عبر MessageChannel
     Promise.all([
       getCacheSize(STATIC_CACHE),
       getCacheSize(VIDEO_CACHE),
@@ -532,14 +527,12 @@ self.addEventListener("message", (event) => {
   }
 });
 
-// تنظيف جميع الذاكرات المؤقتة
 async function clearAllCaches() {
   const cacheNames = await caches.keys();
   await Promise.all(cacheNames.map((name) => caches.delete(name)));
   console.log("Service Worker: تم حذف جميع الذاكرات المؤقتة");
 }
 
-// تنسيق حجم الملف
 function formatBytes(bytes) {
   if (bytes === 0) return "0 B";
   const k = 1024;

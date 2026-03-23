@@ -25,7 +25,7 @@ export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://xbsgkyikyxwakmszmnsg.supabase.co" },
   {
     rel: "stylesheet",
-    href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Noto+Sans+Coptic&display=swap",
+    href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Coptic&family=Noto+Sans+Arabic:wght@400;700&display=swap",
   },
   {
     rel: "shortcut icon",
@@ -46,7 +46,6 @@ export const links: Route.LinksFunction = () => [
     rel: "manifest",
     href: "/manifest.json",
   },
-  // Android App Links
   { rel: "manifest", href: "/manifest-mobile.json" },
 ];
 
@@ -65,7 +64,6 @@ export function meta() {
       name: "apple-mobile-web-app-status-bar-style",
       content: "black-translucent",
     },
-    // ✏️ تغيير اسم الموقع إلى الإنجليزية
     { name: "apple-mobile-web-app-title", content: "Coptic Hymns" },
     {
       name: "application-name",
@@ -75,7 +73,6 @@ export function meta() {
     { name: "msapplication-tap-highlight", content: "no" },
     { name: "msapplication-TileColor", content: "#1e3a8a" },
     { name: "msapplication-TileImage", content: "/photos/icon-192.png" },
-    // Android App Links
     { name: "android-app-link", content: "https://esmo-erof.vercel.app" },
     {
       name: "description",
@@ -105,18 +102,16 @@ export function meta() {
     {
       name: "twitter:title",
       content:
-        "Coptic Hymns - ألحان مهرجان الكرازة لإيبارشية الشرقية والعاشر منرمضان",
+        "Coptic Hymns - ألحان مهرجان الكرازة لإيبارشية الشرقية والعاشر من رمضان",
     },
     {
       name: "twitter:description",
       content: "Learn Coptic Orthodox hymns with the best educational app.",
     },
     { name: "twitter:image", content: "/photos/icon-512.png" },
-    // iOS App Store (replace with actual app ID when available)
     { property: "al:ios:url", content: "https://esmo-erof.vercel.app" },
     { property: "al:ios:app_store_id", content: "" },
     { property: "al:ios:app_name", content: "Coptic Hymns" },
-    // Android (replace with actual package name when available)
     { property: "al:android:url", content: "https://esmo-erof.vercel.app" },
     { property: "al:android:package", content: "" },
     { property: "al:android:app_name", content: "Coptic Hymns" },
@@ -161,7 +156,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
-                // ✅ تسجيل الـ Service Worker (بدون اشتراك في إشعارات Push)
                 if ('serviceWorker' in navigator) {
                   window.addEventListener('load', function() {
                     navigator.serviceWorker.register('/sw.js')
@@ -169,8 +163,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
                       .catch(function(err) { console.log('Service Worker failed:', err); });
                   });
                 }
-                // ❌ تم إلغاء طلب إذن الإشعارات Push نهائياً
-                // تحميل مميزات الجوال
                 function loadMobileFeatures() {
                   var script = document.createElement('script');
                   script.src = '/scripts/mobile-features.js';
@@ -243,6 +235,8 @@ export default function App() {
     <div dir="rtl">
       <Outlet />
       <AppInstaller />
+      {/* التخزين يعمل تلقائياً في الخلفية عبر sw.js و offlineDB.ts */}
+
       <button
         id="landscape-toggle-button"
         onClick={toggleLandscape}
