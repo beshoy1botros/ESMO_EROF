@@ -153,7 +153,7 @@ export const stageVideoUrls = {
       `${BASE_URL}/High-1-4 Rxqx8v.mp4`,
     ],
     second: [
-      `${BASE_URL}/Middle-2-2 Bkrddm.mp4`,
+      `${BASE_URL}/Midde-2-2 Bkrddm.mp4`,
       `${BASE_URL}/High-2-2 Bgy0po.mp4`,
       `${BASE_URL}/High-2-3 Xa9ltr.mp4`,
       `${BASE_URL}/High-2-4 C1gsas.mp4`,
