@@ -136,8 +136,8 @@ export const stageVideoUrls = {
     ],
     second: [
       `${BASE_URL}/Middle-2-1 Wd3yvy.mp4`,
-      `${BASE_URL}/Middle-2-2 Bkrddm.mp4`,
-      `${BASE_URL}/Middle-2-3 Zvgag4.mp4`,
+      `${BASE_URL}/Midde-2-2 Bkrddm.mp4`,
+      `${BASE_URL}/Midde-2-3 Zvgag4.mp4`,
     ],
     gifted: [
       `${BASE_URL}/Middle-3-1 Xixkl3.mp4`,
