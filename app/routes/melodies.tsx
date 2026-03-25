@@ -942,7 +942,9 @@ export default function MelodiesPage() {
 
                   const hasAfEranav = afEranavRegex.test(allLyricsText);
 
-                  const disableQuarterNumbers = !hasAfEranav && maxParts <= 3;
+                  const isKhatamTasbeha = fullscreenLyrics.title && fullscreenLyrics.title.includes("ختام التسبحة السنوي (افنوتي ناي نان)");
+
+                  const disableQuarterNumbers = !hasAfEranav && maxParts <= 3 && !isKhatamTasbeha;
 
                   return Array.from({ length: maxParts }).map((_, i) => {
                     const arText = (arabic[i] || "").trim();
@@ -969,6 +971,13 @@ export default function MelodiesPage() {
                       }
                     }
 
+                    // For ختام التسبحة السنوي: skip first quarter, start numbering from second quarter as 1
+                    let displayQuarter: number | null = currentQuarter;
+                    if (isKhatamTasbeha && currentQuarter !== null && currentQuarter > 0) {
+                      // First quarter (1) should be hidden, subsequent quarters should be (n-1)
+                      displayQuarter = currentQuarter === 1 ? null : currentQuarter - 1;
+                    }
+
                     const quarterNumber =
                       disableQuarterNumbers || isSectionHeader || isAfEranav
                         ? null
@@ -979,7 +988,9 @@ export default function MelodiesPage() {
                       ? getNumberFromTitle(arabic[i] || "")
                       : isAfEranav
                         ? currentQuarter || 1
-                        : quarterNumber;
+                        : isKhatamTasbeha
+                          ? (displayQuarter !== null ? displayQuarter + 1 : quarterNumber)
+                          : quarterNumber;
 
                     const isPsali =
                       fullscreenLyrics.title &&
@@ -1014,11 +1025,11 @@ export default function MelodiesPage() {
                           }
                         }
                       >
-                        {(quarterNumber !== null || isAfEranav) && (
+                        {(displayQuarter !== null || isAfEranav) && (
                           <div className="lyrics-quarter">
-                            {quarterNumber !== null && (
+                            {displayQuarter !== null && (
                               <div className="lyrics-quarter-badge">
-                                {quarterNumber}
+                                {displayQuarter}
                               </div>
                             )}
                           </div>
