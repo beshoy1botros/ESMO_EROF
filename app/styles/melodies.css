@@ -297,3 +297,14 @@
   letter-spacing: 0.05em;
   flex: 1.25;
 }
+
+/* ✏️ ألوان الألحان بدون ترقيم (disableQuarterNumbers = true) */
+.lyrics-row-no-numbering .lyrics-col-coptic-arabic {
+  color: #ffffff !important;
+}
+.lyrics-row-no-numbering .lyrics-col-coptic {
+  color: #dd9a3c !important;
+}
+.lyrics-row-no-numbering .lyrics-col-arabic {
+  color: #ffffff !important;
+}

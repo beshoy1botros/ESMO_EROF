@@ -1169,7 +1169,7 @@ export default function PreparatoryPage() {
                         key={i}
                         className={`lyrics-row ${
                           isSectionHeader ? "lyrics-row-section" : ""
-                        } ${quarterColorClass}`}
+                        } ${quarterColorClass} ${disableQuarterNumbers ? "lyrics-row-no-numbering" : ""}`}
                         style={{ ["--grid-columns" as any]: visibleColumns }}
                       >
                         {quarterNumber !== null && (
