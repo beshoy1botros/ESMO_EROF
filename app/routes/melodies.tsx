@@ -1042,9 +1042,9 @@ export default function MelodiesPage() {
                           }
                         }
                       >
-                        {(displayQuarter !== null || isAfEranav) && (
+                        {(!!displayQuarter || isAfEranav) && (
                           <div className="lyrics-quarter">
-                            {displayQuarter !== null && !isAfEranav && (
+                            {!!displayQuarter && !isAfEranav && (
                               <div className="lyrics-quarter-badge">
                                 {displayQuarter}
                               </div>
