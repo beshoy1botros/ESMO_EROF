@@ -988,9 +988,16 @@ export default function MelodiesPage() {
                       currentQuarter !== null &&
                       currentQuarter > 0
                     ) {
-                      // First quarter (1) should be hidden, subsequent quarters should be (n-1)
                       displayQuarter =
                         currentQuarter === 1 ? null : currentQuarter - 1;
+                    }
+
+                    // إخفاء آخر ربع (16) من الليلويا التوزيع الكيهكي
+                    const isAlleluiaKiahk = fullscreenLyrics?.title?.includes(
+                      "الليلويا التوزيع الكيهكي",
+                    );
+                    if (isAlleluiaKiahk && displayQuarter === 16) {
+                      displayQuarter = null;
                     }
 
                     const quarterNumber =
