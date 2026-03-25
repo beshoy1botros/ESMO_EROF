@@ -128,7 +128,12 @@ export default function MelodiesPage() {
       const stageKey = stage as StageKey;
       const urls = getStageVideoUrls(stageKey);
       if (urls.length > 0) {
-        console.log("[Melodies] تخزين فيديوهات المرحلة:", stage, urls.length, "فيديو");
+        console.log(
+          "[Melodies] تخزين فيديوهات المرحلة:",
+          stage,
+          urls.length,
+          "فيديو",
+        );
         prewarmVideos(urls);
       }
     }
@@ -942,9 +947,14 @@ export default function MelodiesPage() {
 
                   const hasAfEranav = afEranavRegex.test(allLyricsText);
 
-                  const isKhatamTasbeha = fullscreenLyrics.title && fullscreenLyrics.title.includes("ختام التسبحة السنوي (افنوتي ناي نان)");
+                  const isKhatamTasbeha =
+                    fullscreenLyrics.title &&
+                    fullscreenLyrics.title.includes(
+                      "ختام التسبحة السنوي (افنوتي ناي نان)",
+                    );
 
-                  const disableQuarterNumbers = !hasAfEranav && maxParts <= 3 && !isKhatamTasbeha;
+                  const disableQuarterNumbers =
+                    !hasAfEranav && maxParts <= 3 && !isKhatamTasbeha;
 
                   return Array.from({ length: maxParts }).map((_, i) => {
                     const arText = (arabic[i] || "").trim();
@@ -973,9 +983,14 @@ export default function MelodiesPage() {
 
                     // For ختام التسبحة السنوي: skip first quarter, start numbering from second quarter as 1
                     let displayQuarter: number | null = currentQuarter;
-                    if (isKhatamTasbeha && currentQuarter !== null && currentQuarter > 0) {
+                    if (
+                      isKhatamTasbeha &&
+                      currentQuarter !== null &&
+                      currentQuarter > 0
+                    ) {
                       // First quarter (1) should be hidden, subsequent quarters should be (n-1)
-                      displayQuarter = currentQuarter === 1 ? null : currentQuarter - 1;
+                      displayQuarter =
+                        currentQuarter === 1 ? null : currentQuarter - 1;
                     }
 
                     const quarterNumber =
@@ -989,7 +1004,9 @@ export default function MelodiesPage() {
                       : isAfEranav
                         ? currentQuarter || 1
                         : isKhatamTasbeha
-                          ? (displayQuarter !== null ? displayQuarter + 1 : quarterNumber)
+                          ? displayQuarter !== null
+                            ? displayQuarter + 1
+                            : quarterNumber
                           : quarterNumber;
 
                     const isPsali =
@@ -1027,7 +1044,7 @@ export default function MelodiesPage() {
                       >
                         {(displayQuarter !== null || isAfEranav) && (
                           <div className="lyrics-quarter">
-                            {displayQuarter !== null && (
+                            {displayQuarter !== null && !isAfEranav && (
                               <div className="lyrics-quarter-badge">
                                 {displayQuarter}
                               </div>
