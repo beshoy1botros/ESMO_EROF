@@ -10,12 +10,9 @@ interface LazyVideoProps {
   onPlayChange?: (isPlaying: boolean) => void;
 }
 
-// قائمة بجميع الفيديوهات النشطة
+// قائمة بجميع الفيديوهات النشطة للتحكم في التشغيل الحصري
 const videoInstances: HTMLVideoElement[] = [];
 
-// عدد محاولات الاسترداد التلقائي قبل إظهار خطأ للمستخدم
-const MAX_STALL_RETRIES = 3;
-// الانتظار بين كل محاولة (ms) — يتضاعف مع كل محاولة (exponential backoff)
 const BASE_RETRY_DELAY = 2000;
 
 export default function LazyVideo({
@@ -27,16 +24,15 @@ export default function LazyVideo({
   onPlayChange,
 }: LazyVideoProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const sourceRef = useRef<HTMLSourceElement>(null); // مرجع مباشر للـ source لضمان تحديث الـ DOM
   const initialTimeSet = useRef(false);
   const stallRetryCount = useRef(0);
   const stallTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const lastCurrentTime = useRef(0);
 
-  const [hasError, setHasError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [stallMessage, setStallMessage] = useState<string | null>(null);
 
-  // ── مسح الـ stall timer عند الـ unmount أو تغيير الـ src ──────────────
+  // ── تنظيف المؤقتات ────────────────────────────────────────────────
   const clearStallTimer = useCallback(() => {
     if (stallTimer.current) {
       clearTimeout(stallTimer.current);
@@ -44,57 +40,56 @@ export default function LazyVideo({
     }
   }, []);
 
-  // ── محاولة استرداد تلقائي عند التوقف ────────────────────────────────
+  // ── استراتيجية التعافي التلقائي عند فشل التحميل ──────────────────────────
   const attemptStalledRecovery = useCallback(() => {
     const video = videoRef.current;
-    if (!video) return;
+    const source = sourceRef.current;
+    if (!video || !source) return;
 
-    // دايماً حاول استرداد الفيديو بدون حدود
-    const delay = BASE_RETRY_DELAY * Math.pow(2, stallRetryCount.current % 5); // 2s, 4s, 8s, 16s, 32s
+    // استخدام Exponential Backoff لزيادة وقت الانتظار تدريجياً
+    const delay = BASE_RETRY_DELAY * Math.pow(2, stallRetryCount.current % 5);
     stallRetryCount.current += 1;
 
-    setStallMessage(`جاري المحاولة... (${stallRetryCount.current})`);
+    setStallMessage(
+      `جاري محاولة استعادة الفيديو... (${stallRetryCount.current})`,
+    );
 
     stallTimer.current = setTimeout(() => {
-      const v = videoRef.current;
-      if (!v) return;
+      if (!videoRef.current || !sourceRef.current) return;
 
-      const wasPlaying = !v.paused;
-      const savedTime = v.currentTime;
+      const wasPlaying = !videoRef.current.paused;
+      const savedTime = videoRef.current.currentTime;
 
-      // الحيلة: تحريك الوقت بشكل طفيف يجبر المتصفح على طلب بيانات جديدة
-      try {
-        v.currentTime = Math.max(0, savedTime - 0.1);
-      } catch {}
+      // إضافة Cache Buster لكسر القفل وضمان طلب CORS جديد نظيف
+      const sep = src.includes("?") ? "&" : "?";
+      const bustSrc = `${src}${sep}_cb=${Date.now()}`;
 
+      sourceRef.current.src = bustSrc;
+      videoRef.current.load(); // إجبار المتصفح على إعادة تحميل المصدر الجديد
+
+      videoRef.current.currentTime = savedTime;
       if (wasPlaying) {
-        v.play().catch(() => {
-          // أعد تحميل الـ src بـ timestamp لكسر الكاش
-          const sep = src.includes("?") ? "&" : "?";
-          const bustSrc = `${src}${sep}_cb=${Date.now()}`;
-          const sourceEl = v.querySelector("source");
-          if (sourceEl) sourceEl.setAttribute("src", bustSrc);
-          v.load();
-          v.currentTime = savedTime;
-          v.play().catch(() => {
-            // تابع المحاولة بدون إظهار خطأ
-          });
+        videoRef.current.play().catch(() => {
+          console.warn("Service Worker: فشل التشغيل التلقائي بعد التعافي");
         });
       }
     }, delay);
   }, [src]);
 
-  // ── إعادة ضبط عند تغيير الـ src ─────────────────────────────────────
+  // ── التحديث عند تغيير الفيديو أو المسار ─────────────────────────────────
   useEffect(() => {
+    if (videoRef.current && sourceRef.current) {
+      sourceRef.current.src = src;
+      videoRef.current.load();
+    }
     initialTimeSet.current = false;
     stallRetryCount.current = 0;
-    setHasError(false);
     setIsLoading(true);
     setStallMessage(null);
     clearStallTimer();
   }, [src, clearStallTimer]);
 
-  // ── ربط أحداث الفيديو ────────────────────────────────────────────────
+  // ── إدارة الأحداث والتحكم في الموارد ──────────────────────────────────
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
@@ -104,17 +99,15 @@ export default function LazyVideo({
       initialTimeSet.current = true;
     }
 
-    // تسجيل الفيديو في قائمة الفيديوهات النشطة
     if (!videoInstances.includes(video)) {
       videoInstances.push(video);
     }
 
     const handlePlay = () => {
-      // أوقف بقية الفيديوهات عند تشغيل هذا الفيديو
+      // إيقاف أي فيديوهات أخرى تعمل في نفس الوقت
       videoInstances.forEach((v) => {
         if (v !== video && !v.paused) v.pause();
       });
-      // الفيديو شغّال → أعد ضبط حالات التوقف
       clearStallTimer();
       stallRetryCount.current = 0;
       setStallMessage(null);
@@ -127,27 +120,18 @@ export default function LazyVideo({
     };
 
     const handleTimeUpdate = () => {
-      lastCurrentTime.current = video.currentTime;
       onTimeUpdate?.(video.currentTime);
     };
 
     const handleCanPlay = () => {
+      setIsLoading(false);
       clearStallTimer();
-      stallRetryCount.current = 0;
       setStallMessage(null);
     };
 
-    const handleStalled = () => {
-      // "stalled" = المتصفح طلب بيانات لكنها ما جاتش
-      // نبدأ محاولة استرداد تلقائي فقط لو الفيديو كان شغّال
-      if (!video.paused) {
-        attemptStalledRecovery();
-      }
-    };
-
     const handleError = () => {
-      // بدلاً من إظهار خطأ، استمر في المحاولة
-      setStallMessage("جاري التحقق من الاتصال بالإنترنت...");
+      // بدلاً من إظهار شاشة خطأ، نبدأ محاولة التعافي فوراً
+      setIsLoading(true);
       attemptStalledRecovery();
     };
 
@@ -155,7 +139,7 @@ export default function LazyVideo({
     video.addEventListener("pause", handlePause);
     video.addEventListener("timeupdate", handleTimeUpdate);
     video.addEventListener("canplay", handleCanPlay);
-    video.addEventListener("stalled", handleStalled);
+    video.addEventListener("waiting", handleError); // استدعاء التعافي عند الـ Buffering الطويل
     video.addEventListener("error", handleError);
 
     return () => {
@@ -163,11 +147,10 @@ export default function LazyVideo({
       video.removeEventListener("pause", handlePause);
       video.removeEventListener("timeupdate", handleTimeUpdate);
       video.removeEventListener("canplay", handleCanPlay);
-      video.removeEventListener("stalled", handleStalled);
+      video.removeEventListener("waiting", handleError);
       video.removeEventListener("error", handleError);
 
       clearStallTimer();
-      // إزالة الفيديو من قائمة الفيديوهات النشطة
       const index = videoInstances.indexOf(video);
       if (index > -1) videoInstances.splice(index, 1);
     };
@@ -179,110 +162,59 @@ export default function LazyVideo({
     onTimeUpdate,
   ]);
 
-  // ── إعادة المحاولة اليدوية (زر المستخدم) ────────────────────────────
+  // ── إعادة المحاولة اليدوية ──────────────────────────────────────────
   const handleManualRetry = async () => {
-    const video = videoRef.current;
-    if (!video) return;
-
     try {
-      evictVideo(src);
+      evictVideo(src); // حذف النسخة البايظة من الكاش المحلي
     } catch {}
-
     stallRetryCount.current = 0;
-    setHasError(false);
-    setIsLoading(true);
-    setStallMessage(null);
-
-    const sep = src.includes("?") ? "&" : "?";
-    const newSrc = `${src}${sep}retry=${Date.now()}`;
-    const sourceEl = video.querySelector("source");
-    if (sourceEl) sourceEl.setAttribute("src", newSrc);
-    video.load();
-
-    try {
-      await video.play();
-    } catch {}
+    attemptStalledRecovery();
   };
 
   return (
-    <div className="relative w-full h-full group">
-      {/* Poster Background - removed loading overlay */}
-      <div
-        className="absolute inset-0 bg-cover bg-center transition-all duration-700 blur-0 scale-100"
-        style={{
-          backgroundImage: poster ? `url(${poster})` : "none",
-          backgroundColor: poster ? "transparent" : "#1a1a2e",
-        }}
-      >
-        <div className="absolute inset-0 bg-black/20" />
-      </div>
-
+    /* تأكد أن العنصر الأب لديه aspect-ratio أو طول محدد 
+       استخدمنا aspect-video لضمان أبعاد 16:9 الافتراضية إذا لم يحدد الأب غير ذلك
+    */
+    <div className="relative w-full h-full max-h-full max-w-full bg-black overflow-hidden rounded-xl shadow-2xl flex items-center justify-center">
       <video
         ref={videoRef}
-        className="relative w-full h-full max-w-full max-h-full object-contain bg-transparent"
+        /* استخدام max-full يضمن عدم خروج الفيديو عن حدود الـ div 
+           object-contain يضمن رؤية الفيديو كاملاً مع وجود حواف سوداء إذا لم تتطابق الأبعاد
+        */
+        className="w-full h-full max-w-full max-h-full object-contain block"
         controls
-        preload="auto"
+        preload="metadata"
         poster={poster}
         playsInline
         crossOrigin="anonymous"
-        disablePictureInPicture={false}
-        aria-label={`${title}${isLoading ? " (جارٍ التحميل)" : ""}${stallMessage ? " - " + stallMessage : ""}`}
         title={title}
-        onError={() => {
-          // بدلاً من إظهار خطأ، استمر في المحاولة
-          setStallMessage("جاري التحقق من الاتصال بالإنترنت...");
-          setIsLoading(true);
-          attemptStalledRecovery();
-        }}
-        onLoadedData={() => {
-          setIsLoading(false);
-        }}
       >
-        <source src={src} type="video/mp4" />
-        <p className="text-gray-400 text-sm text-center p-4">
-          متصفحك لا يدعم تشغيل الفيديو. الرجاء تحديث المتصفح.
+        <source ref={sourceRef} src={src} type="video/mp4" />
+        <p className="text-white text-center p-4">
+          متصفحك لا يدعم تشغيل الفيديو.
         </p>
       </video>
 
-      {/* Error Overlay - تصميم محسّن */}
-      {hasError && (
-        <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-b from-black/70 to-black/90 text-white p-6 backdrop-blur-sm">
-          <div className="text-center max-w-sm">
-            {/* أيقونة الخطأ */}
-            <div className="mb-4 relative">
-              <div className="w-20 h-20 mx-auto bg-red-500/10 rounded-full flex items-center justify-center border border-red-500/20">
-                <svg
-                  className="w-10 h-10 text-red-400"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1.5}
-                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-                  />
-                </svg>
-              </div>
+      {/* شاشة التحميل - ستبقى متمركزة دائماً بفضل flex في الأب */}
+      {(isLoading || stallMessage) && (
+        <div className="absolute inset-0 pointer-events-none flex flex-col items-center justify-center bg-black/40 backdrop-blur-[2px] z-10">
+          <div className="w-10 h-10 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin mb-4" />
+          {stallMessage && (
+            <div className="bg-black/60 px-4 py-2 rounded-full text-white text-xs animate-pulse">
+              {stallMessage}
             </div>
-
-            <h3 className="text-lg font-semibold text-white mb-2">
-              تحقق من الاتصال بالإنترنت
-            </h3>
-            <p className="text-sm text-white/60 mb-6 leading-relaxed">
-              يرجى التحقق من اتصالك بالإنترنت وسيتم تحميل الفيديو تلقائياً عند
-              استعادة الاتصال.
-            </p>
-
-            <button
-              onClick={handleManualRetry}
-              className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-full font-medium transition-colors"
-            >
-              إعادة المحاولة
-            </button>
-          </div>
+          )}
         </div>
+      )}
+
+      {/* زر إعادة المحاولة */}
+      {stallRetryCount.current > 2 && (
+        <button
+          onClick={handleManualRetry}
+          className="absolute bottom-16 left-1/2 -translate-x-1/2 bg-red-600/90 hover:bg-red-700 text-white text-xs px-4 py-2 rounded-lg transition-all z-20"
+        >
+          إعادة تحميل الفيديو يدوياً
+        </button>
       )}
     </div>
   );

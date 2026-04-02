@@ -22,7 +22,7 @@ export const links: Route.LinksFunction = () => [
     href: "https://fonts.gstatic.com",
     crossOrigin: "anonymous",
   },
-  { rel: "preconnect", href: "https://xbsgkyikyxwakmszmnsg.supabase.co" },
+  { rel: "preconnect", href: "https://pub-25e727cf0c0e49799268f333275e7cf2.r2.dev" },
   {
     rel: "stylesheet",
     href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Coptic&family=Noto+Sans+Arabic:wght@400;700&display=swap",
@@ -159,7 +159,23 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 if ('serviceWorker' in navigator) {
                   window.addEventListener('load', function() {
                     navigator.serviceWorker.register('/sw.js')
-                      .then(function(reg) { console.log('Service Worker registered:', reg.scope); })
+                      .then(function(reg) {
+                        console.log('Service Worker registered:', reg.scope);
+                        
+                        // ✅ التحقق من وجود تحديث للـ Service Worker
+                        reg.addEventListener('updatefound', function() {
+                          const newWorker = reg.installing;
+                          if (newWorker) {
+                            newWorker.addEventListener('statechange', function() {
+                              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                // ✅ إعادة التحميل التلقائي عند اكتشاف نسخة جديدة
+                                console.log('Service Worker: تم اكتشاف نسخة جديدة، جارٍ إعادة التحميل...');
+                                window.location.reload();
+                              }
+                            });
+                          }
+                        });
+                      })
                       .catch(function(err) { console.log('Service Worker failed:', err); });
                   });
                 }

@@ -113,6 +113,8 @@ export default function MelodiesPage() {
   const [isMinimized, setIsMinimized] = useState(false);
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
 
+
+
   // ====== حالة تحريك الفيديو ======
   const [videoPosition, setVideoPosition] = useState({ x: 24, y: 24 });
   const [isDragging, setIsDragging] = useState(false);
@@ -122,19 +124,76 @@ export default function MelodiesPage() {
   // ====== Ref للإغلاق الذكي عند النقر خارج القائمة ======
   const controlsPanelRef = useRef<HTMLDivElement>(null);
 
-  // ====== useEffect لتحميل الفيديوهات مسبقاً عند اختيار مرحلة ======
+  // ====== useEffect لتحميل الفيديوهات مسبقاً عند اختيار مستوى ======
+  // يتم التحميل فقط للمستوى المحدد (وليس جميع مستويات المرحلة)
+  useEffect(() => {
+    if (stage && level) {
+      const stageKey = stage as StageKey;
+      // تحويل المستوى العربي إلى الإنجليزي
+      const levelMap: Record<string, keyof LevelVideos> = {
+        الأول: "first",
+        الثاني: "second",
+        الموهوبين: "gifted",
+      };
+      const englishLevel = levelMap[level];
+      
+      if (englishLevel) {
+        // الحصول على رابط الفيديوهات للمستوى المحدد فقط
+        const stageUrls = stageVideoUrls[stageKey];
+        if (stageUrls) {
+          const urls = stageUrls[englishLevel as keyof typeof stageUrls]?.filter(Boolean) || [];
+          if (urls.length > 0) {
+            console.log(
+              "[Melodies] تخزين فيديوهات المستوى:",
+              stage,
+              level,
+              urls.length,
+              "فيديو",
+            );
+            prewarmVideos(urls);
+          }
+        }
+      }
+    }
+  }, [stage, level]);
+
+  // ====== useEffect لتحميل صور الهزات عند اختيار مرحلة ======
+  // يتم التحميل لجميع صور الهزات في المرحلة عند فتحها
   useEffect(() => {
     if (stage) {
       const stageKey = stage as StageKey;
-      const urls = getStageVideoUrls(stageKey);
-      if (urls.length > 0) {
-        console.log(
-          "[Melodies] تخزين فيديوهات المرحلة:",
-          stage,
-          urls.length,
-          "فيديو",
-        );
-        prewarmVideos(urls);
+      const stageData = videoData[stageKey];
+      
+      if (stageData) {
+        // جمع جميع روابط صور الهزات من جميع المستويات
+        const hazzatUrls: string[] = [];
+        
+        Object.values(stageData).forEach((levelVideos) => {
+          if (Array.isArray(levelVideos)) {
+            levelVideos.forEach((video) => {
+              if (video.hazzatImage) hazzatUrls.push(video.hazzatImage);
+              if (video.hazzatImage٢) hazzatUrls.push(video.hazzatImage٢);
+              if (video.hazzatImage٣) hazzatUrls.push(video.hazzatImage٣);
+              if (video.hazzatImage٤) hazzatUrls.push(video.hazzatImage٤);
+              if (video.hazzatImage٥) hazzatUrls.push(video.hazzatImage٥);
+              if (video.hazzatImage٦) hazzatUrls.push(video.hazzatImage٦);
+              if (video.hazzatImage٧) hazzatUrls.push(video.hazzatImage٧);
+              if (video.hazzatImage٨) hazzatUrls.push(video.hazzatImage٨);
+              if (video.hazzatImage٩) hazzatUrls.push(video.hazzatImage٩);
+              if (video.hazzatImage١٠) hazzatUrls.push(video.hazzatImage١٠);
+            });
+          }
+        });
+        
+        if (hazzatUrls.length > 0) {
+          console.log(
+            "[Melodies] تخزين صور الهزات للمرحلة:",
+            stage,
+            hazzatUrls.length,
+            "صورة",
+          );
+          prewarmVideos(hazzatUrls);
+        }
       }
     }
   }, [stage]);
@@ -1133,6 +1192,8 @@ export default function MelodiesPage() {
                         <span className="text-3xl">🎵</span>
                       </h3>
                       <p className="text-center text-gray-400 text-sm mt-2"></p>
+                      
+
                     </div>
 
                     <div className="w-full overflow-hidden">

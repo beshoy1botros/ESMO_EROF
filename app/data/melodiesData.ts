@@ -6,7 +6,7 @@
  * This file contains data types and exports
  */
 
-import { SUPABASE_VIDEO_BASE_URL } from "../utils/supabase";
+import { CLOUDFLARE_VIDEO_BASE_URL } from "../utils/cloudflare";
 
 // --- ١. التعريفات البرمجية (Types & Enums) ---
 
@@ -49,155 +49,153 @@ export interface LevelVideos {
 export type VideoData = Record<StageKey, LevelVideos>;
 
 // --- ١. الإعدادات والروابط الأساسية ---
-const BASE_URL = SUPABASE_VIDEO_BASE_URL;
-
+const BASE_URL = CLOUDFLARE_VIDEO_BASE_URL;
 export const stageVideoUrls = {
   [StageKey.Kindergarten]: {
     first: [
-      `${BASE_URL}/Hadana-1-1 Gf3h9c.mp4`,
-      `${BASE_URL}/Hadana-1-2 A6lf1y.mp4`,
-      `${BASE_URL}/Hadana-1-3 Rd273v.mp4`,
-      `${BASE_URL}/Hadana-1-4 Gkkcss.mp4`,
+      `${BASE_URL}/Hadana-1-1.mp4`,
+      `${BASE_URL}/Hadana-1-2.mp4`,
+      `${BASE_URL}/Hadana-1-3.mp4`,
+      `${BASE_URL}/Hadana-1-4.mp4`,
     ],
     second: [
-      `${BASE_URL}/Hadana-2-1 Sw4yc6.mp4`,
-      `${BASE_URL}/Hadana-2-2 Z9axb1.mp4`,
-      `${BASE_URL}/Hadana-2-3 Jxxtv4.mp4`,
-      `${BASE_URL}/Hadana-2-4 Cjjci2.mp4`,
+      `${BASE_URL}/Hadana-2-1.mp4`,
+      `${BASE_URL}/Hadana-2-2.mp4`,
+      `${BASE_URL}/Hadana-2-3.mp4`,
+      `${BASE_URL}/Hadana-2-4.mp4`,
     ],
     gifted: [
-      `${BASE_URL}/Hadana-3-1 Ueghwz.mp4`,
-      `${BASE_URL}/Hadana-3-2 Ci1vdg.mp4`,
-      `${BASE_URL}/Hadana-3-3 Q347t9.mp4`,
+      `${BASE_URL}/Hadana-3-1.mp4`,
+      `${BASE_URL}/Hadana-3-2.mp4`,
+      `${BASE_URL}/Hadana-3-3.mp4`,
     ],
   },
   [StageKey.FirstSecond]: {
     first: [
-      `${BASE_URL}/Owla Tania-1-1 I34swr.mp4`,
-      `${BASE_URL}/Owla Tania-1-2 Xculcu.mp4`,
-      `${BASE_URL}/Owla Tania-1-3 Ndtdz9.mp4`,
-      `${BASE_URL}/Owla Tania-1-4 Fqkxms.mp4`,
+      `${BASE_URL}/Owla_Tania-1-1.mp4`,
+      `${BASE_URL}/Owla_Tania-1-2.mp4`,
+      `${BASE_URL}/Owla_Tania-1-3.mp4`,
+      `${BASE_URL}/Owla_Tania-1-4.mp4`,
     ],
     second: [
-      `${BASE_URL}/Owla Tania-2-1 J4ekrw.mp4`,
-      `${BASE_URL}/Owla Tania-2-2 P7z0cl.mp4`,
-      `${BASE_URL}/Owla Tania-2-3 Lm5inb.mp4`,
-      `${BASE_URL}/Owla Tania-2-4 I9anxt.mp4`,
+      `${BASE_URL}/Owla_Tania-2-1.mp4`,
+      `${BASE_URL}/Owla_Tania-2-2.mp4`,
+      `${BASE_URL}/Owla_Tania-2-3.mp4`,
+      `${BASE_URL}/Owla_Tania-2-4.mp4`,
     ],
     gifted: [
-      `${BASE_URL}/Owla Tania-3-1 Oltolz.mp4`,
-      `${BASE_URL}/Owla Tania-3-2 P602ok.mp4`,
-      `${BASE_URL}/Owla Tania-3-3 Yh03ip.mp4`,
+      `${BASE_URL}/Owla_Tania-3-1.mp4`,
+      `${BASE_URL}/Owla_Tania-3-2.mp4`,
+      `${BASE_URL}/Owla_Tania-3-3.mp4`,
     ],
   },
   [StageKey.ThirdFourth]: {
     first: [
-      `${BASE_URL}/Talta Rabaa-1-1 Kom2c4.mp4`,
-      `${BASE_URL}/Talta Rabaa 1 2 Whwht7.mp4`,
-      `${BASE_URL}/Talta Rabaa-1-3 Hypqmt.mp4`,
-      `${BASE_URL}/Talta Rabaa-1-4 Dh8ppl.mp4`,
+      `${BASE_URL}/Talta_Rabaa-1-1.mp4`,
+      `${BASE_URL}/Talta_Rabaa-1-2.mp4`,
+      `${BASE_URL}/Talta_Rabaa-1-3.mp4`,
+      `${BASE_URL}/Talta_Rabaa-1-4.mp4`,
     ],
     second: [
-      `${BASE_URL}/Talta Rabaa-2-1 Egiv11.mp4`,
-      `${BASE_URL}/Talta Rabaa-2-2 M7phqi.mp4`,
-      `${BASE_URL}/Talta Rabaa-2-3 Lkrfue.mp4`,
-      `${BASE_URL}/Talta Rabaa-2-4 Apakmp.mp4`,
+      `${BASE_URL}/Talta_Rabaa-2-1.mp4`,
+      `${BASE_URL}/Talta_Rabaa-2-2.mp4`,
+      `${BASE_URL}/Talta_Rabaa-2-3.mp4`,
+      `${BASE_URL}/Talta_Rabaa-2-4.mp4`,
     ],
     gifted: [
-      `${BASE_URL}/Talta Rabaa-3-1 Nvipyx.mp4`,
-      `${BASE_URL}/Talta Rabaa-3-2 Fnsg4l.mp4`,
-      `${BASE_URL}/Talta Rabaa-3-3 Ljeh1n.mp4`,
+      `${BASE_URL}/Talta_Rabaa-3-1.mp4`,
+      `${BASE_URL}/Talta_Rabaa-3-2.mp4`,
+      `${BASE_URL}/Talta_Rabaa-3-3.mp4`,
     ],
   },
   [StageKey.FifthSixth]: {
     first: [
-      `${BASE_URL}/Khamsa Satta-1-1 Rgz9tt.mp4`,
-      `${BASE_URL}/Khamsa Satta-1-2 Jsq8ev.mp4`,
-      `${BASE_URL}/Khamsa Satta-1-3 Xgm1ev.mp4`,
-      `${BASE_URL}/Khamsa Satta-1-4 Eyonvs.mp4`,
+      `${BASE_URL}/Khamsa_Satta-1-1.mp4`,
+      `${BASE_URL}/Khamsa_Satta-1-2.mp4`,
+      `${BASE_URL}/Khamsa_Satta-1-3.mp4`,
+      `${BASE_URL}/Khamsa_Satta-1-4.mp4`,
     ],
     second: [
-      `${BASE_URL}/Khamsa Satta-2-1 Hqcj0a.mp4`,
-      `${BASE_URL}/Khamsa Satta-2-2 F3tqy0.mp4`,
-      `${BASE_URL}/Khamsa Satta-2-3 Mvawvs.mp4`,
-      `${BASE_URL}/Khamsa Satta-2-4 Igbiek.mp4`,
+      `${BASE_URL}/Khamsa_Satta-2-1.mp4`,
+      `${BASE_URL}/Khamsa_Satta-2-2.mp4`,
+      `${BASE_URL}/Khamsa_Satta-2-3.mp4`,
+      `${BASE_URL}/Khamsa_Satta-2-4.mp4`,
     ],
     gifted: [
-      `${BASE_URL}/Khamsa Satta-3-1 Lvbrzq.mp4`,
-      `${BASE_URL}/Khamsa Satta-3-2 Zy19yl.mp4`,
+      `${BASE_URL}/Khamsa_Satta-3-1.mp4`,
+      `${BASE_URL}/Khamsa_Satta-3-2.mp4`,
     ],
   },
   [StageKey.Middle]: {
     first: [
-      `${BASE_URL}/Middle-1-1 Ekbvyd.mp4`,
-      `${BASE_URL}/Middle-1-2 C83cnf.mp4`,
-      `${BASE_URL}/Middle-1-3 Bipalm.mp4`,
-      `${BASE_URL}/Middle-1-4 T1o5d9.mp4`,
+      `${BASE_URL}/Middle-1-1.mp4`,
+      `${BASE_URL}/Middle-1-2.mp4`,
+      `${BASE_URL}/Middle-1-3.mp4`,
+      `${BASE_URL}/Middle-1-4.mp4`,
     ],
     second: [
-      `${BASE_URL}/Middle-2-1 Wd3yvy.mp4`,
-      `${BASE_URL}/Midde-2-2 Bkrddm.mp4`,
-      `${BASE_URL}/Midde-2-3 Zvgag4.mp4`,
+      `${BASE_URL}/Middle-2-1.mp4`,
+      `${BASE_URL}/Middle-2-2.mp4`,
+      `${BASE_URL}/Middle-2-3.mp4`,
     ],
     gifted: [
-      `${BASE_URL}/Middle-3-1 Xixkl3.mp4`,
-      `${BASE_URL}/Middle-3-2 Gzahs2.mp4`,
-      `${BASE_URL}/Middle-3-3 Pmnqka.mp4`,
+      `${BASE_URL}/Middle-3-1.mp4`,
+      `${BASE_URL}/Middle-3-2.mp4`,
+      `${BASE_URL}/Middle-3-3.mp4`,
     ],
   },
   [StageKey.High]: {
     first: [
-      `${BASE_URL}/High-1-1 Dkmfwi.mp4`,
-      `${BASE_URL}/High-1-2 Hdjp9d.mp4`,
-      `${BASE_URL}/Talta Rabaa-1-1 Kom2c4.mp4`,
-      `${BASE_URL}/High-1-4 Rxqx8v.mp4`,
+      `${BASE_URL}/High-1-1.mp4`,
+      `${BASE_URL}/High-1-2.mp4`,
+      `${BASE_URL}/Talta_Rabaa-1-1.mp4`,   // مشترك — لا يوجد High-1-3 في المجلد
+      `${BASE_URL}/High-1-4.mp4`,
     ],
     second: [
-      `${BASE_URL}/Midde-2-2 Bkrddm.mp4`,
-      `${BASE_URL}/High-2-2 Bgy0po.mp4`,
-      `${BASE_URL}/High-2-3 Xa9ltr.mp4`,
-      `${BASE_URL}/High-2-4 C1gsas.mp4`,
+      `${BASE_URL}/Middle-2-2.mp4`,          // مشترك — لا يوجد High-2-1 في المجلد
+      `${BASE_URL}/High-2-2.mp4`,
+      `${BASE_URL}/High-2-3.mp4`,
+      `${BASE_URL}/High-2-4.mp4`,
     ],
     gifted: [
-      `${BASE_URL}/High-3-1 Hyh2jz.mp4`,
-      `${BASE_URL}/High-3-2 Dduwis.mp4`,
-      `${BASE_URL}/High-3-3 Nojczl.mp4`,
+      `${BASE_URL}/High-3-1.mp4`,
+      `${BASE_URL}/High-3-2.mp4`,
+      `${BASE_URL}/High-3-3.mp4`,
     ],
   },
   [StageKey.University]: {
     first: [
-      `${BASE_URL}/Middle-3-1 Xixkl3.mp4`,
-      `${BASE_URL}/Middle-2-1 Wd3yvy.mp4`,
-      `${BASE_URL}/University-1-3 Xkeaxx.mp4`,
+      `${BASE_URL}/Middle-3-1.mp4`,          // مشترك
+      `${BASE_URL}/Middle-2-1.mp4`,          // مشترك
+      `${BASE_URL}/University-1-3.mp4`,
     ],
     second: [
-      `${BASE_URL}/University-2-1 Rqqiiy.mp4`,
-      `${BASE_URL}/University-2-2 Scs9ub.mp4`,
-      `${BASE_URL}/University-2-3 Dinsks.mp4`,
+      `${BASE_URL}/University-2-1.mp4`,
+      `${BASE_URL}/University-2-2.mp4`,
+      `${BASE_URL}/University-2-3.mp4`,
     ],
   },
   [StageKey.Servants]: {
     first: [
-      `${BASE_URL}/Servants-1-1 E2hy5j.mp4`,
-      `${BASE_URL}/Servants-1-2 Jvaw8e.mp4`,
-      `${BASE_URL}/Servants-1-3 Zclwgc.mp4`,
+      `${BASE_URL}/Servants-1-1.mp4`,
+      `${BASE_URL}/Servants-1-2.mp4`,
+      `${BASE_URL}/Servants-1-3.mp4`,
     ],
     second: [
-      `${BASE_URL}/Servants-2-1 Etdtp4.mp4`,
-      `${BASE_URL}/Middle-3-1 Xixkl3.mp4`,
-      `${BASE_URL}/Servants-2-3 Ckqgj4.mp4`,
+      `${BASE_URL}/Servants-2-1.mp4`,
+      `${BASE_URL}/Middle-3-1.mp4`,          // مشترك — لا يوجد Servants-2-2 في المجلد
+      `${BASE_URL}/Servants-2-3.mp4`,
     ],
   },
   [StageKey.WeddingOfCana]: {
     first: [
-      `${BASE_URL}/Talta Rabaa-2-2 M7phqi.mp4`,
-      `${BASE_URL}/Weddingofcana-2 Ieovpq.mp4`,
-      `${BASE_URL}/Khamsa Satta-1-4 Eyonvs.mp4`,
-      `${BASE_URL}/Talta Rabaa-1-1 Kom2c4.mp4`,
+      `${BASE_URL}/Talta_Rabaa-2-2.mp4`,     // مشترك
+      `${BASE_URL}/Weddingofcana-2.mp4`,
+      `${BASE_URL}/Khamsa_Satta-1-4.mp4`,    // مشترك
+      `${BASE_URL}/Talta_Rabaa-1-1.mp4`,     // مشترك
     ],
   },
 } as const;
-
 // --- ٢. إعادة التصدير (Re-exports) ---
 // يتم استيراد البيانات من ملف المسار الأصلي
 // Data is imported from the original route file
