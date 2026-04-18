@@ -21,14 +21,26 @@ const copticStyles = `
     display: inline-block;
     direction: ltr;
     margin: 0 4px;
+    font-size: 1.2em;
   }
   
   .coptic-content {
     font-family: "copt-main", "copt-alt", "copt-youssef", "Noto Sans Coptic", sans-serif;
+    font-size: 1.5rem !important;
+    line-height: 1.8 !important;
+    text-align: right !important;
+    direction: rtl !important;
+    color: #d1d5db !important;
   }
   
   .coptic-content span[class*="coptic"] {
     font-family: "copt-main", "copt-alt", "copt-youssef", "Noto Sans Coptic", sans-serif;
+  }
+
+  @media (max-width: 768px) {
+    .coptic-content {
+      font-size: 1.3rem !important;
+    }
   }
 `;
 
@@ -238,7 +250,7 @@ export default function PreparatoryPage() {
   const [showCopticArabic, setShowCopticArabic] = useState(true);
   const [showArabic, setShowArabic] = useState(true);
   const [showCoptic, setShowCoptic] = useState(true);
-  const [fontSize, setFontSize] = useState(16);
+  const [fontSize, setFontSize] = useState(12);
   const [showHazzat, setShowHazzat] = useState(false);
   const [_rotateFromSidebar, setRotateFromSidebar] = useState(false);
   const [showControlsPanel, setShowControlsPanel] = useState(false);
@@ -558,21 +570,29 @@ export default function PreparatoryPage() {
                           {item.title}
                         </h3>
                         <button
-                          onClick={() =>
-                            setExpandedIndices((prev) => ({
-                              ...prev,
-                              [index]: !prev[index],
-                            }))
+                          onClick={
+                            item.content
+                              ? () =>
+                                  setExpandedIndices((prev) => ({
+                                    ...prev,
+                                    [index]: !prev[index],
+                                  }))
+                              : undefined
                           }
+                          disabled={!item.content}
                           className={`w-full py-3 rounded-xl font-bold transition-all mb-4 ${
-                            expandedIndices[index]
-                              ? "bg-blue-600 text-white shadow-lg"
-                              : "bg-blue-600/10 text-blue-400 border border-blue-600/30 hover:bg-blue-600/20"
+                            item.content
+                              ? expandedIndices[index]
+                                ? "bg-blue-600 text-white shadow-lg"
+                                : "bg-blue-600/10 text-blue-400 border border-blue-600/30 hover:bg-blue-600/20"
+                              : "bg-blue-600/10 text-blue-400 border border-blue-600/30 opacity-60 cursor-not-allowed"
                           }`}
                         >
-                          {expandedIndices[index]
-                            ? "إخفاء طقس اللحن"
-                            : "عرض طقس اللحن"}
+                          {item.content
+                            ? expandedIndices[index]
+                              ? "إخفاء طقس اللحن"
+                              : "عرض طقس اللحن"
+                            : "⏳ قريباً"}
                         </button>
                         {expandedIndices[index] && item.content && (
                           <div className="animate-in fade-in slide-in-from-top-2 duration-300">
