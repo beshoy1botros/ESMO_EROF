@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router";
-import { FaHome, FaMusic, FaBook, FaGraduationCap } from "react-icons/fa";
+import { FaHome, FaMusic, FaBook, FaGraduationCap, FaHeadset } from "react-icons/fa";
 import { useState, useEffect, useRef } from "react";
 
 declare module "react" {
@@ -13,6 +13,7 @@ const navLinks = [
   { to: "/melodies", label: "الألحان", icon: FaMusic },
   { to: "/about", label: "طقس اللحن", icon: FaBook },
   { to: "/preparatory", label: "تمهيدي", icon: FaGraduationCap },
+  { to: "/contact", label: "تواصل معنا", icon: FaHeadset },
 ];
 
 interface FloatingDot {
