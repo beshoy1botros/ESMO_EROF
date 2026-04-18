@@ -34,7 +34,7 @@ export default function Contact() {
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
+    >,
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -44,7 +44,9 @@ export default function Contact() {
   };
 
   const saveToLocalStorage = (data: ContactData & { timestamp: string }) => {
-    const existing = JSON.parse(localStorage.getItem("contactFeedback") || "[]");
+    const existing = JSON.parse(
+      localStorage.getItem("contactFeedback") || "[]",
+    );
     existing.push(data);
     localStorage.setItem("contactFeedback", JSON.stringify(existing));
   };
@@ -60,18 +62,14 @@ export default function Contact() {
       saveToLocalStorage({ ...formData, timestamp });
 
       // Send email via EmailJS
-      await emailjs.send(
-        EMAILJS_SERVICE_ID,
-        EMAILJS_TEMPLATE_ID,
-        {
-          to_email: "botrosabanoub422@gmail.com",
-          from_name: formData.name,
-          from_email: formData.email,
-          category: formData.category,
-          message: formData.message,
-          timestamp,
-        }
-      );
+      await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+        to_email: "botrosabanoub422@gmail.com",
+        from_name: formData.name,
+        from_email: formData.email,
+        category: formData.category,
+        message: formData.message,
+        timestamp,
+      });
 
       setSubmitted(true);
       setFormData({
@@ -83,9 +81,7 @@ export default function Contact() {
 
       setTimeout(() => setSubmitted(false), 5000);
     } catch (err) {
-      setError(
-        err instanceof Error ? err.message : "حدث خطأ غير متوقع"
-      );
+      setError(err instanceof Error ? err.message : "حدث خطأ غير متوقع");
       console.error("Error sending email:", err);
     } finally {
       setLoading(false);
@@ -172,9 +168,7 @@ export default function Contact() {
 
         <div className="contact-info">
           <h2>معلومات التواصل</h2>
-          <p>
-            يمكنك أيضاً التواصل معنا مباشرة عبر:
-          </p>
+          <p>يمكنك أيضاً التواصل معنا مباشرة عبر:</p>
           <ul>
             <li>
               📧 البريد:{" "}

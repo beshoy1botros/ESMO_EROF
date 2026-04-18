@@ -1,5 +1,11 @@
 import { Link, useLocation } from "react-router";
-import { FaHome, FaMusic, FaBook, FaGraduationCap, FaHeadset } from "react-icons/fa";
+import {
+  FaHome,
+  FaMusic,
+  FaBook,
+  FaGraduationCap,
+  FaHeadset,
+} from "react-icons/fa";
 import { useState, useEffect, useRef } from "react";
 
 declare module "react" {
