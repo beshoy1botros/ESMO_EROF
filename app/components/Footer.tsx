@@ -10,17 +10,6 @@ export default function Footer() {
           © {currentYear}
         </span>
       </p>
-      <p className="mt-3 text-gray-300 text-sm sm:text-base">
-        للتواصل عبر الواتساب:
-        <a
-          href="https://wa.me/201210138629"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-green-400 hover:text-green-300 mx-1"
-        >
-          201210138629
-        </a>
-      </p>
     </footer>
   );
 }
