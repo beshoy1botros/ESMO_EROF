@@ -14,7 +14,6 @@
     "test:ui": "vitest --ui"
   },
   "dependencies": {
-    "@emailjs/browser": "^4.4.1",
     "@react-router/node": "^7.6.0",
     "@react-router/serve": "^7.6.0",
     "@supabase/supabase-js": "^2.99.2",
