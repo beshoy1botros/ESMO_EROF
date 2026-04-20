@@ -283,6 +283,12 @@ export default function Footer() {
             <WhatsAppIcon className="w-4 h-4" />
             تواصل عبر الواتساب
           </button>
+          {/* تنبيه أخطاء */}
+          <p className="mt-5 text-white/55 text-xs leading-relaxed">
+            ⚠ احتمال وجود أخطاء في بعض كلمات اللحن أو الطقس،
+            <br />
+            يُرجى مراجعتهما جيداً مع مدرس الألحان.
+          </p>
         </div>
       </footer>
 
