@@ -15,7 +15,7 @@ declare module "react" {
 }
 
 const navLinks = [
-  { to: "/", label: "الرئيسية", icon: FaHome },
+  { to: "/", label: "مقدمة", icon: FaHome },
   { to: "/melodies", label: "الألحان", icon: FaMusic },
   { to: "/about", label: "طقس اللحن", icon: FaBook },
   { to: "/preparatory", label: "تمهيدي", icon: FaGraduationCap },
