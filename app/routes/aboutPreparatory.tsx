@@ -11,6 +11,16 @@ import {
 import { preparatoryData } from "../utils/preparatoryData";
 import "../styles/about.css";
 
+function toArabicNumerals(text: string): string {
+  const western = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+  const eastern = ["٠", "١", "٢", "٣", "٤", "٥", "٦", "٧", "٨", "٩"];
+  let result = text;
+  for (let i = 0; i < western.length; i++) {
+    result = result.split(western[i]).join(eastern[i]);
+  }
+  return result;
+}
+
 // CSS مخصص للنصوص القبطية
 const copticStyles = `
   .coptic-content .coptic-inline {
@@ -167,7 +177,7 @@ export default function About() {
                           <p
                             className="text-gray-300 leading-relaxed whitespace-pre-line coptic-content"
                             dangerouslySetInnerHTML={{
-                              __html: String(item.content),
+                              __html: toArabicNumerals(String(item.content)),
                             }}
                           />
                         </div>

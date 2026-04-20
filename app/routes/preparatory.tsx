@@ -13,6 +13,16 @@ import {
 } from "../utils/preparatoryData";
 import { STAGE_KEYS } from "../utils/stageUtils";
 
+function toArabicNumerals(text: string): string {
+  const western = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+  const eastern = ["٠", "١", "٢", "٣", "٤", "٥", "٦", "٧", "٨", "٩"];
+  let result = text;
+  for (let i = 0; i < western.length; i++) {
+    result = result.split(western[i]).join(eastern[i]);
+  }
+  return result;
+}
+
 // CSS مخصص للنصوص القبطية
 const copticStyles = `
   .coptic-content .coptic-inline {
@@ -599,7 +609,7 @@ export default function PreparatoryPage() {
                             <div className="h-px bg-white/10 mb-4" />
                             <p
                               className="text-gray-300 leading-relaxed whitespace-pre-line coptic-content"
-                              dangerouslySetInnerHTML={{ __html: item.content }}
+                              dangerouslySetInnerHTML={{ __html: toArabicNumerals(item.content) }}
                             />
                           </div>
                         )}
