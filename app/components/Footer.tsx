@@ -272,12 +272,11 @@ export default function Footer() {
             aria-label="تواصل معنا عبر واتساب"
             className="
               inline-flex items-center gap-2.5 px-5 py-2.5
-              bg-green-600 hover:bg-green-500 active:bg-green-700
+              bg-white/10 hover:bg-white/20 active:bg-white/5
               text-white text-sm font-medium rounded-full
-              border border-green-500/40
-              shadow-lg shadow-green-900/30
+              border border-white/20
               transition-all duration-200 active:scale-[0.97]
-              focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-400 focus-visible:ring-offset-2 focus-visible:ring-offset-blue-950
+              focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 focus-visible:ring-offset-2 focus-visible:ring-offset-blue-950
             "
           >
             <WhatsAppIcon className="w-4 h-4" />

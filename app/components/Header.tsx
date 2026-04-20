@@ -4,7 +4,7 @@ import {
   FaMusic,
   FaBook,
   FaGraduationCap,
-  FaHeadset,
+  FaQuestionCircle,
 } from "react-icons/fa";
 import { useState, useEffect, useRef } from "react";
 
@@ -19,6 +19,7 @@ const navLinks = [
   { to: "/melodies", label: "الألحان", icon: FaMusic },
   { to: "/about", label: "طقس اللحن", icon: FaBook },
   { to: "/preparatory", label: "تمهيدي", icon: FaGraduationCap },
+  { to: "/help", label: "دليل الاستخدام", icon: FaQuestionCircle },
 ];
 
 interface FloatingDot {
