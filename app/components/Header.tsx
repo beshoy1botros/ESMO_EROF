@@ -131,33 +131,27 @@ export default function Header() {
             </button>
 
             {/* ✏️ الاسم الجديد بالإنجليزية */}
-            <Link
-              to="/"
-              className="flex-1 flex items-center justify-center group focus-visible:outline-none"
-              aria-label="الصفحة الرئيسية"
-            >
+            {/* الاسم */}
+            <div className="flex-1 flex items-center justify-center">
               <h1
                 className="
                 font-newath font-bold leading-tight
                 text-2xl sm:text-3xl md:text-4xl lg:text-5xl
-                text-blue-400 group-hover:text-blue-300
-                transition-colors duration-200
+                text-blue-400
                 drop-shadow-[0_0_20px_rgba(96,165,250,0.3)]
-                group-hover:drop-shadow-[0_0_28px_rgba(96,165,250,0.5)]
-                text-center tracking-wide
-              "
+                text-center tracking-wide"
               >
                 # Cmou ; Erof ;#
               </h1>
-            </Link>
+            </div>
 
             {/* اللوجو */}
             <Link to="/" tabIndex={-1}>
               <img
                 src="/photos/favicon-96x96.png"
                 alt=""
-                width={64}
-                height={64}
+                width={50}
+                height={50}
                 loading="eager"
               />
             </Link>
