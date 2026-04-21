@@ -283,7 +283,7 @@ export default function Footer() {
             تواصل عبر الواتساب
           </button>
           {/* تنبيه أخطاء */}
-          <p className="mt-5 text-white/55 text-xs leading-relaxed">
+          <p className="mt-5 text-white/60 text-xs leading-relaxed">
             ⚠ احتمال وجود أخطاء في بعض كلمات اللحن أو الطقس،
             <br />
             يُرجى مراجعتهما جيداً مع مدرس الألحان.
