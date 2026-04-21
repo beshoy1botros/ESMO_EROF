@@ -284,7 +284,7 @@ export default function Footer() {
           </button>
           {/* تنبيه أخطاء */}
           <p className="mt-5 text-white/60 text-xs leading-relaxed">
-            ⚠ احتمال وجود أخطاء في بعض كلمات اللحن أو الطقس،
+            <span className="text-yellow-90">⚠</span> احتمال وجود أخطاء في بعض كلمات اللحن أو الطقس،
             <br />
             يُرجى مراجعتهما جيداً مع مدرس الألحان.
           </p>
