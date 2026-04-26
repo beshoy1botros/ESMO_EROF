@@ -11,6 +11,9 @@ import {
   FaHandPaper,
   FaQuestionCircle,
   FaWifi,
+  FaInfoCircle,
+  FaMobileAlt,
+  FaBars,
 } from "react-icons/fa";
 
 const helpSections = [
@@ -124,13 +127,52 @@ const helpSections = [
     items: [
       {
         label: "تشغيل وإيقاف الفيديو",
-        description:
-          "اضغط على زر التشغيل (▶️) في النافذة لبدء تشغيل مقطع الفيديو، أو على زر الإغلاق (✕) لإيقافه",
+        description: (
+          <span className="flex items-center flex-wrap gap-1">
+            اضغط على زر التشغيل (▶️) لبدء الفيديو، أو على زر الإغلاق الأحمر
+            <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-red-600 text-white mx-1 shadow-sm">
+              <svg
+                className="w-3 h-3"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </span>
+            الموجود في <b>أعلى يسار</b> الفيديو لإيقافه تماماً.
+          </span>
+        ),
       },
       {
         label: "تصغير الفيديو",
-        description:
-          "اضغط على أيقونة التصغير (ثلاثة خطوط أفقية متلامسة بلون أزرق) في أعلى يمين الفيديو لإخفائه في زاوية الشاشة",
+        description: (
+          <span className="flex items-center flex-wrap gap-1">
+            اضغط على أيقونة التصغير الزرقاء
+            <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-blue-600 text-white mx-1 shadow-sm">
+              <svg
+                className="w-3 h-3"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+                />
+              </svg>
+            </span>
+            الموجودة في <b>أعلى يسار</b> الفيديو (بجانب زر الإغلاق) لإخفائه في
+            زاوية الشاشة.
+          </span>
+        ),
       },
       {
         label: "توسيع الفيديو",
@@ -184,6 +226,22 @@ const helpSections = [
       },
     ],
   },
+  {
+    title: "١٠. الأسئلة الشائعة (FAQ)",
+    icon: FaInfoCircle,
+    items: [
+      {
+        label: "هل يعمل التطبيق على جميع الأجهزة؟",
+        description:
+          "نعم، التطبيق مصمم ليعمل على جميع الهواتف الذكية والأجهزة اللوحية وأجهزة الكمبيوتر من خلال المتصفح.",
+      },
+      {
+        label: "لماذا لا تظهر الفيديوهات أحياناً؟",
+        description:
+          "قد يكون ذلك بسبب ضعف اتصال الإنترنت في المرة الأولى. تأكد من فتح اللحن مرة واحدة وأنت متصل بإنترنت قوي ليتم تخزينه.",
+      },
+    ],
+  },
 ];
 
 export default function Help() {
@@ -208,6 +266,43 @@ export default function Help() {
           </header>
 
           <div className="space-y-6 sm:space-y-8">
+            <section className="glass-card-dark p-5 sm:p-6 md:p-8 border-l-4 border-l-blue-500">
+              <div className="flex items-center gap-3 mb-5">
+                <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-blue-800/40 border border-blue-600/30">
+                  <FaMobileAlt className="w-5 h-5 text-blue-400" />
+                </div>
+                <h2 className="text-xl font-bold text-blue-300">
+                  تثبيت التطبيق على الهاتف
+                </h2>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="p-4 rounded-xl bg-blue-950/30 border border-blue-800/20">
+                  <h3 className="text-lg font-semibold text-white mb-2 flex items-center gap-2">
+                    <span className="w-6 h-6 rounded-full bg-blue-500 text-xs flex items-center justify-center">
+                      1
+                    </span>
+                    أجهزة الأندرويد (Chrome)
+                  </h3>
+                  <p className="text-gray-300 text-sm leading-relaxed">
+                    افتح الموقع في متصفح Chrome، اضغط على النقاط الثلاث (⋮) في
+                    الأعلى، ثم اختر <b>"تثبيت التطبيق"</b>.
+                  </p>
+                </div>
+                <div className="p-4 rounded-xl bg-blue-950/30 border border-blue-800/20">
+                  <h3 className="text-lg font-semibold text-white mb-2 flex items-center gap-2">
+                    <span className="w-6 h-6 rounded-full bg-blue-500 text-xs flex items-center justify-center">
+                      2
+                    </span>
+                    أجهزة الآيفون (Safari)
+                  </h3>
+                  <p className="text-gray-300 text-sm leading-relaxed">
+                    افتح الموقع في Safari، اضغط على زر <b>"المشاركة"</b> (المربع
+                    مع سهم للأعلى)، ثم اختر <b>"إضافة إلى الشاشة الرئيسية"</b>.
+                  </p>
+                </div>
+              </div>
+            </section>
+
             {helpSections.map((section, sectionIndex) => (
               <section
                 key={section.title}
