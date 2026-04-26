@@ -480,16 +480,29 @@ async function buildRangedResponseStreaming(fullResponse, rangeHeader) {
  */
 async function fetchVideoFromNetwork(request, cache, cleanReq, cleanUrl) {
   const slow = isSlowNetwork();
-  const corsReq = new Request(cleanUrl ?? request.url, {
+  const targetUrl = cleanUrl ?? request.url;
+
+  const corsOptions = {
     method: "GET",
     mode: "cors",
     credentials: "omit",
-    // لو كان الطلب الأصلي range request، اطلب الملف كامل للكاش
     headers: {},
-  });
+  };
 
   try {
-    const response = await fetch(corsReq);
+    let response = await fetch(new Request(targetUrl, corsOptions));
+
+    // إذا فشل الطلب الأول (احتمال تلوث الكاش)، جرب مع bypass
+    if (!response.ok && response.status !== 404) {
+      const bypassUrl =
+        targetUrl +
+        (targetUrl.includes("?") ? "&" : "?") +
+        "cors_retry=" +
+        Date.now();
+      response = await fetch(
+        new Request(bypassUrl, { ...corsOptions, cache: "no-store" }),
+      );
+    }
 
     if (response.ok && !slow) {
       const withinLimit = await isWithinQuota(MAX_VIDEO_CACHE_SIZE);
@@ -584,6 +597,8 @@ async function fetchAndCacheVideo(url, cache, cleanReq) {
       method: "GET",
       mode: "cors",
       credentials: "omit",
+      cache: "no-store", // إجبار المتصفح على جلب نسخة جديدة من السيرفر
+      referrerPolicy: "no-referrer",
     });
     try {
       const response = await fetch(corsReq);
