@@ -503,7 +503,17 @@ async function fetchVideoFromNetwork(request, cache, cleanReq, cleanUrl) {
 
     return response;
   } catch (error) {
-    console.error("[SW] فشل جلب الفيديو من الشبكة:", error);
+    if (error.name === "TypeError" && !navigator.onLine) {
+      // نحن في وضع الأوفلاين والفيديو غير مخزن
+    } else {
+      console.error(
+        "[SW] فشل جلب الفيديو من الشبكة (احتمال مشكلة CORS):",
+        error,
+      );
+      console.warn(
+        "[SW] ⚠️ تنبيه: يجب إضافة Origin 'https://esmo-erof.vercel.app' في إعدادات Cloudflare R2 bucket CORS.",
+      );
+    }
     return new Response(null, { status: 503 });
   }
 }
@@ -575,7 +585,11 @@ async function fetchAndCacheVideo(url, cache, cleanReq) {
         await cacheVideoWithHeaders(response, cache, cleanReq, cleanUrl);
       }
     } catch (err) {
-      // صامت في الخلفية
+      if (err.name === "TypeError" && navigator.onLine) {
+        console.warn(
+          `[SW] فشل التخزين المسبق لـ ${cleanUrl} بسبب CORS. يرجى مراجعة إعدادات R2.`,
+        );
+      }
     } finally {
       activeVideoFetches.delete(cleanUrl);
     }
