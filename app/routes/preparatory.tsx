@@ -282,6 +282,7 @@ export default function PreparatoryPage() {
 
   // ====== Ref للإغلاق الذكي عند النقر خارج القائمة ======
   const controlsPanelRef = useRef<HTMLDivElement>(null);
+  const lastPrewarmedUrls = useRef<Set<string>>(new Set());
 
   // ====== useEffect للإغلاق الذكي (Click Outside to Close) ======
   useEffect(() => {
@@ -317,24 +318,34 @@ export default function PreparatoryPage() {
     ].filter(Boolean).length;
   }, [fullscreenLyrics]);
 
-  // --- دالة لاستخراج روابط الفيديو لمرحلة محددة ---
-  const getStageVideoUrls = (stageKey: string): string[] => {
-    const videos = preparatoryVideos[stageKey] || [];
-    return videos.map((v) => v.url).filter(Boolean);
-  };
-
-  // تخزين مسبق للفيديوهات عند اختيار مرحلة
+  // ====== useEffect لتحميل الفيديوهات وصور الهزات مسبقاً ======
+  // يتم التحميل عند اختيار مرحلة
   useEffect(() => {
-    if (selectedStage) {
-      const urls = getStageVideoUrls(selectedStage);
-      if (urls.length > 0) {
+    if (!selectedStage) return;
+
+    const allUrlsToPrewarm: string[] = [];
+    const videos = preparatoryVideos[selectedStage] || [];
+
+    videos.forEach((v) => {
+      if (v.url) allUrlsToPrewarm.push(v.url);
+      if (v.hazzatImage) allUrlsToPrewarm.push(v.hazzatImage);
+      if (v.hazzatImage2) allUrlsToPrewarm.push(v.hazzatImage2);
+      if (v.hazzatImage3) allUrlsToPrewarm.push(v.hazzatImage3);
+    });
+
+    if (allUrlsToPrewarm.length > 0) {
+      const uniqueUrls = [...new Set(allUrlsToPrewarm)];
+      const newUrls = uniqueUrls.filter(
+        (url) => !lastPrewarmedUrls.current.has(url),
+      );
+
+      if (newUrls.length > 0) {
         console.log(
-          "[Preparatory] تخزين فيديوهات المرحلة:",
-          selectedStage,
-          urls.length,
-          "فيديو",
+          `[Preparatory] طلب تخزين مسبق لـ ${newUrls.length} مورد جديد (من أصل ${uniqueUrls.length})`,
+          { selectedStage },
         );
-        prewarmVideos(urls);
+        newUrls.forEach((url) => lastPrewarmedUrls.current.add(url));
+        prewarmVideos(newUrls);
       }
     }
   }, [selectedStage]);
@@ -609,7 +620,9 @@ export default function PreparatoryPage() {
                             <div className="h-px bg-white/10 mb-4" />
                             <p
                               className="text-gray-300 leading-relaxed whitespace-pre-line coptic-content"
-                              dangerouslySetInnerHTML={{ __html: toArabicNumerals(item.content) }}
+                              dangerouslySetInnerHTML={{
+                                __html: toArabicNumerals(item.content),
+                              }}
                             />
                           </div>
                         )}

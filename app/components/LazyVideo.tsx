@@ -10,10 +10,11 @@ interface LazyVideoProps {
   onPlayChange?: (isPlaying: boolean) => void;
 }
 
-// قائمة بجميع الفيديوهات النشطة للتحكم في التشغيل الحصري
 const videoInstances: HTMLVideoElement[] = [];
-
 const BASE_RETRY_DELAY = 2000;
+
+// ✅ FIX: waiting ده مش دايماً خطأ — انتظر 5 ثواني قبل التدخل
+const STALL_THRESHOLD_MS = 5000;
 
 export default function LazyVideo({
   src,
@@ -24,15 +25,16 @@ export default function LazyVideo({
   onPlayChange,
 }: LazyVideoProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const sourceRef = useRef<HTMLSourceElement>(null); // مرجع مباشر للـ source لضمان تحديث الـ DOM
+  const sourceRef = useRef<HTMLSourceElement>(null);
   const initialTimeSet = useRef(false);
   const stallRetryCount = useRef(0);
   const stallTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // ✅ مؤقت لـ waiting event — لا نتدخل فوراً
+  const waitingTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const [isLoading, setIsLoading] = useState(true);
   const [stallMessage, setStallMessage] = useState<string | null>(null);
 
-  // ── تنظيف المؤقتات ────────────────────────────────────────────────
   const clearStallTimer = useCallback(() => {
     if (stallTimer.current) {
       clearTimeout(stallTimer.current);
@@ -40,18 +42,27 @@ export default function LazyVideo({
     }
   }, []);
 
-  // ── استراتيجية التعافي التلقائي عند فشل التحميل ──────────────────────────
+  // ✅ FIX: تنظيف مؤقت الـ waiting أيضاً
+  const clearWaitingTimer = useCallback(() => {
+    if (waitingTimer.current) {
+      clearTimeout(waitingTimer.current);
+      waitingTimer.current = null;
+    }
+  }, []);
+
   const attemptStalledRecovery = useCallback(() => {
     const video = videoRef.current;
     const source = sourceRef.current;
     if (!video || !source) return;
 
-    // استخدام Exponential Backoff لزيادة وقت الانتظار تدريجياً
     const delay = BASE_RETRY_DELAY * Math.pow(2, stallRetryCount.current % 5);
+    const isOffline = !navigator.onLine;
     stallRetryCount.current += 1;
 
     setStallMessage(
-      `جاري محاولة استعادة الفيديو... (${stallRetryCount.current})`,
+      isOffline
+        ? `جاري البحث في الكاش... (${stallRetryCount.current})`
+        : `جاري استعادة الفيديو... (${stallRetryCount.current})`,
     );
 
     stallTimer.current = setTimeout(() => {
@@ -60,23 +71,27 @@ export default function LazyVideo({
       const wasPlaying = !videoRef.current.paused;
       const savedTime = videoRef.current.currentTime;
 
-      // إضافة Cache Buster لكسر القفل وضمان طلب CORS جديد نظيف
-      const sep = src.includes("?") ? "&" : "?";
-      const bustSrc = `${src}${sep}_cb=${Date.now()}`;
+      // ✅ في الأوفلاين: استخدم المسار الأصلي بدون cache buster
+      //    المسار الأصلي هو الي مخزن في الكاش
+      let finalSrc = src;
+      if (!isOffline) {
+        const sep = src.includes("?") ? "&" : "?";
+        finalSrc = `${src}${sep}_cb=${Date.now()}`;
+      }
 
-      sourceRef.current.src = bustSrc;
-      videoRef.current.load(); // إجبار المتصفح على إعادة تحميل المصدر الجديد
-
+      sourceRef.current.src = finalSrc;
+      videoRef.current.load();
       videoRef.current.currentTime = savedTime;
+
       if (wasPlaying) {
         videoRef.current.play().catch(() => {
-          console.warn("Service Worker: فشل التشغيل التلقائي بعد التعافي");
+          console.warn("[LazyVideo] فشل التشغيل التلقائي بعد التعافي");
         });
       }
     }, delay);
   }, [src]);
 
-  // ── التحديث عند تغيير الفيديو أو المسار ─────────────────────────────────
+  // ── تحديث المصدر عند تغيير الفيديو ──────────────────────────────────────
   useEffect(() => {
     if (videoRef.current && sourceRef.current) {
       sourceRef.current.src = src;
@@ -87,9 +102,10 @@ export default function LazyVideo({
     setIsLoading(true);
     setStallMessage(null);
     clearStallTimer();
-  }, [src, clearStallTimer]);
+    clearWaitingTimer();
+  }, [src, clearStallTimer, clearWaitingTimer]);
 
-  // ── إدارة الأحداث والتحكم في الموارد ──────────────────────────────────
+  // ── إدارة الأحداث ─────────────────────────────────────────────────────────
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
@@ -99,16 +115,14 @@ export default function LazyVideo({
       initialTimeSet.current = true;
     }
 
-    if (!videoInstances.includes(video)) {
-      videoInstances.push(video);
-    }
+    if (!videoInstances.includes(video)) videoInstances.push(video);
 
     const handlePlay = () => {
-      // إيقاف أي فيديوهات أخرى تعمل في نفس الوقت
       videoInstances.forEach((v) => {
         if (v !== video && !v.paused) v.pause();
       });
       clearStallTimer();
+      clearWaitingTimer();
       stallRetryCount.current = 0;
       setStallMessage(null);
       onPlayChange?.(true);
@@ -116,21 +130,38 @@ export default function LazyVideo({
 
     const handlePause = () => {
       clearStallTimer();
+      clearWaitingTimer();
       onPlayChange?.(false);
     };
 
     const handleTimeUpdate = () => {
+      // لو الفيديو بدأ يتحرك، الـ waiting انتهى بنجاح → نلغي المؤقت
+      clearWaitingTimer();
+      setStallMessage(null);
       onTimeUpdate?.(video.currentTime);
     };
 
     const handleCanPlay = () => {
       setIsLoading(false);
       clearStallTimer();
+      clearWaitingTimer();
       setStallMessage(null);
     };
 
+    // ✅ FIX: waiting مش خطأ — انتظر STALL_THRESHOLD_MS قبل اعتباره فشلاً
+    const handleWaiting = () => {
+      clearWaitingTimer();
+      waitingTimer.current = setTimeout(() => {
+        // بعد 5 ثواني، لو لسه واقف → اعتبره فشل حقيقي
+        if (videoRef.current && !videoRef.current.paused) return; // عاد للتشغيل لوحده
+        setIsLoading(true);
+        attemptStalledRecovery();
+      }, STALL_THRESHOLD_MS);
+    };
+
+    // ✅ error ده خطأ حقيقي — تدخّل فوراً
     const handleError = () => {
-      // بدلاً من إظهار شاشة خطأ، نبدأ محاولة التعافي فوراً
+      clearWaitingTimer();
       setIsLoading(true);
       attemptStalledRecovery();
     };
@@ -139,18 +170,18 @@ export default function LazyVideo({
     video.addEventListener("pause", handlePause);
     video.addEventListener("timeupdate", handleTimeUpdate);
     video.addEventListener("canplay", handleCanPlay);
-    video.addEventListener("waiting", handleError); // استدعاء التعافي عند الـ Buffering الطويل
-    video.addEventListener("error", handleError);
+    video.addEventListener("waiting", handleWaiting); // ✅ مؤقت 5 ثواني
+    video.addEventListener("error", handleError); // ✅ فوري
 
     return () => {
       video.removeEventListener("play", handlePlay);
       video.removeEventListener("pause", handlePause);
       video.removeEventListener("timeupdate", handleTimeUpdate);
       video.removeEventListener("canplay", handleCanPlay);
-      video.removeEventListener("waiting", handleError);
+      video.removeEventListener("waiting", handleWaiting);
       video.removeEventListener("error", handleError);
-
       clearStallTimer();
+      clearWaitingTimer();
       const index = videoInstances.indexOf(video);
       if (index > -1) videoInstances.splice(index, 1);
     };
@@ -158,29 +189,25 @@ export default function LazyVideo({
     startTime,
     attemptStalledRecovery,
     clearStallTimer,
+    clearWaitingTimer,
     onPlayChange,
     onTimeUpdate,
   ]);
 
-  // ── إعادة المحاولة اليدوية ──────────────────────────────────────────
+  // ── إعادة المحاولة اليدوية ────────────────────────────────────────────────
   const handleManualRetry = async () => {
     try {
-      evictVideo(src); // حذف النسخة البايظة من الكاش المحلي
+      evictVideo(src);
     } catch {}
     stallRetryCount.current = 0;
+    clearWaitingTimer();
     attemptStalledRecovery();
   };
 
   return (
-    /* تأكد أن العنصر الأب لديه aspect-ratio أو طول محدد 
-       استخدمنا aspect-video لضمان أبعاد 16:9 الافتراضية إذا لم يحدد الأب غير ذلك
-    */
     <div className="relative w-full h-full max-h-full max-w-full bg-black overflow-hidden rounded-xl shadow-2xl flex items-center justify-center">
       <video
         ref={videoRef}
-        /* استخدام max-full يضمن عدم خروج الفيديو عن حدود الـ div 
-           object-contain يضمن رؤية الفيديو كاملاً مع وجود حواف سوداء إذا لم تتطابق الأبعاد
-        */
         className="w-full h-full max-w-full max-h-full object-contain block"
         controls
         preload="metadata"
@@ -195,7 +222,6 @@ export default function LazyVideo({
         </p>
       </video>
 
-      {/* شاشة التحميل - ستبقى متمركزة دائماً بفضل flex في الأب */}
       {(isLoading || stallMessage) && (
         <div className="absolute inset-0 pointer-events-none flex flex-col items-center justify-center bg-black/40 backdrop-blur-[2px] z-10">
           <div className="w-10 h-10 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin mb-4" />
@@ -207,7 +233,6 @@ export default function LazyVideo({
         </div>
       )}
 
-      {/* زر إعادة المحاولة */}
       {stallRetryCount.current > 2 && (
         <button
           onClick={handleManualRetry}

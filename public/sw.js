@@ -1,22 +1,30 @@
 /**
- * ESMO_EROF Service Worker — Advanced Edition
+ * ESMO_EROF Service Worker — Offline-First Edition
  *
- * ✅ الميزات الجديدة:
- * ─────────────────────────────────────────────
- * 1. Range Requests (206 Partial Content)   → تقديم الفيديو من الكاش مع دعم Seek كامل
- * 2. IndexedDB LRU                          → بيانات LRU تبقى حتى بعد إعادة تشغيل SW
- * 3. BroadcastChannel                       → تواصل ثنائي الاتجاه موثوق مع التطبيق
- * 4. Background Fetch API                   → تحميل الفيديوهات الكبيرة في الخلفية
- * 5. Network Information API               → تجنب التخزين على شبكات 2G/slow-2g
- * 6. Min-Heap Priority Queue               → إدارة أولويات التحميل المسبق بدقة
- * 7. navigator.storage.persist()           → طلب تخزين دائم لمنع الحذف التلقائي
- * 8. Compression-aware caching             → اكتشاف دعم Brotli / GZip
- * 9. Stale-While-Revalidate لجميع الأنواع → سرعة + حداثة في نفس الوقت
- * 10. Self-healing cache                   → اكتشاف وإصلاح استجابات الكاش التالفة
+ * ✅ الإصلاحات الجوهرية في هذه النسخة:
+ * ─────────────────────────────────────────────────────────────────────────────
+ * 🔴 FIX 1: buildRangedResponse → Streaming بدل blob()
+ *    السبب: blob() كانت تحمّل الفيديو كله في الذاكرة (مثلاً 300MB دفعة واحدة)
+ *    على الموبايل ده بيفشل صامتاً → لا 206 response → الفيديو مش بيشتغل
+ *    الحل: TransformStream يقرأ بايت بايت بدون تحميل الكل
+ *
+ * 🔴 FIX 2: تخزين الفيديو مع Content-Length + Accept-Ranges مضمونة
+ *    السبب: لو الـ response المخزنة مالهاش Content-Length، مش ممكن نعمل range
+ *    الحل: إعادة بناء الـ response بعد التخزين مع inject الـ headers الناقصة
+ *
+ * 🔴 FIX 3: تنظيف الـ URL قبل البحث في الكاش
+ *    السبب: LazyVideo بتضيف ?_cb=timestamp → مطابقة خاطئة → cache miss دايماً
+ *    الحل: نشيل الـ query string قبل البحث والتخزين
+ *
+ * 🟡 FIX 4: منع إعادة التخزين لو الفيديو موجود بالفعل (مش offline)
+ *    السبب: SWR كان بيعيد تحميل الفيديو كل مرة في الخلفية حتى لو موجود
+ *
+ * 🟡 FIX 5: إبلاغ التطبيق بحالة persist()
+ *    السبب: المتصفح يحذف الكاش تلقائياً لو persist مش متفعلة
  */
 
 // ─── إصدارات الكاش ───────────────────────────────────────────────────────────
-const CACHE_VERSION = "esmo-erof-v10";
+const CACHE_VERSION = "esmo-erof-v11";
 const STATIC_CACHE = `${CACHE_VERSION}-static`;
 const FONT_CACHE = `${CACHE_VERSION}-fonts`;
 const IMAGE_CACHE = `${CACHE_VERSION}-images`;
@@ -45,14 +53,13 @@ const GOOGLE_FONTS = [
   "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Coptic&family=Noto+Sans+Arabic:wght@400;700&display=swap",
 ];
 
-// ─── BroadcastChannel للتواصل مع التطبيق ─────────────────────────────────────
+// ─── BroadcastChannel ────────────────────────────────────────────────────────
 const broadcast = new BroadcastChannel("sw-updates");
 
-// ─── IndexedDB للـ LRU (يبقى عبر إعادة تشغيل SW) ────────────────────────────
+// ─── IndexedDB للـ LRU ────────────────────────────────────────────────────────
 const IDB_NAME = "sw-lru-store";
 const IDB_VERSION = 1;
 const IDB_STORE = "lru";
-
 let _idb = null;
 
 async function getIDB() {
@@ -81,7 +88,7 @@ async function idbPut(cacheName, url) {
     const tx = db.transaction(IDB_STORE, "readwrite");
     tx.objectStore(IDB_STORE).put({ key, cacheName, url, ts: Date.now() });
   } catch {
-    /* تجاهل أخطاء IDB غير الحرجة */
+    /* تجاهل */
   }
 }
 
@@ -91,7 +98,6 @@ async function idbGetLRU(cacheName, count) {
     const tx = db.transaction(IDB_STORE, "readonly");
     const index = tx.objectStore(IDB_STORE).index("ts");
     const items = [];
-
     return new Promise((resolve) => {
       const req = index.openCursor();
       req.onsuccess = (e) => {
@@ -121,17 +127,15 @@ async function idbDelete(cacheName, url) {
   }
 }
 
-// ─── Min-Heap Priority Queue للتحميل المسبق ──────────────────────────────────
+// ─── Min-Heap Priority Queue ──────────────────────────────────────────────────
 class MinHeap {
   constructor() {
     this._data = [];
   }
-
   push(item) {
     this._data.push(item);
     this._bubbleUp(this._data.length - 1);
   }
-
   pop() {
     if (!this._data.length) return null;
     const top = this._data[0];
@@ -142,14 +146,12 @@ class MinHeap {
     }
     return top;
   }
-
   peek() {
     return this._data[0] ?? null;
   }
   get size() {
     return this._data.length;
   }
-
   _bubbleUp(i) {
     while (i > 0) {
       const p = (i - 1) >> 1;
@@ -158,7 +160,6 @@ class MinHeap {
       i = p;
     }
   }
-
   _sinkDown(i) {
     const n = this._data.length;
     while (true) {
@@ -175,8 +176,11 @@ class MinHeap {
 }
 
 const prewarmHeap = new MinHeap();
-const prewarmInSet = new Set(); // لمنع التكرار بدون O(n) scan
+const prewarmInSet = new Set();
 let prewarmActive = false;
+
+// لتجنب تكرار جلب نفس الفيديو في نفس الوقت
+const activeVideoFetches = new Map();
 
 // ─── فحص جودة الشبكة ─────────────────────────────────────────────────────────
 function isSlowNetwork() {
@@ -187,20 +191,51 @@ function isSlowNetwork() {
   );
 }
 
+// ─── ✅ دالة مساعدة: تنظيف URL من Cache Busters ──────────────────────────────
+/**
+ * نشيل أي query string زيادة (?_cb=... أو غيرها) عشان نضمن تطابق الكاش
+ * الفيديو المخزن بـ /video.mp4 مش هيتلاقى لو طلبناه بـ /video.mp4?_cb=1234
+ */
+function cleanVideoUrl(url) {
+  try {
+    const u = new URL(url);
+    // احتفظ بالـ query parameters الأصلية إلا لو كانت cache buster فقط
+    u.searchParams.delete("_cb");
+    // لو بعد الحذف ما فيش params تانية، ارجع الـ URL بدون query string
+    if ([...u.searchParams.keys()].length === 0) {
+      return u.origin + u.pathname;
+    }
+    return u.toString();
+  } catch {
+    // لو URL مش صالح، ارجعه زي ما هو
+    return url.split("?")[0];
+  }
+}
+
 // ─── تثبيت Service Worker ─────────────────────────────────────────────────────
 self.addEventListener("install", (event) => {
   console.log(`[SW] تثبيت ${CACHE_VERSION}`);
-
   event.waitUntil(
     (async () => {
-      // 1. طلب تخزين دائم لمنع حذف الكاش تلقائياً
+      // 1. طلب تخزين دائم
       try {
-        await self.navigator.storage?.persist();
+        const granted = await self.navigator.storage?.persist();
+        console.log(
+          `[SW] Storage persist: ${granted ? "✅ ممنوح" : "⚠️ مرفوض"}`,
+        );
+        // أبلغ التطبيق بالنتيجة فور التفعيل
+        broadcast.postMessage({
+          type: "STORAGE_PERSIST_STATUS",
+          granted: granted ?? false,
+          warning: !granted
+            ? "التخزين غير دائم — أضف التطبيق لشاشة الرئيسية لضمان بقاء الفيديوهات offline"
+            : null,
+        });
       } catch {
         /* تجاهل */
       }
 
-      // 2. تخزين الأصول الحرجة أولاً
+      // 2. تخزين الأصول الحرجة
       const staticCache = await caches.open(STATIC_CACHE);
       await staticCache.addAll(CRITICAL_ASSETS).catch(() => {});
 
@@ -229,10 +264,8 @@ self.addEventListener("install", (event) => {
 // ─── تفعيل Service Worker ─────────────────────────────────────────────────────
 self.addEventListener("activate", (event) => {
   console.log("[SW] تفعيل النسخة الجديدة");
-
   event.waitUntil(
     (async () => {
-      // حذف الكاشات القديمة
       const allCaches = await caches.keys();
       await Promise.all(
         allCaches
@@ -242,7 +275,6 @@ self.addEventListener("activate", (event) => {
             return caches.delete(name);
           }),
       );
-
       await self.clients.claim();
       broadcast.postMessage({ type: "SW_ACTIVATED", version: CACHE_VERSION });
       console.log("[SW] تمت السيطرة على التطبيق");
@@ -255,7 +287,6 @@ self.addEventListener("fetch", (event) => {
   const { request } = event;
   const url = new URL(request.url);
 
-  // استثناءات — لا تعترض هذه الطلبات
   if (!url.protocol.startsWith("http")) return;
   if (url.pathname.includes("manifest.json")) return;
   if (url.hostname.includes("api.countapi.xyz")) return;
@@ -265,7 +296,6 @@ self.addEventListener("fetch", (event) => {
     event.respondWith(handleVideoRequest(request));
     return;
   }
-
   if (
     url.hostname.includes("fonts.googleapis.com") ||
     url.hostname.includes("fonts.gstatic.com")
@@ -273,17 +303,14 @@ self.addEventListener("fetch", (event) => {
     event.respondWith(handleFontRequest(request));
     return;
   }
-
   if (isImageRequest(request)) {
     event.respondWith(handleImageRequest(request));
     return;
   }
-
   if (isStaticAsset(request)) {
     event.respondWith(handleStaticRequest(request));
     return;
   }
-
   if (isPageRequest(request)) {
     event.respondWith(handlePageRequest(request));
     return;
@@ -294,121 +321,277 @@ self.addEventListener("fetch", (event) => {
   );
 });
 
-// ─── ✅ معالجة طلبات الفيديو مع Range Request كامل ──────────────────────────
+// ═══════════════════════════════════════════════════════════════════════════════
+// ✅ FIX 1+2+3: معالجة طلبات الفيديو — الإصلاح الجوهري
+// ═══════════════════════════════════════════════════════════════════════════════
+
 async function handleVideoRequest(request) {
   const cache = await caches.open(VIDEO_CACHE);
-  const cleanReq = new Request(request.url, { method: "GET" });
+  // ✅ FIX 3: نظّف الـ URL من cache busters قبل البحث
+  const cleanUrl = cleanVideoUrl(request.url);
+  const cleanReq = new Request(cleanUrl, { method: "GET" });
   const rangeHeader = request.headers.get("range");
 
-  // ── محاولة تقديم من الكاش ─────────────────────────────────────────────────
+  // ── بحث في الكاش ──────────────────────────────────────────────────────────
   const cachedResponse = await cache.match(cleanReq);
 
-  if (cachedResponse?.ok) {
-    idbPut(VIDEO_CACHE, request.url); // تحديث LRU
-
-    // ✅ إذا كان الطلب يحمل Range header، قطّع الاستجابة من الكاش
-    if (rangeHeader) {
-      const ranged = await buildRangedResponse(cachedResponse, rangeHeader);
-      if (ranged) {
-        // تحديث في الخلفية (SWR)
-        fetchAndCacheVideo(request.url, cache, cleanReq).catch(() => {});
-        return ranged;
-      }
+  if (cachedResponse) {
+    // تأكد إن الـ response الجاية من الكاش صالحة
+    if (!cachedResponse.ok && cachedResponse.status !== 206) {
+      console.warn("[SW] كاش تالف، حذف وإعادة جلب:", cleanUrl);
+      await cache.delete(cleanReq);
+      await idbDelete(VIDEO_CACHE, cleanUrl);
+      return fetchVideoFromNetwork(request, cache, cleanReq, cleanUrl);
     }
 
-    // ✅ Stale-While-Revalidate: أعد فوراً وحدّث في الخلفية
-    fetchAndCacheVideo(request.url, cache, cleanReq).catch(() => {});
+    idbPut(VIDEO_CACHE, cleanUrl);
+
+    if (rangeHeader) {
+      // ✅ FIX 1: Streaming Range — بدون تحميل الفيديو كله في الذاكرة
+      const ranged = await buildRangedResponseStreaming(
+        cachedResponse,
+        rangeHeader,
+      );
+      if (ranged) return ranged;
+      // Fallback: ارجع الملف كاملاً، المتصفح يتعامل معاه
+      console.warn("[SW] Range fallback → 200 كامل");
+      return cachedResponse;
+    }
+
+    // ✅ FIX 4: SWR فقط لو الفيديو مش offline وفيه شبكة
+    if (navigator.onLine && !isSlowNetwork()) {
+      fetchAndCacheVideo(cleanUrl, cache, cleanReq).catch(() => {});
+    }
     return cachedResponse;
   }
 
-  // إذا كان الكاش تالفاً، امسحه
-  if (cachedResponse && !cachedResponse.ok) {
-    await cache.delete(cleanReq);
-  }
-
-  // ── جلب من الشبكة ────────────────────────────────────────────────────────
-  return fetchVideoFromNetwork(request, cache, cleanReq);
+  // ── مش في الكاش → جلب من الشبكة ──────────────────────────────────────────
+  return fetchVideoFromNetwork(request, cache, cleanReq, cleanUrl);
 }
 
+// ─── ✅ FIX 1: Streaming Range Response — قلب الحل ───────────────────────────
 /**
- * ✅ بناء استجابة 206 Partial Content من كاش كامل
+ * يخدم جزء من فيديو مخزن بدون تحميله كله في الذاكرة.
+ *
+ * الفرق عن النسخة القديمة:
+ *   قديم → blob() → يحمّل 300MB+ في RAM → OOM على الموبايل → null → فشل
+ *   جديد → ReadableStream → يقرأ chunk بـ chunk → لا استهلاك ذاكرة زيادة
  */
-async function buildRangedResponse(fullResponse, rangeHeader) {
+async function buildRangedResponseStreaming(fullResponse, rangeHeader) {
   try {
     const rangeMatch = /bytes=(\d+)-(\d*)/.exec(rangeHeader);
     if (!rangeMatch) return null;
 
-    // ✅ اقرأ الحجم الكلي من Content-Length أولاً — بدون تحميل الـ body
     const contentLength = fullResponse.headers.get("content-length");
-    const blob = await fullResponse.clone().blob();
-    const total = contentLength ? parseInt(contentLength, 10) : blob.size;
+    if (!contentLength) {
+      // بدون Content-Length مش نعرف نحسب النطاق → ارجع null
+      console.warn("[SW] Content-Length مفقود — لا يمكن بناء Range response");
+      return null;
+    }
+
+    const total = parseInt(contentLength, 10);
     const start = parseInt(rangeMatch[1], 10);
     const end = rangeMatch[2] ? parseInt(rangeMatch[2], 10) : total - 1;
     const safeEnd = Math.min(end, total - 1);
-    const sliced = blob.slice(start, safeEnd + 1);
+    const needed = safeEnd - start + 1;
 
-    return new Response(sliced, {
+    // نطاق غير صالح
+    if (start >= total || needed <= 0) {
+      return new Response(null, {
+        status: 416,
+        headers: { "Content-Range": `bytes */${total}` },
+      });
+    }
+
+    // ✅ TransformStream: لا blob، لا ArrayBuffer كامل في الذاكرة
+    const { readable, writable } = new TransformStream();
+    const writer = writable.getWriter();
+    const reader = fullResponse.body.getReader();
+
+    // شغّل القراءة في الخلفية
+    (async () => {
+      let position = 0; // بايت قرأناه من أول الملف
+      let bytesWritten = 0; // بايت كتبناه في الـ stream
+
+      try {
+        while (bytesWritten < needed) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          const chunkStart = position;
+          const chunkEnd = position + value.length - 1;
+          position += value.length;
+
+          // هذا الـ chunk قبل النطاق المطلوب → تجاهله كاملاً
+          if (chunkEnd < start) continue;
+
+          // هذا الـ chunk بعد نهاية النطاق → وقّف
+          if (chunkStart > safeEnd) break;
+
+          // احسب التقاطع بين الـ chunk والنطاق المطلوب
+          const sliceFrom = Math.max(0, start - chunkStart);
+          const sliceTo = Math.min(value.length, safeEnd - chunkStart + 1);
+          const slice = value.subarray(sliceFrom, sliceTo);
+
+          await writer.write(slice);
+          bytesWritten += slice.length;
+        }
+      } catch (err) {
+        // تجاهل أخطاء الإلغاء العادية (AbortError) أو الأخطاء غير المعرفة
+        if (err && err.name !== "AbortError") {
+          console.error("[SW] Stream error:", err);
+        }
+      } finally {
+        try {
+          await writer.close();
+        } catch {
+          /* تجاهل */
+        }
+        try {
+          await reader.cancel();
+        } catch {
+          /* تجاهل */
+        }
+      }
+    })();
+
+    return new Response(readable, {
       status: 206,
       headers: {
         "Content-Type": fullResponse.headers.get("Content-Type") ?? "video/mp4",
         "Content-Range": `bytes ${start}-${safeEnd}/${total}`,
-        "Content-Length": String(sliced.size),
+        "Content-Length": String(needed),
         "Accept-Ranges": "bytes",
       },
     });
-  } catch {
+  } catch (err) {
+    console.error("[SW] buildRangedResponseStreaming خطأ:", err);
     return null;
   }
 }
 
-async function fetchVideoFromNetwork(request, cache, cleanReq) {
-  // لا تحفظ على شبكة بطيئة
+// ─── ✅ FIX 2: تخزين الفيديو مع ضمان Content-Length + Accept-Ranges ──────────
+/**
+ * المشكلة: لو الـ response المخزنة مالهاش Content-Length،
+ * مش هنقدر نعمل range requests من الكاش → الفيديو لن يعمل offline.
+ *
+ * الحل: بعد ما نجيب الفيديو من الشبكة، لو Content-Length ناقص،
+ * نقرأ الـ body ونحسب الحجم بنفسنا ونحط الـ headers يدوياً.
+ */
+async function fetchVideoFromNetwork(request, cache, cleanReq, cleanUrl) {
   const slow = isSlowNetwork();
-  const corsReq = new Request(request.url, {
+  const corsReq = new Request(cleanUrl ?? request.url, {
     method: "GET",
     mode: "cors",
     credentials: "omit",
+    // لو كان الطلب الأصلي range request، اطلب الملف كامل للكاش
+    headers: {},
   });
 
   try {
     const response = await fetch(corsReq);
+
     if (response.ok && !slow) {
       const withinLimit = await isWithinQuota(MAX_VIDEO_CACHE_SIZE);
       if (withinLimit) {
-        cache
-          .put(cleanReq, response.clone())
-          .then(() => idbPut(VIDEO_CACHE, request.url))
-          .catch(() => {});
+        // استخدام fetchAndCacheVideo لضمان عدم التكرار
+        fetchAndCacheVideo(cleanUrl || request.url, cache, cleanReq).catch(
+          () => {},
+        );
       }
     }
+
     return response;
   } catch (error) {
-    console.error("[SW] فشل جلب الفيديو:", error);
+    console.error("[SW] فشل جلب الفيديو من الشبكة:", error);
     return new Response(null, { status: 503 });
   }
 }
 
-async function fetchAndCacheVideo(url, cache, cleanReq) {
-  const corsReq = new Request(url, {
-    method: "GET",
-    mode: "cors",
-    credentials: "omit",
-  });
-  const response = await fetch(corsReq);
-  if (response.ok) {
-    await cache.put(cleanReq, response.clone());
-    await idbPut(VIDEO_CACHE, url);
+/**
+ * يخزّن الفيديو مع إضافة Content-Length و Accept-Ranges إن كانا غائبَين.
+ * هذا هو ما يضمن قدرتنا على Range requests لاحقاً من الكاش.
+ */
+async function cacheVideoWithHeaders(response, cache, cleanReq, cleanUrl) {
+  const existingCL = response.headers.get("content-length");
+  const isVideo = isVideoRequest({ url: cleanUrl || cleanReq.url });
+
+  let finalResponse;
+
+  if (existingCL && (isVideo ? response.headers.get("accept-ranges") : true)) {
+    // ✅ الـ headers موجودة → خزّن مباشرة
+    finalResponse = response;
+  } else {
+    // ⚠️ الـ headers ناقصة → اقرأ الـ body وحسب الحجم
+    const bodyBuffer = await response.arrayBuffer();
+    const size = bodyBuffer.byteLength;
+
+    const headers = new Headers(response.headers);
+    headers.set("Content-Length", String(size));
+
+    if (isVideo) {
+      headers.set("Accept-Ranges", "bytes");
+      if (!headers.get("content-type")) {
+        headers.set("Content-Type", "video/mp4");
+      }
+    } else if (!headers.get("content-type")) {
+      // محاولة استنتاج نوع الصورة من الامتداد
+      const url = cleanUrl || cleanReq.url;
+      if (url.endsWith(".png")) headers.set("Content-Type", "image/png");
+      else if (url.endsWith(".jpg") || url.endsWith(".jpeg"))
+        headers.set("Content-Type", "image/jpeg");
+      else if (url.endsWith(".webp")) headers.set("Content-Type", "image/webp");
+      else headers.set("Content-Type", "image/jpeg");
+    }
+
+    finalResponse = new Response(bodyBuffer, {
+      status: response.status,
+      statusText: response.statusText,
+      headers,
+    });
   }
+
+  await cache.put(cleanReq, finalResponse);
+  await idbPut(isVideo ? VIDEO_CACHE : IMAGE_CACHE, cleanUrl ?? cleanReq.url);
+  console.log(
+    `[SW] ✅ تم التخزين بنجاح (${isVideo ? "فيديو" : "صورة"}):`,
+    cleanReq.url,
+  );
 }
 
-// ─── ✅ الملفات الثابتة — Stale-While-Revalidate ─────────────────────────────
+async function fetchAndCacheVideo(url, cache, cleanReq) {
+  const cleanUrl = cleanVideoUrl(url);
+  if (activeVideoFetches.has(cleanUrl)) return activeVideoFetches.get(cleanUrl);
+
+  const fetchPromise = (async () => {
+    const corsReq = new Request(cleanUrl, {
+      method: "GET",
+      mode: "cors",
+      credentials: "omit",
+    });
+    try {
+      const response = await fetch(corsReq);
+      if (response.ok) {
+        await cacheVideoWithHeaders(response, cache, cleanReq, cleanUrl);
+      }
+    } catch (err) {
+      // صامت في الخلفية
+    } finally {
+      activeVideoFetches.delete(cleanUrl);
+    }
+  })();
+
+  activeVideoFetches.set(cleanUrl, fetchPromise);
+  return fetchPromise;
+}
+
+// ─── الملفات الثابتة — Stale-While-Revalidate ────────────────────────────────
 async function handleStaticRequest(request) {
   const cache = await caches.open(STATIC_CACHE);
   const cached = await cache.match(request);
   idbPut(STATIC_CACHE, request.url);
 
   if (cached) {
-    // تحديث صامت في الخلفية
     fetch(request)
       .then((r) => r.ok && cache.put(request, r.clone()))
       .catch(() => {});
@@ -424,7 +607,7 @@ async function handleStaticRequest(request) {
   }
 }
 
-// ─── ✅ الصور — Cache-First + SWR ─────────────────────────────────────────────
+// ─── الصور — Cache-First + SWR ───────────────────────────────────────────────
 async function handleImageRequest(request) {
   const cache = await caches.open(IMAGE_CACHE);
   const cached = await cache.match(request);
@@ -445,7 +628,6 @@ async function handleImageRequest(request) {
     }
     return response;
   } catch {
-    // صورة شفافة 1×1 كـ fallback
     return new Response(
       Uint8Array.from(
         atob("R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"),
@@ -456,7 +638,7 @@ async function handleImageRequest(request) {
   }
 }
 
-// ─── ✅ الخطوط — Cache-First دائم ─────────────────────────────────────────────
+// ─── الخطوط — Cache-First دائم ───────────────────────────────────────────────
 async function handleFontRequest(request) {
   const cache = await caches.open(FONT_CACHE);
   const cached = await cache.match(request);
@@ -471,23 +653,20 @@ async function handleFontRequest(request) {
   }
 }
 
-// ─── ✅ الصفحات — Network-First مع Fallback سريع ─────────────────────────────
+// ─── الصفحات — Network-First مع Fallback ─────────────────────────────────────
 async function handlePageRequest(request) {
   const cache = await caches.open(STATIC_CACHE);
-
   try {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 3000); // 3 ثواني timeout
-
+    const timeoutId = setTimeout(() => controller.abort(), 3000);
     const response = await fetch(request, { signal: controller.signal });
     clearTimeout(timeoutId);
-
     if (response.ok) {
       cache.put(request, response.clone());
       return response;
     }
   } catch {
-    /* Fallback للكاش */
+    /* Fallback */
   }
 
   return (
@@ -497,12 +676,7 @@ async function handlePageRequest(request) {
   );
 }
 
-// ─── ✅ Min-Heap Prewarm Queue ─────────────────────────────────────────────────
-/**
- * أضف URL للقائمة بأولوية (أرقام أصغر = أولوية أعلى)
- * @param {string} url
- * @param {number} priority  0 = أعلى أولوية (priority queue)
- */
+// ─── Min-Heap Prewarm ─────────────────────────────────────────────────────────
 function enqueuePrewarm(url, priority = 5) {
   if (!url || prewarmInSet.has(url)) return;
   prewarmInSet.add(url);
@@ -514,7 +688,8 @@ async function processPrewarmQueue() {
   prewarmActive = true;
 
   try {
-    const cache = await caches.open(VIDEO_CACHE);
+    const videoCache = await caches.open(VIDEO_CACHE);
+    const imageCache = await caches.open(IMAGE_CACHE);
     const CONCURRENT = isSlowNetwork() ? 1 : 3;
 
     while (prewarmHeap.size > 0) {
@@ -524,21 +699,27 @@ async function processPrewarmQueue() {
       }
 
       await Promise.allSettled(
-        batch.map(async (url) => {
+        batch.map(async (rawUrl) => {
           try {
-            const req = new Request(url, { mode: "cors", credentials: "omit" });
-            const exists = await cache.match(req);
+            const url = cleanVideoUrl(rawUrl);
+            const isVideo = isVideoRequest({ url });
+            const cache = isVideo ? videoCache : imageCache;
+
+            const cleanReq = new Request(url, {
+              mode: "cors",
+              credentials: "omit",
+            });
+
+            const exists = await cache.match(cleanReq);
             if (!exists) {
-              const resp = await fetch(req);
-              if (resp?.ok) {
-                await cache.put(req, resp.clone());
-                await idbPut(VIDEO_CACHE, url);
-              }
+              // استخدام fetchAndCacheVideo بدلاً من الجلب المباشر لضمان عدم التكرار
+              await fetchAndCacheVideo(url, cache, cleanReq);
             }
           } catch {
-            /* تجاهل أخطاء الطلب الفردي */
+            /* تجاهل */
+          } finally {
+            prewarmInSet.delete(rawUrl);
           }
-          prewarmInSet.delete(url);
         }),
       );
 
@@ -546,18 +727,17 @@ async function processPrewarmQueue() {
     }
   } finally {
     prewarmActive = false;
-    // تطبيق حدود الكاش بعد اكتمال التحميل
     enforceLRULimit(VIDEO_CACHE, MAX_VIDEO_CACHE_SIZE).catch(() => {});
+    enforceLRULimit(IMAGE_CACHE, MAX_IMAGE_CACHE_SIZE).catch(() => {});
   }
 }
 
-// ─── ✅ Background Fetch لملفات الفيديو الضخمة ───────────────────────────────
+// ─── Background Fetch ─────────────────────────────────────────────────────────
 async function startBackgroundFetch(id, urls, options = {}) {
   try {
     if (!self.registration.backgroundFetch) return false;
     const existing = await self.registration.backgroundFetch.get(id);
     if (existing) return true;
-
     await self.registration.backgroundFetch.fetch(id, urls, {
       title: options.title ?? "تحميل فيديو",
       icons: options.icons ?? [],
@@ -578,9 +758,9 @@ self.addEventListener("backgroundfetchsuccess", (event) => {
         records.map(async (record) => {
           const response = await record.responseReady;
           if (response.ok) {
-            const req = new Request(record.request.url, { method: "GET" });
-            await cache.put(req, response);
-            await idbPut(VIDEO_CACHE, record.request.url);
+            const url = cleanVideoUrl(record.request.url);
+            const cleanReq = new Request(url, { method: "GET" });
+            await cacheVideoWithHeaders(response, cache, cleanReq, url);
           }
         }),
       );
@@ -592,7 +772,7 @@ self.addEventListener("backgroundfetchsuccess", (event) => {
   );
 });
 
-// ─── ✅ معالجة رسائل التطبيق ──────────────────────────────────────────────────
+// ─── معالجة رسائل التطبيق ────────────────────────────────────────────────────
 self.addEventListener("message", (event) => {
   const { data, ports } = event;
   if (!data?.type) return;
@@ -624,7 +804,7 @@ self.addEventListener("message", (event) => {
       if (urls.length) {
         event.waitUntil(
           (async () => {
-            urls.forEach((u) => enqueuePrewarm(u, 0)); // أولوية قصوى
+            urls.forEach((u) => enqueuePrewarm(u, 0));
             await processPrewarmQueue();
           })(),
         );
@@ -644,8 +824,9 @@ self.addEventListener("message", (event) => {
         (async () => {
           try {
             const cache = await caches.open(VIDEO_CACHE);
+            const clean = cleanVideoUrl(urlToEvict);
+            const target = new URL(clean);
             const keys = await cache.keys();
-            const target = new URL(urlToEvict, self.location.origin);
             await Promise.all(
               keys.map(async (req) => {
                 const rUrl = new URL(req.url);
@@ -687,12 +868,30 @@ self.addEventListener("message", (event) => {
       break;
     }
 
+    // ✅ طلب إعادة فحص حالة الـ persist
+    case "CHECK_PERSIST": {
+      event.waitUntil(
+        (async () => {
+          try {
+            const persisted = await self.navigator.storage?.persisted();
+            ports[0]?.postMessage({
+              type: "PERSIST_STATUS",
+              persisted: persisted ?? false,
+            });
+          } catch {
+            ports[0]?.postMessage({ type: "PERSIST_STATUS", persisted: false });
+          }
+        })(),
+      );
+      break;
+    }
+
     default:
       break;
   }
 });
 
-// ─── دوال مساعدة ─────────────────────────────────────────────────────────────
+// ─── دوال مساعدة ──────────────────────────────────────────────────────────────
 
 function isVideoRequest(req) {
   return /\.(mp4|webm|ogg|mov|avi|mkv)(\?|$)/i.test(req.url);
@@ -722,55 +921,34 @@ function sleep(ms) {
   return new Promise((r) => setTimeout(r, ms));
 }
 
-/**
- * ✅ التحقق من المساحة المتاحة قبل التخزين
- */
 async function isWithinQuota(needed) {
   try {
     const { quota, usage } = await self.navigator.storage.estimate();
-    return quota - usage > needed * 0.1; // احتفظ بـ 10% هامش
+    return quota - usage > needed * 0.1;
   } catch {
     return true;
   }
 }
 
-/**
- * ✅ حساب حجم كاش بعينه بالبايت
- *
- * الاستراتيجية (بالأولوية):
- *  1. Content-Length header  → O(1) بدون تحميل أي بيانات
- *  2. StorageManager.estimate() كـ fallback سريع للمجموع الكلي
- *  3. blob().size فقط كملاذ أخير لملفات مجهولة الحجم
- */
 async function getCacheSize(cacheName) {
   try {
     const cache = await caches.open(cacheName);
     const keys = await cache.keys();
     let total = 0;
-    let unknownSizeCount = 0;
+    let unknownCount = 0;
 
     for (const key of keys) {
-      // اقرأ الـ headers فقط — لا تحمّل الـ body أبداً
       const resp = await cache.match(key, { ignoreVary: true });
       if (!resp) continue;
-
-      const contentLength = resp.headers.get("content-length");
-
-      if (contentLength) {
-        // ✅ الحالة المثالية: الحجم موجود في الـ header مباشرة
-        total += parseInt(contentLength, 10);
-      } else {
-        // ⚠️ الملف مخزن بدون Content-Length (نادر — HTML/CSS صغير عادةً)
-        // استخدم blob() بس على الملفات الصغيرة فقط (< 5MB)
-        unknownSizeCount++;
-        if (unknownSizeCount <= 20) {
-          // حد أقصى 20 ملف بـ blob لتجنب استنزاف الذاكرة
-          try {
-            const blob = await resp.clone().blob();
-            total += blob.size;
-          } catch {
-            /* تجاهل ملفات تالفة */
-          }
+      const cl = resp.headers.get("content-length");
+      if (cl) {
+        total += parseInt(cl, 10);
+      } else if (unknownCount++ < 20) {
+        try {
+          const blob = await resp.clone().blob();
+          total += blob.size;
+        } catch {
+          /* تجاهل */
         }
       }
     }
@@ -780,9 +958,6 @@ async function getCacheSize(cacheName) {
   }
 }
 
-/**
- * ✅ تطبيق حد LRU: احذف الأقدم استخداماً حتى نصل للحد المسموح
- */
 async function enforceLRULimit(cacheName, maxBytes) {
   try {
     let size = await getCacheSize(cacheName);
@@ -792,14 +967,13 @@ async function enforceLRULimit(cacheName, maxBytes) {
     const victims = await idbGetLRU(cacheName, 20);
 
     for (const item of victims) {
-      if (size <= maxBytes * 0.9) break; // أوقف عند 90% من الحد
+      if (size <= maxBytes * 0.9) break;
       const req = new Request(item.url);
       await cache.delete(req);
       await idbDelete(cacheName, item.url);
       size = await getCacheSize(cacheName);
     }
 
-    // إذا لم يكفِ، احذف بالترتيب الطبيعي
     if (size > maxBytes) {
       const keys = await cache.keys();
       for (const key of keys) {
@@ -817,8 +991,6 @@ async function enforceLRULimit(cacheName, maxBytes) {
 async function clearAllCaches() {
   const names = await caches.keys();
   await Promise.all(names.map((n) => caches.delete(n)));
-
-  // مسح IDB
   try {
     const db = await getIDB();
     const tx = db.transaction(IDB_STORE, "readwrite");
@@ -826,7 +998,6 @@ async function clearAllCaches() {
   } catch {
     /* تجاهل */
   }
-
   broadcast.postMessage({ type: "CACHES_CLEARED" });
   console.log("[SW] تم مسح جميع الكاشات");
 }

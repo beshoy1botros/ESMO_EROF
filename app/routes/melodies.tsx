@@ -113,8 +113,6 @@ export default function MelodiesPage() {
   const [isMinimized, setIsMinimized] = useState(false);
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
 
-
-
   // ====== حالة تحريك الفيديو ======
   const [videoPosition, setVideoPosition] = useState({ x: 24, y: 24 });
   const [isDragging, setIsDragging] = useState(false);
@@ -123,80 +121,63 @@ export default function MelodiesPage() {
 
   // ====== Ref للإغلاق الذكي عند النقر خارج القائمة ======
   const controlsPanelRef = useRef<HTMLDivElement>(null);
+  const lastPrewarmedUrls = useRef<Set<string>>(new Set());
 
-  // ====== useEffect لتحميل الفيديوهات مسبقاً عند اختيار مستوى ======
-  // يتم التحميل فقط للمستوى المحدد (وليس جميع مستويات المرحلة)
+  // ====== useEffect لتحميل الفيديوهات وصور الهزات مسبقاً ======
+  // يتم التحميل عند اختيار المرحلة أو المستوى أو تغير الفيديوهات
   useEffect(() => {
-    if (stage && level) {
-      const stageKey = stage as StageKey;
-      // تحويل المستوى العربي إلى الإنجليزي
-      const levelMap: Record<string, keyof LevelVideos> = {
-        الأول: "first",
-        الثاني: "second",
-        الموهوبين: "gifted",
-      };
-      const englishLevel = levelMap[level];
-      
-      if (englishLevel) {
-        // الحصول على رابط الفيديوهات للمستوى المحدد فقط
-        const stageUrls = stageVideoUrls[stageKey];
-        if (stageUrls) {
-          const urls = stageUrls[englishLevel as keyof typeof stageUrls]?.filter(Boolean) || [];
-          if (urls.length > 0) {
-            console.log(
-              "[Melodies] تخزين فيديوهات المستوى:",
-              stage,
-              level,
-              urls.length,
-              "فيديو",
-            );
-            prewarmVideos(urls);
-          }
+    if (!stage) return;
+
+    const stageKey = stage as StageKey;
+    const allUrlsToPrewarm: string[] = [];
+
+    // 1. جمع صور الهزات للمرحلة (فقط إذا لم يتم تحميلها من قبل في هذه الجلسة للمرحلة الحالية)
+    const stageData = videoData[stageKey];
+    if (stageData) {
+      Object.values(stageData).forEach((levelVideos) => {
+        if (Array.isArray(levelVideos)) {
+          levelVideos.forEach((video) => {
+            if (video.hazzatImage) allUrlsToPrewarm.push(video.hazzatImage);
+            if (video.hazzatImage٢) allUrlsToPrewarm.push(video.hazzatImage٢);
+            if (video.hazzatImage٣) allUrlsToPrewarm.push(video.hazzatImage٣);
+            if (video.hazzatImage٤) allUrlsToPrewarm.push(video.hazzatImage٤);
+            if (video.hazzatImage٥) allUrlsToPrewarm.push(video.hazzatImage٥);
+            if (video.hazzatImage٦) allUrlsToPrewarm.push(video.hazzatImage٦);
+            if (video.hazzatImage٧) allUrlsToPrewarm.push(video.hazzatImage٧);
+            if (video.hazzatImage٨) allUrlsToPrewarm.push(video.hazzatImage٨);
+            if (video.hazzatImage٩) allUrlsToPrewarm.push(video.hazzatImage٩);
+            if (video.hazzatImage١٠) allUrlsToPrewarm.push(video.hazzatImage١٠);
+          });
         }
+      });
+    }
+
+    // 2. جمع فيديوهات المستوى الحالي
+    if (level && videos.length > 0) {
+      videos.forEach((v) => {
+        const url = getVideoUrl(v, stageKey, level);
+        if (url) allUrlsToPrewarm.push(url);
+      });
+    }
+
+    // إرسال الكل في طلب واحد للـ SW
+    if (allUrlsToPrewarm.length > 0) {
+      // إزالة التكرار وفلترة الروابط التي تم طلبها بالفعل في هذه الجلسة
+      const uniqueUrls = [...new Set(allUrlsToPrewarm)];
+      const newUrls = uniqueUrls.filter(
+        (url) => !lastPrewarmedUrls.current.has(url),
+      );
+
+      if (newUrls.length > 0) {
+        console.log(
+          `[Melodies] طلب تخزين مسبق لـ ${newUrls.length} مورد جديد (من أصل ${uniqueUrls.length})`,
+          { stage, level },
+        );
+        newUrls.forEach((url) => lastPrewarmedUrls.current.add(url));
+        prewarmVideos(newUrls);
       }
     }
-  }, [stage, level]);
-
-  // ====== useEffect لتحميل صور الهزات عند اختيار مرحلة ======
-  // يتم التحميل لجميع صور الهزات في المرحلة عند فتحها
-  useEffect(() => {
-    if (stage) {
-      const stageKey = stage as StageKey;
-      const stageData = videoData[stageKey];
-      
-      if (stageData) {
-        // جمع جميع روابط صور الهزات من جميع المستويات
-        const hazzatUrls: string[] = [];
-        
-        Object.values(stageData).forEach((levelVideos) => {
-          if (Array.isArray(levelVideos)) {
-            levelVideos.forEach((video) => {
-              if (video.hazzatImage) hazzatUrls.push(video.hazzatImage);
-              if (video.hazzatImage٢) hazzatUrls.push(video.hazzatImage٢);
-              if (video.hazzatImage٣) hazzatUrls.push(video.hazzatImage٣);
-              if (video.hazzatImage٤) hazzatUrls.push(video.hazzatImage٤);
-              if (video.hazzatImage٥) hazzatUrls.push(video.hazzatImage٥);
-              if (video.hazzatImage٦) hazzatUrls.push(video.hazzatImage٦);
-              if (video.hazzatImage٧) hazzatUrls.push(video.hazzatImage٧);
-              if (video.hazzatImage٨) hazzatUrls.push(video.hazzatImage٨);
-              if (video.hazzatImage٩) hazzatUrls.push(video.hazzatImage٩);
-              if (video.hazzatImage١٠) hazzatUrls.push(video.hazzatImage١٠);
-            });
-          }
-        });
-        
-        if (hazzatUrls.length > 0) {
-          console.log(
-            "[Melodies] تخزين صور الهزات للمرحلة:",
-            stage,
-            hazzatUrls.length,
-            "صورة",
-          );
-          prewarmVideos(hazzatUrls);
-        }
-      }
-    }
-  }, [stage]);
+  }, [stage, level, videos]);
 
   // ====== useEffect للإغلاق الذكي (Click Outside to Close) ======
   useEffect(() => {
@@ -364,15 +345,6 @@ export default function MelodiesPage() {
         fullscreenLyrics.hazzatImage٣,
       ].filter(Boolean).length
     : 0;
-
-  useEffect(() => {
-    if (Array.isArray(videos) && videos.length > 0 && stage && level) {
-      const urls = videos
-        .map((v) => getVideoUrl(v, stage as StageKey, level))
-        .filter((url): url is string => Boolean(url));
-      prewarmVideos(urls);
-    }
-  }, [videos, stage, level]);
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-950 text-white font-sans">
@@ -1192,8 +1164,6 @@ export default function MelodiesPage() {
                         <span className="text-3xl">🎵</span>
                       </h3>
                       <p className="text-center text-gray-400 text-sm mt-2"></p>
-                      
-
                     </div>
 
                     <div className="w-full overflow-hidden">
