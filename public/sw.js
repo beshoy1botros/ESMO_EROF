@@ -19,12 +19,15 @@
  * 🟡 FIX 4: منع إعادة التخزين لو الفيديو موجود بالفعل (مش offline)
  *    السبب: SWR كان بيعيد تحميل الفيديو كل مرة في الخلفية حتى لو موجود
  *
- * 🟡 FIX 5: إبلاغ التطبيق بحالة persist()
- *    السبب: المتصفح يحذف الكاش تلقائياً لو persist مش متفعلة
+ * � FIX 5: تجاوز كاش الـ CDN الملوث (CORS Fix)
+ *    السبب: طلبات الفيديوهات بدون CORS كانت تلوث كاش الـ CDN/Browser وتمنع التخزين المسبق.
+ *    الحل: استخدام cache: 'no-store' و query param عشوائي لإجبار السيرفر على إرسال Headers صحيحة.
+ *
+ * 🟡 FIX 6: إبلاغ التطبيق بحالة persist()
  */
 
 // ─── إصدارات الكاش ───────────────────────────────────────────────────────────
-const CACHE_VERSION = "esmo-erof-v11";
+const CACHE_VERSION = "esmo-erof-v12";
 const STATIC_CACHE = `${CACHE_VERSION}-static`;
 const FONT_CACHE = `${CACHE_VERSION}-fonts`;
 const IMAGE_CACHE = `${CACHE_VERSION}-images`;
