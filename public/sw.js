@@ -574,7 +574,13 @@ async function fetchAndCacheVideo(url, cache, cleanReq) {
   if (activeVideoFetches.has(cleanUrl)) return activeVideoFetches.get(cleanUrl);
 
   const fetchPromise = (async () => {
-    const corsReq = new Request(cleanUrl, {
+    // إضافة query param لتجاوز كاش الـ CDN الذي قد يكون ملوثاً بطلبات No-CORS
+    const bypassUrl =
+      cleanUrl +
+      (cleanUrl.includes("?") ? "&" : "?") +
+      "cors_fix=" +
+      Date.now();
+    const corsReq = new Request(bypassUrl, {
       method: "GET",
       mode: "cors",
       credentials: "omit",

@@ -210,7 +210,7 @@ export default function LazyVideo({
         ref={videoRef}
         className="w-full h-full max-w-full max-h-full object-contain block"
         controls
-        preload="metadata"
+        preload="auto"
         poster={poster}
         playsInline
         crossOrigin="anonymous"
