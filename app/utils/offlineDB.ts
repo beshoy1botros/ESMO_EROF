@@ -22,9 +22,9 @@ const MELODIES_STORE = "melodiesData";
 const PREPARATORY_STORE = "preparatoryData";
 const USER_PROGRESS_STORE = "userProgress";
 
-// ✅ مدة صلاحية البيانات المخزنة قبل اعتبارها قديمة
-const MELODIES_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000;    // 7 أيام
-const PREPARATORY_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000; // 7 أيام
+// ✅ مدة صلاحية البيانات المخزنة - تم جعلها سنة لضمان البقاء الدائم
+const MELODIES_MAX_AGE_MS = 365 * 24 * 60 * 60 * 1000;    // 365 يوم
+const PREPARATORY_MAX_AGE_MS = 365 * 24 * 60 * 60 * 1000; // 365 يوم
 
 // Types for user progress
 export interface UserProgress {

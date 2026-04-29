@@ -1,6 +1,7 @@
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { Link } from "react-router";
+import OfflineManager from "../components/OfflineManager";
 import {
   FaMusic,
   FaLayerGroup,
@@ -374,6 +375,10 @@ export default function Help() {
               إذا كانت لديك أي استفسارات عن استخدام البرنامج، يمكنك التواصل معنا
               عبر الواتساب في أسفل الصفحة
             </p>
+          </section>
+
+          <section className="mt-8 sm:mt-12">
+            <OfflineManager />
           </section>
         </div>
       </main>

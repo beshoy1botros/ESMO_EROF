@@ -22,7 +22,10 @@ export const links: Route.LinksFunction = () => [
     href: "https://fonts.gstatic.com",
     crossOrigin: "anonymous",
   },
-  { rel: "preconnect", href: "https://pub-25e727cf0c0e49799268f333275e7cf2.r2.dev" },
+  {
+    rel: "preconnect",
+    href: "https://pub-25e727cf0c0e49799268f333275e7cf2.r2.dev",
+  },
   {
     rel: "stylesheet",
     href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Coptic&family=Noto+Sans+Arabic:wght@400;700&display=swap",
@@ -158,6 +161,14 @@ export function Layout({ children }: { children: React.ReactNode }) {
               (function() {
                 if ('serviceWorker' in navigator) {
                   window.addEventListener('load', function() {
+                    // ✅ طلب التخزين الدائم فور التحميل
+                    if (navigator.storage && navigator.storage.persist) {
+                      navigator.storage.persist().then(function(granted) {
+                        if (granted) console.log('Storage will not be cleared except by explicit user action');
+                        else console.log('Storage may be cleared under storage pressure');
+                      });
+                    }
+
                     navigator.serviceWorker.register('/sw.js')
                       .then(function(reg) {
                         console.log('Service Worker registered:', reg.scope);
