@@ -27,10 +27,10 @@
  */
 
 // ─── الإصدار النهائي والمستقر ──────────────────────────────────────────────────
-const CACHE_VERSION = "esmo-erof-stable-v1";
+const CACHE_VERSION = "esmo-erof-stable-v2";
 
 // ✅ جميع الخزائن الآن دائمة ومستقلة تماماً عن أي تحديثات قادمة
-const STATIC_CACHE = `esmo-erof-permanent-static`;
+const STATIC_CACHE = `esmo-erof-permanent-static-v2`;
 const FONT_CACHE = `esmo-erof-permanent-fonts`;
 const IMAGE_CACHE = `esmo-erof-permanent-images`;
 const VIDEO_CACHE = `esmo-erof-permanent-videos`;

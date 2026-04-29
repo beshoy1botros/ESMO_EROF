@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, useMemo, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import LazyVideo from "../components/LazyVideo";
@@ -1166,109 +1167,121 @@ export default function MelodiesPage() {
                       <p className="text-center text-gray-400 text-sm mt-2"></p>
                     </div>
 
-                    <div className="w-full overflow-hidden">
-                      <div className="flex flex-col items-stretch m-0 p-0 leading-none text-[0]">
-                        {fullscreenLyrics.hazzatImage && (
-                          <img
-                            src={fullscreenLyrics.hazzatImage}
-                            alt="هزات اللحن - الصورة الأولى"
-                            className="block w-full h-auto object-contain m-0 p-0 select-none pointer-events-none align-top -mt-px first:mt-0"
-                            draggable={false}
-                            loading="lazy"
-                            decoding="async"
-                          />
-                        )}
-                        {fullscreenLyrics.hazzatImage٢ && (
-                          <img
-                            src={fullscreenLyrics.hazzatImage٢}
-                            alt="هزات اللحن - الصورة الثانية"
-                            className="block w-full h-auto object-contain m-0 p-0 select-none pointer-events-none align-top -mt-px first:mt-0"
-                            draggable={false}
-                            loading="lazy"
-                            decoding="async"
-                          />
-                        )}
-                        {fullscreenLyrics.hazzatImage٣ && (
-                          <img
-                            src={fullscreenLyrics.hazzatImage٣}
-                            alt="هزات اللحن - الصورة الثالثة"
-                            className="block w-full h-auto object-contain m-0 p-0 select-none pointer-events-none align-top -mt-px first:mt-0"
-                            draggable={false}
-                            loading="lazy"
-                            decoding="async"
-                          />
-                        )}
-                        {fullscreenLyrics.hazzatImage٤ && (
-                          <img
-                            src={fullscreenLyrics.hazzatImage٤}
-                            alt="هزات اللحن - الصورة الرابعة"
-                            className="block w-full h-auto object-contain m-0 p-0 select-none pointer-events-none align-top -mt-px first:mt-0"
-                            draggable={false}
-                            loading="lazy"
-                            decoding="async"
-                          />
-                        )}
-                        {fullscreenLyrics.hazzatImage٥ && (
-                          <img
-                            src={fullscreenLyrics.hazzatImage٥}
-                            alt="هزات اللحن - الصورة الخامسة"
-                            className="block w-full h-auto object-contain m-0 p-0 select-none pointer-events-none align-top -mt-px first:mt-0"
-                            draggable={false}
-                            loading="lazy"
-                            decoding="async"
-                          />
-                        )}
-                        {fullscreenLyrics.hazzatImage٦ && (
-                          <img
-                            src={fullscreenLyrics.hazzatImage٦}
-                            alt="هزات اللحن - الصورة السادسة"
-                            className="block w-full h-auto object-contain m-0 p-0 select-none pointer-events-none align-top -mt-px first:mt-0"
-                            draggable={false}
-                            loading="lazy"
-                            decoding="async"
-                          />
-                        )}
-                        {fullscreenLyrics.hazzatImage٧ && (
-                          <img
-                            src={fullscreenLyrics.hazzatImage٧}
-                            alt="هزات اللحن - الصورة السابعة"
-                            className="block w-full h-auto object-contain m-0 p-0 select-none pointer-events-none align-top -mt-px first:mt-0"
-                            draggable={false}
-                            loading="lazy"
-                            decoding="async"
-                          />
-                        )}
-                        {fullscreenLyrics.hazzatImage٨ && (
-                          <img
-                            src={fullscreenLyrics.hazzatImage٨}
-                            alt="هزات اللحن - الصورة الثامنة"
-                            className="block w-full h-auto object-contain m-0 p-0 select-none pointer-events-none align-top -mt-px first:mt-0"
-                            draggable={false}
-                            loading="lazy"
-                            decoding="async"
-                          />
-                        )}
-                        {fullscreenLyrics.hazzatImage٩ && (
-                          <img
-                            src={fullscreenLyrics.hazzatImage٩}
-                            alt="هزات اللحن - الصورة التاسعة"
-                            className="block w-full h-auto object-contain m-0 p-0 select-none pointer-events-none align-top -mt-px first:mt-0"
-                            draggable={false}
-                            loading="lazy"
-                            decoding="async"
-                          />
-                        )}
-                        {fullscreenLyrics.hazzatImage١٠ && (
-                          <img
-                            src={fullscreenLyrics.hazzatImage١٠}
-                            alt="هزات اللحن - الصورة العاشرة"
-                            className="block w-full h-auto object-contain m-0 p-0 select-none pointer-events-none align-top -mt-px first:mt-0"
-                            draggable={false}
-                            loading="lazy"
-                            decoding="async"
-                          />
-                        )}
-                      </div>
+                    <div className="w-full overflow-hidden bg-black/20 rounded-xl">
+                      <TransformWrapper
+                        initialScale={1}
+                        minScale={1}
+                        maxScale={4}
+                        centerOnInit={true}
+                      >
+                        <TransformComponent
+                          wrapperClass="!w-full !h-auto"
+                          contentClass="!w-full !h-auto"
+                        >
+                          <div className="flex flex-col items-stretch m-0 p-0 leading-none text-[0]">
+                            {fullscreenLyrics.hazzatImage && (
+                              <img
+                                src={fullscreenLyrics.hazzatImage}
+                                alt="هزات اللحن - الصورة الأولى"
+                                className="block w-full h-auto object-contain m-0 p-0 align-top -mt-px first:mt-0"
+                                draggable={false}
+                                loading="lazy"
+                                decoding="async"
+                              />
+                            )}
+                            {fullscreenLyrics.hazzatImage٢ && (
+                              <img
+                                src={fullscreenLyrics.hazzatImage٢}
+                                alt="هزات اللحن - الصورة الثانية"
+                                className="block w-full h-auto object-contain m-0 p-0 align-top -mt-px first:mt-0"
+                                draggable={false}
+                                loading="lazy"
+                                decoding="async"
+                              />
+                            )}
+                            {fullscreenLyrics.hazzatImage٣ && (
+                              <img
+                                src={fullscreenLyrics.hazzatImage٣}
+                                alt="هزات اللحن - الصورة الثالثة"
+                                className="block w-full h-auto object-contain m-0 p-0 align-top -mt-px first:mt-0"
+                                draggable={false}
+                                loading="lazy"
+                                decoding="async"
+                              />
+                            )}
+                            {fullscreenLyrics.hazzatImage٤ && (
+                              <img
+                                src={fullscreenLyrics.hazzatImage٤}
+                                alt="هزات اللحن - الصورة الرابعة"
+                                className="block w-full h-auto object-contain m-0 p-0 align-top -mt-px first:mt-0"
+                                draggable={false}
+                                loading="lazy"
+                                decoding="async"
+                              />
+                            )}
+                            {fullscreenLyrics.hazzatImage٥ && (
+                              <img
+                                src={fullscreenLyrics.hazzatImage٥}
+                                alt="هزات اللحن - الصورة الخامسة"
+                                className="block w-full h-auto object-contain m-0 p-0 align-top -mt-px first:mt-0"
+                                draggable={false}
+                                loading="lazy"
+                                decoding="async"
+                              />
+                            )}
+                            {fullscreenLyrics.hazzatImage٦ && (
+                              <img
+                                src={fullscreenLyrics.hazzatImage٦}
+                                alt="هزات اللحن - الصورة السادسة"
+                                className="block w-full h-auto object-contain m-0 p-0 align-top -mt-px first:mt-0"
+                                draggable={false}
+                                loading="lazy"
+                                decoding="async"
+                              />
+                            )}
+                            {fullscreenLyrics.hazzatImage٧ && (
+                              <img
+                                src={fullscreenLyrics.hazzatImage٧}
+                                alt="هزات اللحن - الصورة السابعة"
+                                className="block w-full h-auto object-contain m-0 p-0 align-top -mt-px first:mt-0"
+                                draggable={false}
+                                loading="lazy"
+                                decoding="async"
+                              />
+                            )}
+                            {fullscreenLyrics.hazzatImage٨ && (
+                              <img
+                                src={fullscreenLyrics.hazzatImage٨}
+                                alt="هزات اللحن - الصورة الثامنة"
+                                className="block w-full h-auto object-contain m-0 p-0 align-top -mt-px first:mt-0"
+                                draggable={false}
+                                loading="lazy"
+                                decoding="async"
+                              />
+                            )}
+                            {fullscreenLyrics.hazzatImage٩ && (
+                              <img
+                                src={fullscreenLyrics.hazzatImage٩}
+                                alt="هزات اللحن - الصورة التاسعة"
+                                className="block w-full h-auto object-contain m-0 p-0 align-top -mt-px first:mt-0"
+                                draggable={false}
+                                loading="lazy"
+                                decoding="async"
+                              />
+                            )}
+                            {fullscreenLyrics.hazzatImage١٠ && (
+                              <img
+                                src={fullscreenLyrics.hazzatImage١٠}
+                                alt="هزات اللحن - الصورة العاشرة"
+                                className="block w-full h-auto object-contain m-0 p-0 align-top -mt-px first:mt-0"
+                                draggable={false}
+                                loading="lazy"
+                                decoding="async"
+                              />
+                            )}
+                          </div>
+                        </TransformComponent>
+                      </TransformWrapper>
                     </div>
                   </div>
                 )}

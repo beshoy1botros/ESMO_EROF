@@ -68,6 +68,21 @@
   --safe-right: env(safe-area-inset-right, 0px);
 }
 
+/* ── Zoom Container Styles ── */
+.react-transform-wrapper {
+  cursor: grab;
+}
+
+.react-transform-wrapper:active {
+  cursor: grabbing;
+}
+
+.react-transform-component {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
 /* ============================================
    Fonts
 ============================================ */
