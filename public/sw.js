@@ -471,6 +471,12 @@ async function buildRangedResponseStreaming(fullResponse, rangeHeader) {
       });
     }
 
+    // ✅ التحقق من دعم TransformStream (للأجهزة القديمة)
+    if (typeof TransformStream === "undefined") {
+      console.warn("[SW] TransformStream غير مدعوم - استخدام الرد الكامل");
+      return fullResponse;
+    }
+
     // ✅ TransformStream: لا blob، لا ArrayBuffer كامل في الذاكرة
     const { readable, writable } = new TransformStream();
     const writer = writable.getWriter();
