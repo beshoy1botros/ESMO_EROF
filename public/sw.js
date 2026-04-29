@@ -27,7 +27,7 @@
  */
 
 // ─── إصدارات الكاش ───────────────────────────────────────────────────────────
-const CACHE_VERSION = "esmo-erof-v12";
+const CACHE_VERSION = "esmo-erof-v13"; // ✅ تحديث الإصدار للاختبار (من v12 إلى v13)
 const STATIC_CACHE = `${CACHE_VERSION}-static`;
 const FONT_CACHE = `${CACHE_VERSION}-fonts`;
 const IMAGE_CACHE = `${CACHE_VERSION}-images`;
@@ -266,21 +266,34 @@ self.addEventListener("install", (event) => {
 
 // ─── تفعيل Service Worker ─────────────────────────────────────────────────────
 self.addEventListener("activate", (event) => {
-  console.log("[SW] تفعيل النسخة الجديدة");
+  console.log(`[SW] تفعيل النسخة الجديدة: ${CACHE_VERSION}`);
   event.waitUntil(
     (async () => {
       const allCaches = await caches.keys();
+
+      // ✅ استثناء كاش الفيديوهات والصور من الحذف إذا أردنا الحفاظ عليها عبر الإصدارات
+      // ملاحظة: VALID_CACHES تحتوي على الأسماء الجديدة المرتبطة بـ v13
+      // سنقوم بحذف الكاشات القديمة التي ليست فيديوهات أو صور
+
       await Promise.all(
-        allCaches
-          .filter((name) => !VALID_CACHES.includes(name))
-          .map((name) => {
-            console.log("[SW] حذف كاش قديم:", name);
-            return caches.delete(name);
-          }),
+        allCaches.map((name) => {
+          if (VALID_CACHES.includes(name)) return null;
+
+          // إذا كان الكاش قديماً ولكنه يحتوي على فيديوهات أو صور، يمكننا اختياريًا تركه أو نقله
+          // في الكود الحالي، VALID_CACHES تتغير مع كل إصدار، لذا سنقوم بتعديل المنطق
+          // لضمان عدم حذف كاش الفيديوهات أبداً حتى لو تغير رقم الإصدار
+          if (name.includes("-videos") || name.includes("-images")) {
+            console.log("[SW] الحفاظ على كاش الوسائط القديم:", name);
+            return null;
+          }
+
+          console.log("[SW] حذف كاش قديم (ملفات برمجية):", name);
+          return caches.delete(name);
+        }),
       );
       await self.clients.claim();
       broadcast.postMessage({ type: "SW_ACTIVATED", version: CACHE_VERSION });
-      console.log("[SW] تمت السيطرة على التطبيق");
+      console.log("[SW] تمت السيطرة على التطبيق بالنسخة الجديدة");
     })(),
   );
 });
@@ -335,8 +348,25 @@ async function handleVideoRequest(request) {
   const cleanReq = new Request(cleanUrl, { method: "GET" });
   const rangeHeader = request.headers.get("range");
 
-  // ── بحث في الكاش ──────────────────────────────────────────────────────────
-  const cachedResponse = await cache.match(cleanReq);
+  // ── بحث في الكاش (البحث في كل كاشات الفيديوهات المتاحة) ────────────────────────
+  let cachedResponse = await cache.match(cleanReq);
+
+  if (!cachedResponse) {
+    // البحث في الكاشات القديمة إذا لم يوجد في الكاش الحالي
+    const allCaches = await caches.keys();
+    for (const name of allCaches) {
+      if (name.includes("-videos") && name !== VIDEO_CACHE) {
+        const oldCache = await caches.open(name);
+        cachedResponse = await oldCache.match(cleanReq);
+        if (cachedResponse) {
+          console.log(`[SW] تم العثور على الفيديو في كاش قديم: ${name}`);
+          // اختيارياً: نقل الفيديو للكاش الجديد
+          cache.put(cleanReq, cachedResponse.clone());
+          break;
+        }
+      }
+    }
+  }
 
   if (cachedResponse) {
     // تأكد إن الـ response الجاية من الكاش صالحة
