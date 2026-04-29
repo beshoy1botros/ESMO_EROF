@@ -27,7 +27,7 @@
  */
 
 // ─── إصدارات الكاش ───────────────────────────────────────────────────────────
-const CACHE_VERSION = "esmo-erof-v13"; // ✅ تحديث الإصدار للاختبار (من v12 إلى v13)
+const CACHE_VERSION = "esmo-erof-v14"; // ✅ تحديث الإصدار للاختبار (من v13 إلى v14)
 const STATIC_CACHE = `${CACHE_VERSION}-static`;
 const FONT_CACHE = `${CACHE_VERSION}-fonts`;
 const IMAGE_CACHE = `${CACHE_VERSION}-images`;
