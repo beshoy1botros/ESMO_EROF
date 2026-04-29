@@ -28,9 +28,9 @@
 
 // ─── إصدارات الكاش ───────────────────────────────────────────────────────────
 const CACHE_VERSION = "esmo-erof-v15"; // ✅ تم التحديث لـ v15
-const STATIC_CACHE = `${CACHE_VERSION}-static`;
 
-// ✅ جعل كاشات الأصول ثابتة بدون رقم إصدار لضمان عدم حذفها نهائياً عند التحديث
+// ✅ جعل جميع الكاشات ثابتة لضمان بقاء البرنامج يعمل بدون نت للأبد حتى مع التحديثات
+const STATIC_CACHE = `esmo-erof-permanent-static`;
 const FONT_CACHE = `esmo-erof-permanent-fonts`;
 const IMAGE_CACHE = `esmo-erof-permanent-images`;
 const VIDEO_CACHE = `esmo-erof-permanent-videos`;
@@ -279,12 +279,12 @@ self.addEventListener("activate", (event) => {
           // إذا كان الكاش ضمن القائمة الصالحة الحالية، لا تحذفه
           if (VALID_CACHES.includes(name)) return null;
 
-          // ✅ حماية كاشات الفيديوهات والصور والخطوط القديمة (Migration)
-          // سنقوم بنقل الملفات من الكاشات القديمة (v12, v13) إلى الكاشات الثابتة (Permanent)
+          // ✅ حماية كاشات الفيديوهات والصور والخطوط والملفات الثابتة القديمة (Migration)
           if (
             name.includes("-videos") ||
             name.includes("-images") ||
-            name.includes("-fonts")
+            name.includes("-fonts") ||
+            name.includes("-static")
           ) {
             console.log(
               "[SW] اكتشاف كاش قديم سيتم دمجه في الكاش الثابت:",
@@ -293,7 +293,7 @@ self.addEventListener("activate", (event) => {
             return migrateToPermanentCache(name);
           }
 
-          console.log("[SW] حذف كاش قديم (ملفات برمجية):", name);
+          console.log("[SW] حذف كاش قديم غير معروف:", name);
           return caches.delete(name);
         }),
       );
@@ -315,6 +315,7 @@ async function migrateToPermanentCache(oldCacheName) {
   if (oldCacheName.includes("-videos")) targetCacheName = VIDEO_CACHE;
   else if (oldCacheName.includes("-images")) targetCacheName = IMAGE_CACHE;
   else if (oldCacheName.includes("-fonts")) targetCacheName = FONT_CACHE;
+  else if (oldCacheName.includes("-static")) targetCacheName = STATIC_CACHE;
   else return caches.delete(oldCacheName);
 
   const targetCache = await caches.open(targetCacheName);
