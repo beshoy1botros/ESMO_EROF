@@ -27,11 +27,14 @@
  */
 
 // ─── إصدارات الكاش ───────────────────────────────────────────────────────────
-const CACHE_VERSION = "esmo-erof-v14"; // ✅ تحديث الإصدار للاختبار (من v13 إلى v14)
+const CACHE_VERSION = "esmo-erof-v15"; // ✅ تم التحديث لـ v15
 const STATIC_CACHE = `${CACHE_VERSION}-static`;
-const FONT_CACHE = `${CACHE_VERSION}-fonts`;
-const IMAGE_CACHE = `${CACHE_VERSION}-images`;
-const VIDEO_CACHE = `${CACHE_VERSION}-videos`;
+
+// ✅ جعل كاشات الأصول ثابتة بدون رقم إصدار لضمان عدم حذفها نهائياً عند التحديث
+const FONT_CACHE = `esmo-erof-permanent-fonts`;
+const IMAGE_CACHE = `esmo-erof-permanent-images`;
+const VIDEO_CACHE = `esmo-erof-permanent-videos`;
+
 const VALID_CACHES = [STATIC_CACHE, FONT_CACHE, IMAGE_CACHE, VIDEO_CACHE];
 
 // ─── حدود التخزين (بالبايت) ──────────────────────────────────────────────────
@@ -271,20 +274,23 @@ self.addEventListener("activate", (event) => {
     (async () => {
       const allCaches = await caches.keys();
 
-      // ✅ استثناء كاش الفيديوهات والصور من الحذف إذا أردنا الحفاظ عليها عبر الإصدارات
-      // ملاحظة: VALID_CACHES تحتوي على الأسماء الجديدة المرتبطة بـ v13
-      // سنقوم بحذف الكاشات القديمة التي ليست فيديوهات أو صور
-
       await Promise.all(
         allCaches.map((name) => {
+          // إذا كان الكاش ضمن القائمة الصالحة الحالية، لا تحذفه
           if (VALID_CACHES.includes(name)) return null;
 
-          // إذا كان الكاش قديماً ولكنه يحتوي على فيديوهات أو صور، يمكننا اختياريًا تركه أو نقله
-          // في الكود الحالي، VALID_CACHES تتغير مع كل إصدار، لذا سنقوم بتعديل المنطق
-          // لضمان عدم حذف كاش الفيديوهات أبداً حتى لو تغير رقم الإصدار
-          if (name.includes("-videos") || name.includes("-images")) {
-            console.log("[SW] الحفاظ على كاش الوسائط القديم:", name);
-            return null;
+          // ✅ حماية كاشات الفيديوهات والصور والخطوط القديمة (Migration)
+          // سنقوم بنقل الملفات من الكاشات القديمة (v12, v13) إلى الكاشات الثابتة (Permanent)
+          if (
+            name.includes("-videos") ||
+            name.includes("-images") ||
+            name.includes("-fonts")
+          ) {
+            console.log(
+              "[SW] اكتشاف كاش قديم سيتم دمجه في الكاش الثابت:",
+              name,
+            );
+            return migrateToPermanentCache(name);
           }
 
           console.log("[SW] حذف كاش قديم (ملفات برمجية):", name);
@@ -297,6 +303,34 @@ self.addEventListener("activate", (event) => {
     })(),
   );
 });
+
+/**
+ * دالة لنقل الملفات من الكاشات القديمة إلى الكاشات الثابتة الجديدة
+ */
+async function migrateToPermanentCache(oldCacheName) {
+  const oldCache = await caches.open(oldCacheName);
+  const keys = await oldCache.keys();
+
+  let targetCacheName;
+  if (oldCacheName.includes("-videos")) targetCacheName = VIDEO_CACHE;
+  else if (oldCacheName.includes("-images")) targetCacheName = IMAGE_CACHE;
+  else if (oldCacheName.includes("-fonts")) targetCacheName = FONT_CACHE;
+  else return caches.delete(oldCacheName);
+
+  const targetCache = await caches.open(targetCacheName);
+
+  await Promise.all(
+    keys.map(async (request) => {
+      const response = await oldCache.match(request);
+      if (response) {
+        await targetCache.put(request, response);
+      }
+    }),
+  );
+
+  console.log(`[SW] تم نقل محتويات ${oldCacheName} إلى ${targetCacheName}`);
+  return caches.delete(oldCacheName);
+}
 
 // ─── اعتراض الطلبات ──────────────────────────────────────────────────────────
 self.addEventListener("fetch", (event) => {
