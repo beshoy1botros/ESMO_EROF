@@ -26,10 +26,10 @@
  * 🟡 FIX 6: إبلاغ التطبيق بحالة persist()
  */
 
-// ─── إصدارات الكاش ───────────────────────────────────────────────────────────
-const CACHE_VERSION = "esmo-erof-v15"; // ✅ تم التحديث لـ v15
+// ─── الإصدار النهائي والمستقر ──────────────────────────────────────────────────
+const CACHE_VERSION = "esmo-erof-stable-v1";
 
-// ✅ جعل جميع الكاشات ثابتة لضمان بقاء البرنامج يعمل بدون نت للأبد حتى مع التحديثات
+// ✅ جميع الخزائن الآن دائمة ومستقلة تماماً عن أي تحديثات قادمة
 const STATIC_CACHE = `esmo-erof-permanent-static`;
 const FONT_CACHE = `esmo-erof-permanent-fonts`;
 const IMAGE_CACHE = `esmo-erof-permanent-images`;
@@ -756,27 +756,28 @@ async function handleFontRequest(request) {
   }
 }
 
-// ─── الصفحات — Network-First مع Fallback ─────────────────────────────────────
+// ─── الصفحات — Cache-First مع Fallback للسرعة القصوى ───────────────────────────
 async function handlePageRequest(request) {
   const cache = await caches.open(STATIC_CACHE);
-  try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 3000);
-    const response = await fetch(request, { signal: controller.signal });
-    clearTimeout(timeoutId);
-    if (response.ok) {
-      cache.put(request, response.clone());
-      return response;
+  const cached = await cache.match(request);
+
+  if (cached) {
+    // تحديث الكاش في الخلفية فقط إذا كان هناك إنترنت
+    if (navigator.onLine) {
+      fetch(request)
+        .then((r) => r.ok && cache.put(request, r))
+        .catch(() => {});
     }
-  } catch {
-    /* Fallback */
+    return cached;
   }
 
-  return (
-    (await cache.match(request)) ??
-    (await caches.match("/")) ??
-    new Response(null, { status: 503 })
-  );
+  try {
+    const response = await fetch(request);
+    if (response.ok) cache.put(request, response.clone());
+    return response;
+  } catch {
+    return (await caches.match("/")) ?? new Response(null, { status: 503 });
+  }
 }
 
 // ─── Min-Heap Prewarm ─────────────────────────────────────────────────────────
