@@ -11,6 +11,7 @@ import {
 import type { Route } from "./+types/root";
 import { useEffect, useState } from "react";
 import { AppInstaller } from "./components/AppInstaller";
+import { OfflineManager } from "./components/OfflineManager";
 import "./app.css";
 import "./styles/mobile-improvements.css";
 import "./styles/mobile-advanced.css";
@@ -159,37 +160,54 @@ export function Layout({ children }: { children: React.ReactNode }) {
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
+                // ✅ FIX 1: طلب التخزين الدائم فوراً — قبل أي تخزين
+                // بدون persist() المتصفح ممكن يمسح الكاش أي وقت
+                if (navigator.storage && navigator.storage.persist) {
+                  navigator.storage.persist().then(function(granted) {
+                    console.log('[App] Persistent storage granted:', granted);
+                    if (!granted) {
+                      console.warn(
+                        '[App] التخزين الدائم مرفوض. ' +
+                        'أضف التطبيق للشاشة الرئيسية لضمان بقاء الكاش.'
+                      );
+                    }
+                  });
+                }
+
                 if ('serviceWorker' in navigator) {
                   window.addEventListener('load', function() {
-                    // ✅ طلب التخزين الدائم فور التحميل
-                    if (navigator.storage && navigator.storage.persist) {
-                      navigator.storage.persist().then(function(granted) {
-                        if (granted) console.log('Storage will not be cleared except by explicit user action');
-                        else console.log('Storage may be cleared under storage pressure');
-                      });
-                    }
-
                     navigator.serviceWorker.register('/sw.js')
                       .then(function(reg) {
-                        console.log('Service Worker registered:', reg.scope);
-                        
-                        // ✅ التحقق من وجود تحديث للـ Service Worker
+                        console.log('[SW] registered:', reg.scope);
+
+                        // ✅ FIX 2: إزالة window.location.reload() التلقائي
+                        // الـ reload المتكرر كان يمنع persist() من الاكتمال
+                        // وكان يسبب إعادة تحميل كل مرة يوجد SW جديد
                         reg.addEventListener('updatefound', function() {
-                          const newWorker = reg.installing;
+                          var newWorker = reg.installing;
                           if (newWorker) {
                             newWorker.addEventListener('statechange', function() {
-                              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                                // ✅ إعادة التحميل التلقائي عند اكتشاف نسخة جديدة
-                                console.log('Service Worker: تم اكتشاف نسخة جديدة، جارٍ إعادة التحميل...');
-                                window.location.reload();
+                              if (
+                                newWorker.state === 'installed' &&
+                                navigator.serviceWorker.controller
+                              ) {
+                                // ✅ إبلاغ التطبيق بوجود نسخة جديدة فقط
+                                // بدون reload تلقائي — المستخدم يختار وقت التحديث
+                                console.log('[SW] نسخة جديدة جاهزة');
+                                window.dispatchEvent(
+                                  new CustomEvent('sw-update-available')
+                                );
                               }
                             });
                           }
                         });
                       })
-                      .catch(function(err) { console.log('Service Worker failed:', err); });
+                      .catch(function(err) {
+                        console.log('[SW] registration failed:', err);
+                      });
                   });
                 }
+
                 function loadMobileFeatures() {
                   var script = document.createElement('script');
                   script.src = '/scripts/mobile-features.js';
@@ -212,6 +230,37 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 export default function App() {
   const [landscapeEnabled, setLandscapeEnabled] = useState(false);
+
+  // ✅ FIX 3: طلب persist() مرة ثانية من داخل React بعد الـ hydration
+  // لضمان تنفيذه حتى لو الـ inline script فوق ما اشتغلش في وقت معين
+  useEffect(() => {
+    async function ensurePersistentStorage() {
+      if (!navigator.storage?.persist) return;
+
+      try {
+        const alreadyPersisted = await navigator.storage.persisted();
+        if (alreadyPersisted) {
+          console.log("[App] التخزين الدائم مفعّل مسبقاً ✓");
+          return;
+        }
+
+        const granted = await navigator.storage.persist();
+        if (granted) {
+          console.log("[App] ✅ التخزين الدائم تم تفعيله بنجاح");
+        } else {
+          console.warn(
+            "[App] ⚠️ التخزين الدائم لم يُمنح. " +
+              "المتصفح قد يمسح الكاش عند نقص المساحة. " +
+              "أضف التطبيق للشاشة الرئيسية لضمان التخزين.",
+          );
+        }
+      } catch (err) {
+        console.warn("[App] فشل طلب التخزين الدائم:", err);
+      }
+    }
+
+    ensurePersistentStorage();
+  }, []);
 
   useEffect(() => {
     if (landscapeEnabled) {
@@ -262,7 +311,10 @@ export default function App() {
     <div dir="rtl">
       <Outlet />
       <AppInstaller />
-      {/* التخزين يعمل تلقائياً في الخلفية عبر sw.js و offlineDB.ts */}
+
+      {/* ✅ FIX 4: تفعيل OfflineManager — كان موجود في الكود بس مش متضمّن هنا */}
+      {/* هو اللي بيعرض تحذير "أضف للشاشة الرئيسية" للمستخدم */}
+      <OfflineManager />
 
       <button
         id="landscape-toggle-button"

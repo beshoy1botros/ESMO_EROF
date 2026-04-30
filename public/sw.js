@@ -27,13 +27,13 @@
  */
 
 // ─── الإصدار النهائي والمستقر ──────────────────────────────────────────────────
-const CACHE_VERSION = "esmo-erof-stable-v2";
+const CACHE_VERSION = "esmo-erof-stable-v3";
 
 // ✅ جميع الخزائن الآن دائمة ومستقلة تماماً عن أي تحديثات قادمة
-const STATIC_CACHE = `esmo-erof-permanent-static-v2`;
-const FONT_CACHE = `esmo-erof-permanent-fonts`;
-const IMAGE_CACHE = `esmo-erof-permanent-images`;
-const VIDEO_CACHE = `esmo-erof-permanent-videos`;
+const STATIC_CACHE = `esmo-erof-permanent-static-v3`;
+const FONT_CACHE = `esmo-erof-permanent-fonts-v3`;
+const IMAGE_CACHE = `esmo-erof-permanent-images-v3`;
+const VIDEO_CACHE = `esmo-erof-permanent-videos-v3`;
 
 const VALID_CACHES = [STATIC_CACHE, FONT_CACHE, IMAGE_CACHE, VIDEO_CACHE];
 
@@ -223,25 +223,7 @@ self.addEventListener("install", (event) => {
   console.log(`[SW] تثبيت ${CACHE_VERSION}`);
   event.waitUntil(
     (async () => {
-      // 1. طلب تخزين دائم
-      try {
-        const granted = await self.navigator.storage?.persist();
-        console.log(
-          `[SW] Storage persist: ${granted ? "✅ ممنوح" : "⚠️ مرفوض"}`,
-        );
-        // أبلغ التطبيق بالنتيجة فور التفعيل
-        broadcast.postMessage({
-          type: "STORAGE_PERSIST_STATUS",
-          granted: granted ?? false,
-          warning: !granted
-            ? "التخزين غير دائم — أضف التطبيق لشاشة الرئيسية لضمان بقاء الفيديوهات offline"
-            : null,
-        });
-      } catch {
-        /* تجاهل */
-      }
-
-      // 2. تخزين الأصول الحرجة
+      // 1. تخزين الأصول الحرجة
       const staticCache = await caches.open(STATIC_CACHE);
       await staticCache.addAll(CRITICAL_ASSETS).catch(() => {});
 

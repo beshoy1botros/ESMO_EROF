@@ -13,6 +13,29 @@ export function OfflineManager({ className = "" }: OfflineManagerProps) {
   // ✅ إصلاح SSR: ابدأ بـ true كقيمة آمنة للسيرفر
   const [isOnline, setIsOnline] = useState(true);
   const [showNotification, setShowNotification] = useState(false);
+  const [isPersistent, setIsPersistent] = useState(true);
+
+  // ✅ التحقق من التخزين الدائم (Persistence)
+  useEffect(() => {
+    async function checkPersist() {
+      if (typeof navigator !== "undefined" && navigator.storage) {
+        try {
+          const persisted = await navigator.storage.persisted();
+          if (!persisted) {
+            // نطلب التخزين الدائم من سياق الصفحة
+            const granted = await navigator.storage.persist();
+            setIsPersistent(granted);
+            console.log("[Storage] persist granted:", granted);
+          } else {
+            setIsPersistent(true);
+          }
+        } catch (err) {
+          console.warn("[Storage] فشل فحص التخزين الدائم:", err);
+        }
+      }
+    }
+    checkPersist();
+  }, []);
 
   // ✅ تحديث حالة الاتصال الفعلية بعد الـ hydration على العميل فقط
   useEffect(() => {
@@ -53,6 +76,15 @@ export function OfflineManager({ className = "" }: OfflineManagerProps) {
         </div>
       )}
 
+      {/* Persistence Warning */}
+      {!isPersistent && (
+        <div className="persistence-warning">
+          <span>
+            ⚠️ التخزين غير دائم — أضف التطبيق للشاشة الرئيسية لضمان بقاء الملفات
+          </span>
+        </div>
+      )}
+
       {/* Network Status Indicator */}
 
       <style>{`
@@ -78,6 +110,27 @@ export function OfflineManager({ className = "" }: OfflineManagerProps) {
         @keyframes slideDown {
           from { transform: translateY(-100%); }
           to   { transform: translateY(0); }
+        }
+
+        .persistence-warning {
+          position: fixed;
+          bottom: 20px;
+          left: 20px;
+          right: 20px;
+          background: #fff3cd;
+          color: #856404;
+          border: 1px solid #ffeeba;
+          padding: 10px 15px;
+          border-radius: 8px;
+          font-size: 13px;
+          z-index: 9998;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+          animation: fadeInUp 0.5s ease;
+        }
+
+        @keyframes fadeInUp {
+          from { opacity: 0; transform: translateY(20px); }
+          to   { opacity: 1; transform: translateY(0); }
         }
 
         .offline-banner button {

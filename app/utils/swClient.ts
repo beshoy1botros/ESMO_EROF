@@ -144,9 +144,6 @@ export async function registerSW(options: RegistrationOptions = {}): Promise<boo
   }
 
   try {
-    // ✅ طلب تخزين دائم لمنع مسح الكاش
-    await requestPersistentStorage();
-
     _registration = await navigator.serviceWorker.register(swPath, { scope });
     log("تم التسجيل بنجاح:", _registration.scope);
 
