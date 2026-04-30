@@ -55,6 +55,10 @@ export const links: Route.LinksFunction = () => [
 
 export function meta() {
   return [
+    {
+      title:
+        "Coptic Hymns - ألحان مهرجان الكرازة لإيبارشية الشرقية والعاشر من رمضان",
+    },
     { charset: "utf-8" },
     {
       name: "viewport",
