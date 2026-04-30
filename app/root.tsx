@@ -59,6 +59,7 @@ export function meta() {
       title:
         "Coptic Hymns - ألحان مهرجان الكرازة لإيبارشية الشرقية والعاشر من رمضان",
     },
+    { name: "og:site_name", content: "ألحان مهرجان الكرازة" },
     { charset: "utf-8" },
     {
       name: "viewport",
