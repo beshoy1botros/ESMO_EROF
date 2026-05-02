@@ -331,6 +331,13 @@ export default function MelodiesPage() {
         fullscreenLyrics.hazzatImage,
         fullscreenLyrics.hazzatImage٢,
         fullscreenLyrics.hazzatImage٣,
+        fullscreenLyrics.hazzatImage٤,
+        fullscreenLyrics.hazzatImage٥,
+        fullscreenLyrics.hazzatImage٦,
+        fullscreenLyrics.hazzatImage٧,
+        fullscreenLyrics.hazzatImage٨,
+        fullscreenLyrics.hazzatImage٩,
+        fullscreenLyrics.hazzatImage١٠,
       ].filter(Boolean).length
     : 0;
 
@@ -1155,18 +1162,33 @@ export default function MelodiesPage() {
                         initialScale={1}
                         minScale={1}
                         maxScale={8}
-                        centerOnInit={true}
-                        onTransform={(ref) =>
-                          setIsHazzatZoomed(ref.state.scale > 1)
-                        }
+                        centerOnInit={false}
+                        initialPositionX={0}
+                        initialPositionY={0}
+                        onTransform={(ref) => {
+                          const zoomed = ref.state.scale > 1.01;
+                          if (zoomed !== isHazzatZoomed) {
+                            setIsHazzatZoomed(zoomed);
+                          }
+                        }}
+                        onZoomStop={(ref) => {
+                          const zoomed = ref.state.scale > 1.01;
+                          if (zoomed !== isHazzatZoomed) {
+                            setIsHazzatZoomed(zoomed);
+                          }
+                        }}
                         panning={{
                           disabled: !isHazzatZoomed,
-                          velocityDisabled: true,
+                          velocityDisabled: false,
+                          allowLeftClickPan: true,
+                          allowRightClickPan: true,
+                          lockAxisX: false,
+                          lockAxisY: false,
                         }}
                         doubleClick={{
                           disabled: false,
                           mode: "toggle",
-                          step: 2,
+                          step: 2.5,
                         }}
                         wheel={{ disabled: true }}
                       >
@@ -1175,14 +1197,15 @@ export default function MelodiesPage() {
                           contentClass="!w-full !h-auto"
                           wrapperStyle={{
                             touchAction: isHazzatZoomed ? "none" : "pan-y",
+                            width: "100%",
                           }}
                         >
-                          <div className="flex flex-col items-stretch m-0 p-0 leading-none text-[0] w-full">
+                          <div className="flex flex-col items-stretch m-0 p-0 leading-[0] text-[0] w-full bg-black">
                             {fullscreenLyrics.hazzatImage && (
                               <img
                                 src={fullscreenLyrics.hazzatImage}
                                 alt="هزات اللحن - الصورة الأولى"
-                                className="block w-full h-auto object-contain m-0 p-0 align-top -mt-px first:mt-0"
+                                className="block w-full h-auto object-contain m-0 p-0 align-top"
                                 draggable={false}
                                 loading="lazy"
                                 decoding="async"
@@ -1192,7 +1215,7 @@ export default function MelodiesPage() {
                               <img
                                 src={fullscreenLyrics.hazzatImage٢}
                                 alt="هزات اللحن - الصورة الثانية"
-                                className="block w-full h-auto object-contain m-0 p-0 align-top -mt-px first:mt-0"
+                                className="block w-full h-auto object-contain m-0 p-0 align-top -mt-[0.5px]"
                                 draggable={false}
                                 loading="lazy"
                                 decoding="async"
@@ -1202,7 +1225,7 @@ export default function MelodiesPage() {
                               <img
                                 src={fullscreenLyrics.hazzatImage٣}
                                 alt="هزات اللحن - الصورة الثالثة"
-                                className="block w-full h-auto object-contain m-0 p-0 align-top -mt-px first:mt-0"
+                                className="block w-full h-auto object-contain m-0 p-0 align-top -mt-[0.5px]"
                                 draggable={false}
                                 loading="lazy"
                                 decoding="async"
@@ -1212,7 +1235,7 @@ export default function MelodiesPage() {
                               <img
                                 src={fullscreenLyrics.hazzatImage٤}
                                 alt="هزات اللحن - الصورة الرابعة"
-                                className="block w-full h-auto object-contain m-0 p-0 align-top -mt-px first:mt-0"
+                                className="block w-full h-auto object-contain m-0 p-0 align-top -mt-[0.5px]"
                                 draggable={false}
                                 loading="lazy"
                                 decoding="async"
@@ -1222,7 +1245,7 @@ export default function MelodiesPage() {
                               <img
                                 src={fullscreenLyrics.hazzatImage٥}
                                 alt="هزات اللحن - الصورة الخامسة"
-                                className="block w-full h-auto object-contain m-0 p-0 align-top -mt-px first:mt-0"
+                                className="block w-full h-auto object-contain m-0 p-0 align-top -mt-[0.5px]"
                                 draggable={false}
                                 loading="lazy"
                                 decoding="async"
@@ -1232,7 +1255,7 @@ export default function MelodiesPage() {
                               <img
                                 src={fullscreenLyrics.hazzatImage٦}
                                 alt="هزات اللحن - الصورة السادسة"
-                                className="block w-full h-auto object-contain m-0 p-0 align-top -mt-px first:mt-0"
+                                className="block w-full h-auto object-contain m-0 p-0 align-top -mt-[0.5px]"
                                 draggable={false}
                                 loading="lazy"
                                 decoding="async"
@@ -1242,7 +1265,7 @@ export default function MelodiesPage() {
                               <img
                                 src={fullscreenLyrics.hazzatImage٧}
                                 alt="هزات اللحن - الصورة السابعة"
-                                className="block w-full h-auto object-contain m-0 p-0 align-top -mt-px first:mt-0"
+                                className="block w-full h-auto object-contain m-0 p-0 align-top -mt-[0.5px]"
                                 draggable={false}
                                 loading="lazy"
                                 decoding="async"
@@ -1252,7 +1275,7 @@ export default function MelodiesPage() {
                               <img
                                 src={fullscreenLyrics.hazzatImage٨}
                                 alt="هزات اللحن - الصورة الثامنة"
-                                className="block w-full h-auto object-contain m-0 p-0 align-top -mt-px first:mt-0"
+                                className="block w-full h-auto object-contain m-0 p-0 align-top -mt-[0.5px]"
                                 draggable={false}
                                 loading="lazy"
                                 decoding="async"
@@ -1262,7 +1285,7 @@ export default function MelodiesPage() {
                               <img
                                 src={fullscreenLyrics.hazzatImage٩}
                                 alt="هزات اللحن - الصورة التاسعة"
-                                className="block w-full h-auto object-contain m-0 p-0 align-top -mt-px first:mt-0"
+                                className="block w-full h-auto object-contain m-0 p-0 align-top -mt-[0.5px]"
                                 draggable={false}
                                 loading="lazy"
                                 decoding="async"
@@ -1272,7 +1295,7 @@ export default function MelodiesPage() {
                               <img
                                 src={fullscreenLyrics.hazzatImage١٠}
                                 alt="هزات اللحن - الصورة العاشرة"
-                                className="block w-full h-auto object-contain m-0 p-0 align-top -mt-px first:mt-0"
+                                className="block w-full h-auto object-contain m-0 p-0 align-top -mt-[0.5px]"
                                 draggable={false}
                                 loading="lazy"
                                 decoding="async"
