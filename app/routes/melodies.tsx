@@ -1184,6 +1184,10 @@ export default function MelodiesPage() {
                           allowRightClickPan: true,
                           lockAxisX: false,
                           lockAxisY: false,
+                          excluded: ["input", "button", "a"],
+                        }}
+                        pinch={{
+                          disabled: false,
                         }}
                         doubleClick={{
                           disabled: false,
