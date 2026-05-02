@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, useMemo, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import LazyVideo from "../components/LazyVideo";
@@ -262,6 +263,7 @@ export default function PreparatoryPage() {
   const [showCoptic, setShowCoptic] = useState(true);
   const [fontSize, setFontSize] = useState(12);
   const [showHazzat, setShowHazzat] = useState(false);
+  const [isHazzatZoomed, setIsHazzatZoomed] = useState(false);
   const [_rotateFromSidebar, setRotateFromSidebar] = useState(false);
   const [showControlsPanel, setShowControlsPanel] = useState(false);
 
@@ -1270,54 +1272,101 @@ export default function PreparatoryPage() {
                   });
                 })()}
 
-                {showHazzat &&
-                  (fullscreenLyrics.hazzatImage ||
-                    fullscreenLyrics.hazzatImage2 ||
-                    fullscreenLyrics.hazzatImage3) && (
-                    <div className="mt-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                      <div className="bg-gradient-to-r from-purple-900/30 to-yellow-900/30 border border-purple-500/30 rounded-xl p-4 mb-6">
-                        <h3 className="text-2xl font-bold text-center text-yellow-400 flex items-center justify-center gap-3">
-                          <span className="text-3xl">🎵</span>
-                          هزات اللحن
-                          <span className="text-3xl">🎵</span>
-                        </h3>
-                      </div>
-                      <div className="w-full bg-black/20 rounded-xl">
-                        <div className="flex flex-col items-stretch m-0 p-0 leading-none text-[0]">
-                          {fullscreenLyrics.hazzatImage && (
-                            <img
-                              src={fullscreenLyrics.hazzatImage}
-                              alt="هزات اللحن - الصورة الأولى"
-                              className="block w-full h-auto object-contain m-0 p-0 align-top -mt-px first:mt-0"
-                              draggable={false}
-                              loading="lazy"
-                              decoding="async"
-                            />
-                          )}
-                          {fullscreenLyrics.hazzatImage2 && (
-                            <img
-                              src={fullscreenLyrics.hazzatImage2}
-                              alt="هزات اللحن - الصورة الثانية"
-                              className="block w-full h-auto object-contain m-0 p-0 align-top -mt-px first:mt-0"
-                              draggable={false}
-                              loading="lazy"
-                              decoding="async"
-                            />
-                          )}
-                          {fullscreenLyrics.hazzatImage3 && (
-                            <img
-                              src={fullscreenLyrics.hazzatImage3}
-                              alt="هزات اللحن - الصورة الثالثة"
-                              className="block w-full h-auto object-contain m-0 p-0 align-top -mt-px first:mt-0"
-                              draggable={false}
-                              loading="lazy"
-                              decoding="async"
-                            />
-                          )}
-                        </div>
-                      </div>
+                {showHazzat && hazzatImagesCount > 0 && (
+                  <div className="mt-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                    <div className="bg-gradient-to-r from-purple-900/30 to-yellow-900/30 border border-purple-500/30 rounded-xl p-4 mb-6">
+                      <h3 className="text-2xl font-bold text-center text-yellow-400 flex items-center justify-center gap-3">
+                        <span className="text-3xl">🎵</span>
+                        هزات اللحن
+                        <span className="text-3xl">🎵</span>
+                      </h3>
                     </div>
-                  )}
+
+                    <div className="w-full bg-black/20 rounded-xl overflow-hidden">
+                      <TransformWrapper
+                        initialScale={1}
+                        minScale={1}
+                        maxScale={8}
+                        centerOnInit={false}
+                        initialPositionX={0}
+                        initialPositionY={0}
+                        onTransform={(ref) => {
+                          const zoomed = ref.state.scale > 1.05;
+                          if (zoomed !== isHazzatZoomed) {
+                            setIsHazzatZoomed(zoomed);
+                          }
+                        }}
+                        onZoomStop={(ref) => {
+                          const zoomed = ref.state.scale > 1.05;
+                          if (zoomed !== isHazzatZoomed) {
+                            setIsHazzatZoomed(zoomed);
+                          }
+                        }}
+                        panning={{
+                          disabled: !isHazzatZoomed,
+                          velocityDisabled: false,
+                          allowLeftClickPan: true,
+                          allowRightClickPan: true,
+                          lockAxisX: false,
+                          lockAxisY: false,
+                          excluded: ["input", "button", "a"],
+                        }}
+                        pinch={{
+                          disabled: false,
+                        }}
+                        doubleClick={{
+                          disabled: false,
+                          mode: "toggle",
+                          step: 2.5,
+                        }}
+                        wheel={{ disabled: true }}
+                      >
+                        <TransformComponent
+                          wrapperClass="!w-full !h-auto touch-pan-y"
+                          contentClass="!w-full !h-auto"
+                          wrapperStyle={{
+                            width: "100%",
+                            touchAction: isHazzatZoomed ? "none" : "pan-y",
+                            overflow: "visible",
+                          }}
+                        >
+                          <div className="flex flex-col items-stretch m-0 p-0 leading-[0] text-[0] w-full bg-black">
+                            {fullscreenLyrics.hazzatImage && (
+                              <img
+                                src={fullscreenLyrics.hazzatImage}
+                                alt="هزات اللحن - الصورة الأولى"
+                                className="block w-full h-auto object-contain m-0 p-0 align-top"
+                                draggable={false}
+                                loading="lazy"
+                                decoding="async"
+                              />
+                            )}
+                            {fullscreenLyrics.hazzatImage2 && (
+                              <img
+                                src={fullscreenLyrics.hazzatImage2}
+                                alt="هزات اللحن - الصورة الثانية"
+                                className="block w-full h-auto object-contain m-0 p-0 align-top -mt-[0.5px]"
+                                draggable={false}
+                                loading="lazy"
+                                decoding="async"
+                              />
+                            )}
+                            {fullscreenLyrics.hazzatImage3 && (
+                              <img
+                                src={fullscreenLyrics.hazzatImage3}
+                                alt="هزات اللحن - الصورة الثالثة"
+                                className="block w-full h-auto object-contain m-0 p-0 align-top -mt-[0.5px]"
+                                draggable={false}
+                                loading="lazy"
+                                decoding="async"
+                              />
+                            )}
+                          </div>
+                        </TransformComponent>
+                      </TransformWrapper>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
