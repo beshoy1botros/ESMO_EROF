@@ -28,6 +28,10 @@ export const links: Route.LinksFunction = () => [
     href: "https://pub-25e727cf0c0e49799268f333275e7cf2.r2.dev",
   },
   {
+    rel: "canonical",
+    href: "https://esmo-erof.vercel.app",
+  },
+  {
     rel: "stylesheet",
     href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Coptic&family=Noto+Sans+Arabic:wght@400;700&display=swap",
   },
@@ -56,10 +60,9 @@ export const links: Route.LinksFunction = () => [
 export function meta() {
   return [
     {
-      title:
-        "Coptic Hymns - ألحان مهرجان الكرازة لإيبارشية الشرقية والعاشر من رمضان",
+      title: "Coptic Hymns - ألحان مهرجان الكرازة",
     },
-    { name: "og:site_name", content: "ألحان مهرجان الكرازة" },
+    { name: "og:site_name", content: "Coptic Hymns" },
     { charset: "utf-8" },
     {
       name: "viewport",
@@ -76,63 +79,88 @@ export function meta() {
     { name: "apple-mobile-web-app-title", content: "Coptic Hymns" },
     {
       name: "application-name",
-      content: "Coptic Hymns - ألحان مهرجان الكرازة",
+      content: "Coptic Hymns",
     },
     { name: "format-detection", content: "telephone=no" },
     { name: "msapplication-tap-highlight", content: "no" },
     { name: "msapplication-TileColor", content: "#1e3a8a" },
-    { name: "msapplication-TileImage", content: "/photos/icon-192.png" },
+    { name: "msapplication-TileImage", content: "/photos/icon-512.png" },
     { name: "android-app-link", content: "https://esmo-erof.vercel.app" },
     {
       name: "description",
       content:
-        "Coptic Hymns - Learn and explore Coptic Orthodox hymns with ease. Your complete guide to Coptic liturgical chants.",
+        "Coptic Hymns - Learn and explore Coptic Orthodox hymns with ease. Your complete guide to Coptic liturgical chants and rites.",
     },
     {
       name: "keywords",
       content:
-        "Coptic Hymns - ألحان قبطية, Coptic hymns, Coptic chants, Orthodox liturgy",
+        "Coptic Hymns, ألحان قبطية, Coptic hymns, Coptic chants, Orthodox liturgy, ألحان مهرجان الكرازة, تعليم ألحان",
     },
     { name: "author", content: "Coptic Hymns" },
     { name: "robots", content: "index, follow" },
     {
       property: "og:title",
-      content:
-        "Coptic Hymns - ألحان مهرجان الكرازة لإيبارشية الشرقية والعاشر من رمضان",
+      content: "Coptic Hymns - ألحان مهرجان الكرازة",
     },
     {
       property: "og:description",
-      content: "Learn Coptic Orthodox hymns with the best educational app.",
+      content:
+        "Learn Coptic Orthodox hymns with the best educational app. Discover the beauty of Coptic liturgical chants.",
     },
     { property: "og:type", content: "website" },
     { property: "og:url", content: "https://esmo-erof.vercel.app" },
-    { property: "og:image", content: "/photos/icon-512.png" },
+    {
+      property: "og:image",
+      content: "https://esmo-erof.vercel.app/photos/icon-512.png",
+    },
     { name: "twitter:card", content: "summary_large_image" },
     {
       name: "twitter:title",
-      content:
-        "Coptic Hymns - ألحان مهرجان الكرازة لإيبارشية الشرقية والعاشر من رمضان",
+      content: "Coptic Hymns - ألحان مهرجان الكرازة",
     },
     {
       name: "twitter:description",
-      content: "Learn Coptic Orthodox hymns with the best educational app.",
+      content:
+        "Learn Coptic Orthodox hymns with the best educational app. Discover the beauty of Coptic liturgical chants.",
     },
-    { name: "twitter:image", content: "/photos/icon-512.png" },
+    {
+      name: "twitter:image",
+      content: "https://esmo-erof.vercel.app/photos/icon-512.png",
+    },
     { property: "al:ios:url", content: "https://esmo-erof.vercel.app" },
-    { property: "al:ios:app_store_id", content: "" },
     { property: "al:ios:app_name", content: "Coptic Hymns" },
     { property: "al:android:url", content: "https://esmo-erof.vercel.app" },
-    { property: "al:android:package", content: "" },
     { property: "al:android:app_name", content: "Coptic Hymns" },
   ];
 }
 
 export function Layout({ children }: { children: React.ReactNode }) {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    name: "Coptic Hymns",
+    alternateName: "ألحان مهرجان الكرازة",
+    url: "https://esmo-erof.vercel.app",
+    image: "https://esmo-erof.vercel.app/photos/icon-512.png",
+    description:
+      "Educational platform for learning Coptic Orthodox hymns and liturgical chants.",
+    applicationCategory: "EducationalApplication",
+    operatingSystem: "Web, Android, iOS",
+    author: {
+      "@type": "Organization",
+      name: "Coptic Hymns",
+    },
+  };
+
   return (
     <html lang="ar" suppressHydrationWarning>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
         <script
           dangerouslySetInnerHTML={{
             __html: `
