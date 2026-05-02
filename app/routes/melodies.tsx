@@ -11,20 +11,6 @@ import "../styles/melodies.css";
 import "../styles/mobile-improvements.css";
 import { prewarmVideos } from "../utils/swClient";
 
-// دالة لاستخراج روابط الفيديو لمرحلة محددة
-function getStageVideoUrls(stageKey: StageKey): string[] {
-  const urls: string[] = [];
-  const stageUrls = stageVideoUrls[stageKey];
-  if (stageUrls) {
-    Object.values(stageUrls).forEach((levelUrls) => {
-      if (Array.isArray(levelUrls)) {
-        urls.push(...levelUrls.filter(Boolean));
-      }
-    });
-  }
-  return urls;
-}
-
 // --- مصفوفة البيانات (الألحان) - محدثة حسب المنهج 2026 ---
 
 // --- 3. الدوال المساعدة ---
@@ -106,6 +92,7 @@ export default function MelodiesPage() {
 
   // ====== خاصية التحكم في صور الهزات ======
   const [showHazzat, setShowHazzat] = useState(false);
+  const [isHazzatZoomed, setIsHazzatZoomed] = useState(false);
   const [showVideoInModal, setShowVideoInModal] = useState(false);
   const [videoTime, setVideoTime] = useState<Record<string, number>>({});
 
@@ -1139,10 +1126,6 @@ export default function MelodiesPage() {
                             style={
                               {
                                 "--font-size": `${fontSize + 3}px`,
-                                fontStyle: "normal",
-                                fontWeight: "normal",
-                                fontFamily:
-                                  "'Amiri', 'Traditional Arabic', 'Simplified Arabic', serif",
                               } as React.CSSProperties & {
                                 "--font-size": string;
                               }
@@ -1167,18 +1150,34 @@ export default function MelodiesPage() {
                       <p className="text-center text-gray-400 text-sm mt-2"></p>
                     </div>
 
-                    <div className="w-full overflow-hidden bg-black/20 rounded-xl">
+                    <div className="w-full bg-black/20 rounded-xl overflow-hidden">
                       <TransformWrapper
                         initialScale={1}
                         minScale={1}
-                        maxScale={4}
+                        maxScale={8}
                         centerOnInit={true}
+                        onTransform={(ref) =>
+                          setIsHazzatZoomed(ref.state.scale > 1)
+                        }
+                        panning={{
+                          disabled: !isHazzatZoomed,
+                          velocityDisabled: true,
+                        }}
+                        doubleClick={{
+                          disabled: false,
+                          mode: "toggle",
+                          step: 2,
+                        }}
+                        wheel={{ disabled: true }}
                       >
                         <TransformComponent
                           wrapperClass="!w-full !h-auto"
                           contentClass="!w-full !h-auto"
+                          wrapperStyle={{
+                            touchAction: isHazzatZoomed ? "none" : "pan-y",
+                          }}
                         >
-                          <div className="flex flex-col items-stretch m-0 p-0 leading-none text-[0]">
+                          <div className="flex flex-col items-stretch m-0 p-0 leading-none text-[0] w-full">
                             {fullscreenLyrics.hazzatImage && (
                               <img
                                 src={fullscreenLyrics.hazzatImage}

@@ -231,7 +231,7 @@
 
 /* ─── عمود الكلمات ───────────────────────────────────────────────────────── */
 .lyrics-col {
-  font-size: var(--font-size, 18px);
+  font-size: var(--font-size);
   text-align: center;
   line-height: 1.4;
   padding: 0.5rem;
@@ -279,9 +279,9 @@
 /* الترجمة العربية */
 .lyrics-col-arabic {
   color: #fbbf24;
-  font-style: italic;
-  font-family:
-    "Arabic Typesetting", "Arial", "Traditional Arabic", "Segoe UI", sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-family: "Amiri", "Traditional Arabic", "Simplified Arabic", serif;
   unicode-bidi: embed;
 }
 

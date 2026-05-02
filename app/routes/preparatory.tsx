@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState, useMemo, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import LazyVideo from "../components/LazyVideo";
@@ -1258,10 +1257,6 @@ export default function PreparatoryPage() {
                             style={
                               {
                                 "--font-size": `${fontSize + 3}px`,
-                                fontStyle: "normal",
-                                fontWeight: "normal",
-                                fontFamily:
-                                  "'Amiri', 'Traditional Arabic', 'Simplified Arabic', serif",
                               } as React.CSSProperties & {
                                 "--font-size": string;
                               }
@@ -1287,51 +1282,39 @@ export default function PreparatoryPage() {
                           <span className="text-3xl">🎵</span>
                         </h3>
                       </div>
-                      <div className="w-full overflow-hidden bg-black/20 rounded-xl">
-                        <TransformWrapper
-                          initialScale={1}
-                          minScale={1}
-                          maxScale={4}
-                          centerOnInit={true}
-                        >
-                          <TransformComponent
-                            wrapperClass="!w-full !h-auto"
-                            contentClass="!w-full !h-auto"
-                          >
-                            <div className="flex flex-col items-stretch m-0 p-0 leading-none text-[0]">
-                              {fullscreenLyrics.hazzatImage && (
-                                <img
-                                  src={fullscreenLyrics.hazzatImage}
-                                  alt="هزات اللحن - الصورة الأولى"
-                                  className="block w-full h-auto object-contain m-0 p-0 align-top -mt-px first:mt-0"
-                                  draggable={false}
-                                  loading="lazy"
-                                  decoding="async"
-                                />
-                              )}
-                              {fullscreenLyrics.hazzatImage2 && (
-                                <img
-                                  src={fullscreenLyrics.hazzatImage2}
-                                  alt="هزات اللحن - الصورة الثانية"
-                                  className="block w-full h-auto object-contain m-0 p-0 align-top -mt-px first:mt-0"
-                                  draggable={false}
-                                  loading="lazy"
-                                  decoding="async"
-                                />
-                              )}
-                              {fullscreenLyrics.hazzatImage3 && (
-                                <img
-                                  src={fullscreenLyrics.hazzatImage3}
-                                  alt="هزات اللحن - الصورة الثالثة"
-                                  className="block w-full h-auto object-contain m-0 p-0 align-top -mt-px first:mt-0"
-                                  draggable={false}
-                                  loading="lazy"
-                                  decoding="async"
-                                />
-                              )}
-                            </div>
-                          </TransformComponent>
-                        </TransformWrapper>
+                      <div className="w-full bg-black/20 rounded-xl">
+                        <div className="flex flex-col items-stretch m-0 p-0 leading-none text-[0]">
+                          {fullscreenLyrics.hazzatImage && (
+                            <img
+                              src={fullscreenLyrics.hazzatImage}
+                              alt="هزات اللحن - الصورة الأولى"
+                              className="block w-full h-auto object-contain m-0 p-0 align-top -mt-px first:mt-0"
+                              draggable={false}
+                              loading="lazy"
+                              decoding="async"
+                            />
+                          )}
+                          {fullscreenLyrics.hazzatImage2 && (
+                            <img
+                              src={fullscreenLyrics.hazzatImage2}
+                              alt="هزات اللحن - الصورة الثانية"
+                              className="block w-full h-auto object-contain m-0 p-0 align-top -mt-px first:mt-0"
+                              draggable={false}
+                              loading="lazy"
+                              decoding="async"
+                            />
+                          )}
+                          {fullscreenLyrics.hazzatImage3 && (
+                            <img
+                              src={fullscreenLyrics.hazzatImage3}
+                              alt="هزات اللحن - الصورة الثالثة"
+                              className="block w-full h-auto object-contain m-0 p-0 align-top -mt-px first:mt-0"
+                              draggable={false}
+                              loading="lazy"
+                              decoding="async"
+                            />
+                          )}
+                        </div>
                       </div>
                     </div>
                   )}
