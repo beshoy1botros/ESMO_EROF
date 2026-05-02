@@ -1166,13 +1166,13 @@ export default function MelodiesPage() {
                         initialPositionX={0}
                         initialPositionY={0}
                         onTransform={(ref) => {
-                          const zoomed = ref.state.scale > 1.01;
+                          const zoomed = ref.state.scale > 1.05;
                           if (zoomed !== isHazzatZoomed) {
                             setIsHazzatZoomed(zoomed);
                           }
                         }}
                         onZoomStop={(ref) => {
-                          const zoomed = ref.state.scale > 1.01;
+                          const zoomed = ref.state.scale > 1.05;
                           if (zoomed !== isHazzatZoomed) {
                             setIsHazzatZoomed(zoomed);
                           }
@@ -1197,11 +1197,12 @@ export default function MelodiesPage() {
                         wheel={{ disabled: true }}
                       >
                         <TransformComponent
-                          wrapperClass="!w-full !h-auto"
+                          wrapperClass="!w-full !h-auto touch-pan-y"
                           contentClass="!w-full !h-auto"
                           wrapperStyle={{
-                            touchAction: isHazzatZoomed ? "none" : "pan-y",
                             width: "100%",
+                            touchAction: isHazzatZoomed ? "none" : "pan-y",
+                            overflow: "visible",
                           }}
                         >
                           <div className="flex flex-col items-stretch m-0 p-0 leading-[0] text-[0] w-full bg-black">
