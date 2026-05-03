@@ -101,11 +101,11 @@ function ContactModal({ isOpen, onClose }: ModalProps) {
         requestAnimationFrame(() => setAnimating(true));
       });
       setTimeout(() => firstButtonRef.current?.focus(), 80);
-    } else {
-      setAnimating(false);
-      const t = setTimeout(() => setVisible(false), 280);
-      return () => clearTimeout(t);
+      return;
     }
+    setAnimating(false);
+    const t = setTimeout(() => setVisible(false), 280);
+    return () => clearTimeout(t);
   }, [isOpen]);
 
   // Close on Escape

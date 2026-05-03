@@ -136,7 +136,7 @@ const notificationSettings = {
 ## 🔧 أدوات التطوير
 
 ### 1. ملفات الاختبار
-- ✅ **اختبار التوافق**: `test-mobile-optimization.html`
+- ✅ **اختبار التوافق**: `npm run dev` ثم فتح الموقع على الجهاز المحمول أو أدوات المحاكاة في المتصفح
 - ✅ **اختبار الأداء**: أدوات Lighthouse
 - ✅ **اختبار PWA**: أدوات Chrome DevTools
 - ✅ **اختبار الإمكانية**: WAVE Accessibility Tool

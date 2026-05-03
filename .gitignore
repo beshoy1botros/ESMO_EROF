@@ -10,6 +10,13 @@ build/
 dist/
 .react-router/
 
+# Vercel (يُنشأ محليًا عند البناء)
+.vercel/react-router-build-result.json
+
+# Tooling / caches
+.kilo/
+*.tsbuildinfo
+
 # Environment variables
 .env
 .env.local

@@ -1,6 +1,5 @@
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import { Link } from "react-router";
 import OfflineManager from "../components/OfflineManager";
 import {
   FaMusic,
@@ -14,7 +13,6 @@ import {
   FaWifi,
   FaInfoCircle,
   FaMobileAlt,
-  FaBars,
   FaBookOpen,
 } from "react-icons/fa";
 

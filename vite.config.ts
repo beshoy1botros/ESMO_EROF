@@ -48,6 +48,7 @@ export default defineConfig({
               return 'icons';
             }
           }
+          return undefined;
         },
         // تحسين أسماء الملفات
         chunkFileNames: 'assets/js/[name]-[hash].js',

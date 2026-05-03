@@ -12,6 +12,11 @@ Object.defineProperty(HTMLMediaElement.prototype, 'pause', {
   value: () => {},
 });
 
+Object.defineProperty(HTMLMediaElement.prototype, 'load', {
+  configurable: true,
+  value: () => {},
+});
+
 // scrollIntoView غير مدعوم في jsdom افتراضيًا
 if (!Element.prototype.scrollIntoView) {
   Element.prototype.scrollIntoView = () => {};

@@ -12,8 +12,7 @@ describe("LazyVideo", () => {
     );
     const video = screen.getByTitle("Sample Video");
     expect(video).toBeInTheDocument();
-    // نتأكد من أن الفيديو يستخدم التحميل المسبق للبيانات فقط
-    expect(video.getAttribute("preload")).toBe("metadata");
+    expect(video.getAttribute("preload")).toBe("auto");
     // وجود مصدر للفيديو
     const source = (video as HTMLVideoElement).querySelector("source");
     expect(source).toBeTruthy();

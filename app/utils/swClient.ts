@@ -18,6 +18,8 @@
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 export interface CacheSizeReport {
+  /** يُرسَم من خدمة SW عند الإجابة على GET_CACHE_SIZE */
+  type?:    "CACHE_SIZE";
   static:   string;
   video:    string;
   image:    string;
@@ -150,7 +152,7 @@ export async function registerSW(options: RegistrationOptions = {}): Promise<boo
     // ✅ اكتشاف SW قيد الانتظار (نسخة جديدة جاهزة)
     const detectWaiting = (reg: ServiceWorkerRegistration) => {
       if (reg.waiting) {
-        onUpdate?.({ type: "SW_WAITING", version: undefined });
+        onUpdate?.({ type: "SW_WAITING" });
         _listeners.forEach((cb) => cb({ type: "SW_WAITING" }));
       }
     };
@@ -370,8 +372,19 @@ export interface SWStatus {
  * ✅ قراءة الحالة الكاملة لـ Service Worker
  */
 export async function getSWStatus(): Promise<SWStatus> {
-  if (!("serviceWorker" in navigator)) {
-    return { supported: false, registered: false, active: false, waiting: false, online: navigator.onLine };
+  const online =
+    typeof navigator !== "undefined" && "onLine" in navigator
+      ? navigator.onLine
+      : true;
+
+  if (typeof navigator === "undefined" || !("serviceWorker" in navigator)) {
+    return {
+      supported: false,
+      registered: false,
+      active: false,
+      waiting: false,
+      online,
+    };
   }
 
   const reg = _registration ?? (await navigator.serviceWorker.getRegistration("/").catch(() => null));
