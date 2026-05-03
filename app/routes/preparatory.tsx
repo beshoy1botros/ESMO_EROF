@@ -1,4 +1,3 @@
-import { Link } from "react-router";
 import { useEffect, useRef, useState, useMemo, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
@@ -478,14 +477,6 @@ export default function PreparatoryPage() {
               {selectedStage
                 ? `مرحلة: ${STAGES.find((s) => s.key === selectedStage)?.label}`
                 : "اختر مرحلتك لعرض المحتوى"}
-            </p>
-            <p className="mt-4">
-              <Link
-                to="/preparatory/about"
-                className="text-blue-300 hover:text-blue-200 underline underline-offset-2 text-sm md:text-base"
-              >
-                طقس اللحن للمراحل التمهيدية
-              </Link>
             </p>
           </div>
 
