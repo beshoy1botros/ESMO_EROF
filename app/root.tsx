@@ -60,7 +60,7 @@ export const links: Route.LinksFunction = () => [
 export function meta() {
   return [
     {
-      title: "Coptic Hymns - ألحان مهرجان الكرازة",
+      title: "Coptic Hymns",
     },
     { name: "og:site_name", content: "Coptic Hymns" },
     { charset: "utf-8" },
@@ -89,18 +89,18 @@ export function meta() {
     {
       name: "description",
       content:
-        "Coptic Hymns - Learn and explore Coptic Orthodox hymns with ease. Your complete guide to Coptic liturgical chants and rites.",
+        "Learn and explore Coptic Orthodox hymns with ease. Your complete guide to Coptic liturgical chants and rites.",
     },
     {
       name: "keywords",
       content:
-        "Coptic Hymns, ألحان قبطية, Coptic hymns, Coptic chants, Orthodox liturgy, ألحان مهرجان الكرازة, تعليم ألحان",
+        "Coptic Hymns, ألحان قبطية, Coptic hymns, Coptic chants, Orthodox liturgy, تعليم ألحان",
     },
     { name: "author", content: "Coptic Hymns" },
     { name: "robots", content: "index, follow" },
     {
       property: "og:title",
-      content: "Coptic Hymns - ألحان مهرجان الكرازة",
+      content: "Coptic Hymns",
     },
     {
       property: "og:description",
@@ -116,7 +116,7 @@ export function meta() {
     { name: "twitter:card", content: "summary_large_image" },
     {
       name: "twitter:title",
-      content: "Coptic Hymns - ألحان مهرجان الكرازة",
+      content: "Coptic Hymns",
     },
     {
       name: "twitter:description",
@@ -139,7 +139,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     name: "Coptic Hymns",
-    alternateName: "ألحان مهرجان الكرازة",
     url: "https://esmo-erof.vercel.app",
     image: "https://esmo-erof.vercel.app/photos/icon-512.png",
     description:
