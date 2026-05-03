@@ -89,12 +89,12 @@ export function meta() {
     {
       name: "description",
       content:
-        "Learn and explore Coptic Orthodox hymns with ease. Your complete guide to Coptic liturgical chants and rites.",
+        "Coptic Hymns - التطبيق الرسمي لألحان مهرجان الكرازة لإيبارشية الشرقية ومدينة العاشر من رمضان. تعلم الألحان القبطية الأرثوذكسية وطقوسها الكنسية بسهولة.",
     },
     {
       name: "keywords",
       content:
-        "Coptic Hymns, ألحان قبطية, Coptic hymns, Coptic chants, Orthodox liturgy, تعليم ألحان",
+        "Coptic Hymns, ألحان مهرجان الكرازة, إيبارشية الشرقية, العاشر من رمضان, ألحان قبطية, تعليم ألحان, الكنيسة القبطية الأرثوذكسية, Coptic chants, Orthodox liturgy",
     },
     { name: "author", content: "Coptic Hymns" },
     { name: "robots", content: "index, follow" },
@@ -139,15 +139,26 @@ export function Layout({ children }: { children: React.ReactNode }) {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     name: "Coptic Hymns",
+    alternateName: "ألحان مهرجان الكرازة - إيبارشية الشرقية والعاشر من رمضان",
     url: "https://esmo-erof.vercel.app",
     image: "https://esmo-erof.vercel.app/photos/icon-512.png",
     description:
-      "Educational platform for learning Coptic Orthodox hymns and liturgical chants.",
+      "تطبيق تعليمي متخصص في الألحان القبطية الأرثوذكسية وطقوسها الكنسية، يخدم إيبارشية الشرقية ومدينة العاشر من رمضان.",
     applicationCategory: "EducationalApplication",
     operatingSystem: "Web, Android, iOS",
     author: {
       "@type": "Organization",
+      name: "إيبارشية الشرقية والعاشر من رمضان",
+      url: "https://esmo-erof.vercel.app",
+    },
+    publisher: {
+      "@type": "Organization",
       name: "Coptic Hymns",
+    },
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "EGP",
     },
   };
 
