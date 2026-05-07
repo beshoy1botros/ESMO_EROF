@@ -1,89 +1,81 @@
-# Coptic Hymns - ⲥⲙⲟⲩ ⲉⲣⲟϥ
+# Coptic Hymns — ⲥⲙⲟⲩ ⲉⲣⲟϥ
 
 > An interactive educational application for learning Coptic Orthodox hymns and liturgical chants
 
-[![React](https://img.shields.io/badge/React-19.1-blue.svg)](https://react.dev)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue.svg)](https://www.typescriptlang.org)
-[![Vite](https://img.shields.io/badge/Vite-6.3-blue.svg)](https://vitejs.dev)
-[![React Router](https://img.shields.io/badge/React_Router-7.5-blue.svg)](https://reactrouter.com)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.1-blue.svg)](https://tailwindcss.com)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-
 <div align="center">
+
+[![React](https://img.shields.io/badge/React-19.1-61DAFB?logo=react&logoColor=white)](https://react.dev)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
+[![Vite](https://img.shields.io/badge/Vite-6.3-646CFF?logo=vite&logoColor=white)](https://vitejs.dev)
+[![React Router](https://img.shields.io/badge/React_Router-7.5-CA4245?logo=reactrouter&logoColor=white)](https://reactrouter.com)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.1-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
+[![License](https://img.shields.io/badge/License-MIT-22C55E)](LICENSE)
+[![Live Demo](https://img.shields.io/badge/Live_Demo-Vercel-000000?logo=vercel&logoColor=white)](https://esmo-erof.vercel.app)
 
 ![Coptic Hymns Logo](public/photos/icon-512.png)
 
 **Learn Coptic Orthodox hymns with ease and beauty**
 
-[🌐 Live Demo](https://esmo-erof.vercel.app) • [📖 Documentation](#getting-started) • [🐛 Report Bug](issues) • [📱 Install App](#pwa-installation)
+[🌐 Live Demo](https://esmo-erof.vercel.app)
 
 </div>
 
 ---
 
-## ✨ Key Features
+## ✨ Features
 
 ### 🎵 Educational Content
 - **Comprehensive Hymn Library** — Extensive collection of Coptic hymns organized by educational stages
-- **Preparatory Program** — Special educational content for preliminary learning stages
-- **Liturgical Guide** — Detailed explanations of Coptic Orthodox liturgical rituals
-- **Video Tutorials** — Watch and learn hymns with video demonstrations
+- **Preparatory Program** — Dedicated educational content for preliminary learning stages
+- **Liturgical Guide** — In-depth explanations of Coptic Orthodox liturgical rituals
+- **Video Tutorials** — Watch and learn hymns through step-by-step video demonstrations
 
-### 🛠️ Technical Features
-- **High Performance** — Built on React Router v7 with TypeScript
-- **Progressive Web App (PWA)** — Installable on mobile devices, works offline
-- **Cloudflare R2 Media Delivery** — Video hosting is served from Cloudflare for fast streaming
-- **Modern UI/UX** — Beautiful, responsive interface with smooth animations
-- **Full Arabic Support** — Complete Arabic language support with right-to-left layout
-- **Automatic Dark Mode** — Automatic theme switching based on system preferences
-
-### ⚡ Performance Optimizations
-- Lazy loading for videos and heavy content
-- Intelligent code splitting
-- Service Worker caching for offline access
-- Image optimization
-- Production minification with Terser
+### 🛠️ Technical Highlights
+- **Progressive Web App (PWA)** — Installable on any device, fully functional offline
+- **High Performance** — Built with React Router v7, TypeScript, and intelligent code splitting
+- **Cloudflare R2 Media Delivery** — Fast and reliable video streaming via Cloudflare CDN
+- **Responsive UI/UX** — Beautiful, animated interface that adapts to all screen sizes
+- **Full Arabic & RTL Support** — Native right-to-left layout with optimized Arabic fonts
+- **Automatic Dark Mode** — Seamless theme switching based on system preferences
 
 ---
 
-## 🚀 Quick Start
+## 🚀 Getting Started
 
-### System Requirements
+### Prerequisites
 
-| Requirement | Version Required |
-|-------------|------------------|
-| Node.js | 18.0 or higher |
-| npm | 9.0 or higher |
+| Requirement | Version |
+|-------------|---------|
+| Node.js | ≥ 18.0 |
+| npm | ≥ 9.0 |
 
-### Installation & Running
+### Installation
 
 ```bash
 # Clone the repository
 git clone https://github.com/beshoy1botros/ESMO_EROF.git
-
-# Navigate to project directory
 cd ESMO_EROF
 
 # Install dependencies
 npm install
 
-# Start development server
+# Start the development server
 npm run dev
 ```
 
 The application will be available at [http://localhost:5173](http://localhost:5173)
 
-### Available npm Commands
+### Available Scripts
 
 | Command | Description |
 |---------|-------------|
 | `npm run dev` | Start development server with hot reload |
 | `npm run build` | Build for production |
-| `npm run start` | Start production server |
+| `npm run start` | Start the production server |
 | `npm run typecheck` | Run TypeScript type checking |
-| `npm run test` | Run all tests |
+| `npm run test` | Run the test suite |
 | `npm run test:watch` | Run tests in watch mode |
-| `npm run test:ui` | Run tests with UI |
+| `npm run test:ui` | Run tests with interactive UI |
 
 ---
 
@@ -91,105 +83,104 @@ The application will be available at [http://localhost:5173](http://localhost:51
 
 ```
 ESMO_EROF/
-├── app/                          # Main application code
-│   ├── components/               # React components
-│   │   ├── AppInstaller.tsx      # App installer
+├── app/                          # Main application source
+│   ├── components/               # Reusable React components
+│   │   ├── AppInstaller.tsx      # PWA install prompt
 │   │   ├── Footer.tsx            # Page footer
 │   │   ├── Header.tsx            # Page header
-│   │   ├── LazyVideo.tsx         # Smart video with lazy loading
-│   │   └── OfflineManager.tsx    # Offline mode manager
-│   ├── routes/                   # Application pages
+│   │   ├── LazyVideo.tsx         # Lazy-loaded video player
+│   │   └── OfflineManager.tsx    # Offline state manager
+│   ├── routes/                   # Page-level route components
 │   │   ├── home.tsx              # Home page
-│   │   ├── melodies.tsx          # Hymns page
-│   │   ├── about.tsx             # Rituals explanation
-│   │   ├── preparatory.tsx       # Preparatory content
-│   │   └── help.tsx              # User guide
-│   ├── styles/                   # CSS stylesheets
-│   ├── utils/                    # Utility functions
-│   ├── data/                     # Static data
-│   ├── root.tsx                  # Root component
-│   └── routes.ts                 # Route definitions
-├── public/                       # Public files
-│   ├── photos/                   # Images and icons
-│   ├── fonts/                    # Custom fonts
-│   ├── scripts/                  # Client scripts
+│   │   ├── melodies.tsx          # Hymns library
+│   │   ├── about.tsx             # Liturgical rituals guide
+│   │   ├── preparatory.tsx       # Preparatory program
+│   │   └── help.tsx              # User help & guide
+│   ├── styles/                   # Global CSS stylesheets
+│   ├── utils/                    # Shared utility functions
+│   ├── data/                     # Static application data
+│   ├── root.tsx                  # Root layout component
+│   └── routes.ts                 # Route configuration
+├── public/                       # Static public assets
+│   ├── photos/                   # Images and app icons
+│   ├── fonts/                    # Custom Arabic & Coptic fonts
+│   ├── scripts/                  # Client-side scripts
 │   ├── sw.js                     # Service Worker
 │   └── manifest.json             # PWA manifest
-├── scripts/                      # Build scripts
-├── package.json                  # Project dependencies
-├── vite.config.ts                # Vite configuration
-├── tsconfig.json                 # TypeScript configuration
-└── vitest.config.ts              # Test configuration
+├── scripts/                      # Build & utility scripts
+├── package.json
+├── vite.config.ts
+├── tsconfig.json
+└── vitest.config.ts
 ```
 
 ---
 
 ## 🛠️ Technology Stack
 
-### Framework & Languages
+### Core
+
 | Category | Technology | Version |
 |----------|------------|---------|
-| Framework | [React](https://react.dev) | 19.1 |
+| UI Framework | [React](https://react.dev) | 19.1 |
 | Routing | [React Router](https://reactrouter.com) | 7.5 |
 | Language | [TypeScript](https://www.typescriptlang.org) | 5.9 |
 | Build Tool | [Vite](https://vitejs.dev) | 6.3 |
 | Styling | [Tailwind CSS](https://tailwindcss.com) | 4.1 |
 | Animation | [Framer Motion](https://www.framer.com/motion) | 12.3 |
 | Icons | [React Icons](https://react-icons.github.io/react-icons) | 5.5 |
-| Zoom/Pan | [React Zoom Pan Pinch](https://github.com/prc5/react-zoom-pan-pinch) | 4.0 |
+| Zoom / Pan | [React Zoom Pan Pinch](https://github.com/prc5/react-zoom-pan-pinch) | 4.0 |
 
-### Development & Testing Tools
-- **Vitest**: Testing framework
-- **React Testing Library**: React component testing
-- **Vite TSConfig Paths**: TypeScript path support
-- **Sharp**: Image processing
-- **Terser**: Code minification
+### Tooling & Testing
 
-### Deployment & Hosting
-- **Vercel**: Primary deployment platform
-- **Docker**: Containerization
-- **Service Worker**: Offline support
+| Tool | Purpose |
+|------|---------|
+| [Vitest](https://vitest.dev) | Unit & integration testing |
+| [React Testing Library](https://testing-library.com) | Component testing |
+| [Sharp](https://sharp.pixelplumbing.com) | Image optimization |
+| [Terser](https://terser.org) | Production code minification |
+
+### Infrastructure
+
+| Service | Role |
+|---------|------|
+| [Vercel](https://vercel.com) | Primary hosting & CI/CD |
+| [Cloudflare R2](https://developers.cloudflare.com/r2) | Video asset delivery |
+| [Docker](https://www.docker.com) | Containerized deployments |
+| Service Worker | Offline caching & background sync |
 
 ---
 
 ## 📱 PWA Installation
 
-The application supports installation as a standalone app on mobile devices.
+The app can be installed as a standalone application on any device.
 
-### iOS (Safari)
-1. Open the website in Safari
-2. Tap the Share button
-3. Select "Add to Home Screen"
-
-### Android (Chrome)
-1. Open the website in Chrome
-2. Tap the menu (⋮)
-3. Select "Add to Home Screen"
-
-### Other Browsers
-- **Edge**: Click the install button in the address bar
-- **Firefox**: Click the install button in the address bar
-- **Samsung Internet**: Tap menu → "Add to Home Screen"
+| Platform | Steps |
+|----------|-------|
+| **iOS (Safari)** | Share → Add to Home Screen |
+| **Android (Chrome)** | Menu (⋮) → Add to Home Screen |
+| **Edge / Firefox** | Click the install icon in the address bar |
+| **Samsung Internet** | Menu → Add to Home Screen |
 
 ---
 
 ## 🌍 Offline Support
 
-Service Worker provides:
-- **Static Asset Caching**: Cache CSS, JS, and images
-- **Video Caching**: Play videos offline
-- **Background Sync**: Update content when connection returns
-- **Update Notifications**: Notify users of new updates
+The Service Worker provides full offline functionality:
+
+- **Static Asset Caching** — CSS, JavaScript, fonts, and images are cached on first visit
+- **Video Caching** — Previously watched videos play without an internet connection
+- **Background Sync** — Content updates automatically when the connection is restored
+- **Update Notifications** — Users are alerted when a new version is available
 
 ---
 
-## 🔧 Environment Variables
+## 🔧 Environment Configuration
 
-This project does not require backend database credentials for local setup.
+This project requires no backend credentials for local development.
 
-- No Supabase configuration is needed.
-- Cloudflare video URLs are stored in the application code via `app/utils/cloudflare.ts`.
-- If you need to change the Cloudflare bucket or public URL, update `CLOUDFLARE_VIDEO_BASE_URL` in `app/utils/cloudflare.ts`.
+- Cloudflare video URLs are configured in `app/utils/cloudflare.ts` via the `CLOUDFLARE_VIDEO_BASE_URL` constant.
+- No Supabase or external database setup is needed.
 
 ---
 
@@ -198,139 +189,99 @@ This project does not require backend database credentials for local setup.
 ### Docker
 
 ```bash
-# Build Docker image
-docker build -t esmo-erof
+# Build the Docker image
+docker build -t esmo-erof .
 
-# Run container
+# Run the container
 docker run -p 3000:3000 esmo-erof
 ```
 
 ### Manual Build
 
 ```bash
-# Build for production
 npm run build
+# Output:
+#   build/client/   → Static assets (served by CDN)
+#   build/server/   → Node.js server code
 
-# Production files will be in build/ directory
-# - build/client/    # Static assets
-# - build/server/   # Server code
-
-# Start production server
 npm run start
 ```
 
 ### Supported Platforms
 
-- ✅ **Vercel** - Primary deployment
-- ✅ **Docker** - Container applications
-- ✅ **AWS ECS** - Elastic Container Service
-- ✅ **Google Cloud Run** - Container execution
-- ✅ **Azure Container Apps** - Container applications
-- ✅ **Digital Ocean App Platform** - Application platform
-- ✅ **Fly.io** - Application deployment
-- ✅ **Railway** - Development platform
+| Platform | Status |
+|----------|--------|
+| Vercel | ✅ Primary |
+| Docker / AWS ECS | ✅ Supported |
+| Google Cloud Run | ✅ Supported |
+| Azure Container Apps | ✅ Supported |
+| DigitalOcean App Platform | ✅ Supported |
+| Fly.io / Railway | ✅ Supported |
 
 ---
 
 ## 🧪 Testing
 
-The project uses Vitest with React Testing Library for testing.
-
 ```bash
-# Run all tests
-npm run test
-
-# Run tests in watch mode
-npm run test:watch
-
-# Run tests with UI
-npm run test:ui
+npm run test          # Run full test suite
+npm run test:watch    # Watch mode for active development
+npm run test:ui       # Interactive test UI (Vitest UI)
 ```
-
----
-
-## 📊 Performance Monitoring
-
-### Performance Metrics
-- **Core Web Vitals**: Google's core user experience metrics
-- **Lighthouse Score**: Comprehensive performance and accessibility assessment
-- **Bundle Size**: Compressed bundle size
-- **Cache Hit Rate**: Cache hit rate
-
-### Monitoring Tools
-- **Service Worker Logs**: Monitor cache status
-- **Error Boundaries**: Capture and log errors
 
 ---
 
 ## 🔒 Security
 
-### Applied Security Practices
-- **Content Security Policy (CSP)**: Content security policy
-- **HTTPS Only**: Secure connections only
-- **Secure Headers**: Secure HTTP headers
-- **Input Validation**: Input validation
-- **XSS Protection**: XSS attack protection
-
-### Data Privacy
-- **GDPR Compliant**: Compliant with General Data Protection Regulation
-- **Data Minimization**: Minimize collected data
-- **User Consent**: User consent for data collection
-- **Data Retention**: Data retention policy
+- **Content Security Policy (CSP)** — Restricts resource loading to trusted origins
+- **HTTPS Only** — All traffic is served over secure connections
+- **Secure HTTP Headers** — Hardened response headers on all routes
+- **XSS Protection** — Input sanitization and output escaping throughout
+- **GDPR Compliant** — Minimal data collection with explicit user consent
 
 ---
 
-## 🌐 Languages & Localization
+## 🌐 Localization
 
-### Supported Languages
-- **Arabic (ar)**: Primary language
-- **Coptic**: Liturgical texts
-- **English**: API interface
-
-### Localization Features
-- **RTL Support**: Full right-to-left layout support
-- **Font Optimization**: Optimized fonts for Arabic and Coptic texts
-- **Cultural Adaptation**: Cultural adaptation for the interface
+| Language | Role |
+|----------|------|
+| Arabic (`ar`) | Primary UI language with full RTL support |
+| Coptic | Liturgical text rendering |
+| English | Developer documentation & API interface |
 
 ---
 
 ## 🤝 Contributing
 
-We welcome contributions! Please follow these steps:
+Contributions are welcome! Please follow these steps:
 
-1. **Fork** the project
-2. **Create** a feature branch (`git checkout -b feature/AmazingFeature`)
-3. **Commit** your changes (`git commit -m 'Add some AmazingFeature'`)
-4. **Push** to the branch (`git push origin feature/AmazingFeature`)
+1. **Fork** the repository
+2. **Create** a feature branch: `git checkout -b feature/your-feature`
+3. **Commit** your changes: `git commit -m 'feat: add your feature'`
+4. **Push** to the branch: `git push origin feature/your-feature`
 5. **Open** a Pull Request
 
-### Contribution Guidelines
-- Follow established code style standards
-- Add tests for new features
-- Update documentation as needed
-- Ensure all tests pass
+Please ensure all existing tests pass and new features are covered by tests before submitting.
 
 ---
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the [MIT License](LICENSE).
 
 ---
 
 ## 🙏 Acknowledgments
 
-- **Coptic Orthodox Church** — For preserving this rich heritage
+- **Coptic Orthodox Church** — For preserving this rich and ancient heritage
 - **Karaz (Crisis) Festival** — For the inspiration and educational content
-- **Eastern & 10th of Ramadan Diocese** — For supporting this project
+- **Eastern & 10th of Ramadan Diocese** — For their support of this project
 
 ---
 
 ## 📞 Contact
 
-- **Official Website**: [https://esmo-erof.vercel.app](https://esmo-erof.vercel.app)
-- **Email**: [contact@esmo-erof.com](mailto:contact@esmo-erof.com)
-- **GitHub Issues**: [Report Issues](issues)
+- **Live App**: [https://esmo-erof.vercel.app](https://esmo-erof.vercel.app)
+- **Repository**: [https://github.com/beshoy1botros/ESMO_EROF](https://github.com/beshoy1botros/ESMO_EROF)
 
 ---
 
