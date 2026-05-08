@@ -35,7 +35,7 @@
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "jsdom": "^26.0.0",
-    "sharp": "^0.33.0",
+    "sharp": "^0.34.5",
     "tailwindcss": "^4.2.4",
     "terser": "^5.47.1",
     "typescript": "^6.0.3",
