@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 interface BeforeInstallPromptEvent extends Event {
   readonly platforms: string[];
@@ -9,6 +9,46 @@ interface BeforeInstallPromptEvent extends Event {
   prompt(): Promise<void>;
 }
 
+interface IOSNavigator extends Navigator {
+  standalone?: boolean;
+}
+
+interface LegacyWindow extends Window {
+  MSStream?: unknown;
+}
+
+const INSTALL_DISMISSED_KEY = "app-install-dismissed";
+
+function isStandaloneDisplayMode() {
+  return (
+    window.matchMedia("(display-mode: standalone)").matches ||
+    (window.navigator as IOSNavigator).standalone === true
+  );
+}
+
+function isIOSDevice() {
+  return (
+    /iPad|iPhone|iPod/.test(navigator.userAgent) &&
+    !(window as LegacyWindow).MSStream
+  );
+}
+
+function getInstallDismissed() {
+  try {
+    return localStorage.getItem(INSTALL_DISMISSED_KEY) === "true";
+  } catch {
+    return false;
+  }
+}
+
+function setInstallDismissed() {
+  try {
+    localStorage.setItem(INSTALL_DISMISSED_KEY, "true");
+  } catch {
+    // Storage can be blocked in private browsing; dismissal still works in state.
+  }
+}
+
 export function AppInstaller() {
   const [deferredPrompt, setDeferredPrompt] =
     useState<BeforeInstallPromptEvent | null>(null);
@@ -16,39 +56,41 @@ export function AppInstaller() {
   const [isInstalled, setIsInstalled] = useState(false);
   const [showiOSBanner, setShowiOSBanner] = useState(false);
   const [dismissed, setDismissed] = useState(false);
-  const hasAttemptedInstall = useRef(false);
 
-  useEffect(() => {
-    // Check if app is already installed
-    const checkInstalled = () => {
-      if (window.matchMedia("(display-mode: standalone)").matches) {
-        setIsInstalled(true);
-        return true;
-      }
-      // @ts-ignore - navigator.standalone is iOS specific
-      if (window.navigator.standalone === true) {
-        setIsInstalled(true);
-        return true;
-      }
-      return false;
-    };
+  const handleInstall = useCallback(async () => {
+    if (!deferredPrompt) return;
 
-    // Check if user previously dismissed the banner
-    const wasDismissed =
-      localStorage.getItem("app-install-dismissed") === "true";
-    if (wasDismissed) {
-      setDismissed(true);
+    await deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+
+    if (outcome === "accepted") {
+      setIsInstalled(true);
     }
 
-    if (checkInstalled()) return;
+    setDeferredPrompt(null);
+    setIsInstallable(false);
+  }, [deferredPrompt]);
 
-    // Detect iOS
-    const isIOS =
-      /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
+  const handleDismiss = useCallback(() => {
+    setDismissed(true);
+    setShowiOSBanner(false);
+    setIsInstallable(false);
+    setInstallDismissed();
+  }, []);
 
-    if (isIOS) {
-      // Show iOS install banner after a short delay
-      setTimeout(() => {
+  useEffect(() => {
+    if (isStandaloneDisplayMode()) {
+      setIsInstalled(true);
+      return;
+    }
+
+    const wasDismissed = getInstallDismissed();
+    setDismissed(wasDismissed);
+
+    let iosTimer: ReturnType<typeof setTimeout> | undefined;
+
+    if (isIOSDevice()) {
+      iosTimer = setTimeout(() => {
         if (!wasDismissed) {
           setShowiOSBanner(true);
         }
@@ -58,15 +100,7 @@ export function AppInstaller() {
     const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault();
       setDeferredPrompt(e as BeforeInstallPromptEvent);
-      setIsInstallable(true);
-
-      // Auto-show the install prompt after a short delay (for Android)
-      if (!hasAttemptedInstall.current && !wasDismissed) {
-        hasAttemptedInstall.current = true;
-        setTimeout(() => {
-          handleInstall();
-        }, 2000);
-      }
+      setIsInstallable(!wasDismissed);
     };
 
     const handleAppInstalled = () => {
@@ -79,42 +113,15 @@ export function AppInstaller() {
     window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
     window.addEventListener("appinstalled", handleAppInstalled);
 
-    // Check if beforeinstallprompt was already fired (some browsers)
-    setTimeout(() => {
-      if (!hasAttemptedInstall.current && deferredPrompt) {
-        hasAttemptedInstall.current = true;
-        handleInstall();
-      }
-    }, 3000);
-
     return () => {
+      if (iosTimer) clearTimeout(iosTimer);
       window.removeEventListener(
         "beforeinstallprompt",
-        handleBeforeInstallPrompt
+        handleBeforeInstallPrompt,
       );
       window.removeEventListener("appinstalled", handleAppInstalled);
     };
   }, []);
-
-  const handleInstall = async () => {
-    if (!deferredPrompt) return;
-
-    deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
-
-    if (outcome === "accepted") {
-      setIsInstalled(true);
-    }
-    setDeferredPrompt(null);
-    setIsInstallable(false);
-  };
-
-  const handleDismiss = () => {
-    setDismissed(true);
-    setShowiOSBanner(false);
-    setIsInstallable(false);
-    localStorage.setItem("app-install-dismissed", "true");
-  };
 
   // Don't render if already installed
   if (isInstalled) {
@@ -155,7 +162,7 @@ export function AppInstaller() {
               حمل التطبيق على جهازك
             </div>
             <div style={{ fontSize: "12px", opacity: 0.9 }}>
-              اضغط على {} ثم "أضف إلى الشاشة الرئيسية"
+              اضغط على زر المشاركة ثم "أضف إلى الشاشة الرئيسية"
             </div>
           </div>
         </div>

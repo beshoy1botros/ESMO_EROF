@@ -148,12 +148,18 @@ export default function LazyVideo({
       setStallMessage(null);
     };
 
-    // ✅ FIX: waiting مش خطأ — انتظر STALL_THRESHOLD_MS قبل اعتباره فشلاً
     const handleWaiting = () => {
       clearWaitingTimer();
       waitingTimer.current = setTimeout(() => {
-        // بعد 5 ثواني، لو لسه واقف → اعتبره فشل حقيقي
-        if (videoRef.current && !videoRef.current.paused) return; // عاد للتشغيل لوحده
+        const currentVideo = videoRef.current;
+        if (
+          !currentVideo ||
+          currentVideo.paused ||
+          currentVideo.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA
+        ) {
+          return;
+        }
+
         setIsLoading(true);
         attemptStalledRecovery();
       }, STALL_THRESHOLD_MS);

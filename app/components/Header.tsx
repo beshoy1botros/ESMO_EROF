@@ -7,6 +7,7 @@ import {
   FaQuestionCircle,
 } from "react-icons/fa";
 import { useState, useEffect, useRef } from "react";
+import { useBodyScrollLock } from "../hooks/useBodyScrollLock";
 
 declare module "react" {
   interface HTMLAttributes<T> {
@@ -38,6 +39,9 @@ export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [floatingDots, setFloatingDots] = useState<FloatingDot[]>([]);
   const menuRef = useRef<HTMLDivElement>(null);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const firstMobileLinkRef = useRef<HTMLAnchorElement>(null);
+  const wasMenuOpenRef = useRef(false);
 
   // Generate random floating dots only on client to avoid hydration mismatch
   useEffect(() => {
@@ -63,11 +67,16 @@ export default function Header() {
     setIsMenuOpen(false);
   }, [location.pathname]);
 
+  useBodyScrollLock(isMenuOpen);
+
   useEffect(() => {
-    document.body.style.overflow = isMenuOpen ? "hidden" : "";
-    return () => {
-      document.body.style.overflow = "";
-    };
+    if (isMenuOpen) {
+      requestAnimationFrame(() => firstMobileLinkRef.current?.focus());
+    } else if (wasMenuOpenRef.current) {
+      menuButtonRef.current?.focus();
+    }
+
+    wasMenuOpenRef.current = isMenuOpen;
   }, [isMenuOpen]);
 
   useEffect(() => {
@@ -98,6 +107,7 @@ export default function Header() {
           <div className="flex items-center justify-between py-3 sm:py-4">
             {/* زر القائمة */}
             <button
+              ref={menuButtonRef}
               onClick={() => setIsMenuOpen((v) => !v)}
               className="
                 md:hidden relative flex flex-col items-center justify-center
@@ -341,6 +351,7 @@ export default function Header() {
             return (
               <Link
                 key={to}
+                ref={index === 0 ? firstMobileLinkRef : undefined}
                 to={to}
                 onClick={() => setIsMenuOpen(false)}
                 className={`

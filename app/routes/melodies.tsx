@@ -4,8 +4,15 @@ import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import LazyVideo from "../components/LazyVideo";
-import { getLevelsForStage, isValidStageLevel } from "../utils/stageUtils";
-import { StageKey, videoData, stageVideoUrls } from "../data/melodiesData";
+import {
+  getLevelsForStage,
+  mapArabicToEnglishLevel,
+} from "../utils/stageUtils";
+import {
+  StageKey,
+  loadStageVideos,
+  stageVideoUrls,
+} from "../data/melodiesData";
 import type { Video, LevelVideos } from "../data/melodiesData";
 import "../styles/melodies.css";
 import "../styles/mobile-improvements.css";
@@ -18,14 +25,10 @@ import { prewarmVideos } from "../utils/swClient";
 function getVideoUrl(
   video: Video,
   stage: StageKey,
+  stageData: LevelVideos,
   level: string,
 ): string | undefined {
-  const levelMap: Record<string, keyof LevelVideos> = {
-    الأول: "first",
-    الثاني: "second",
-    الموهوبين: "gifted",
-  };
-  const englishLevel = levelMap[level];
+  const englishLevel = mapArabicToEnglishLevel(level);
   if (!englishLevel) return undefined;
 
   const stageUrls = stageVideoUrls[stage];
@@ -34,25 +37,49 @@ function getVideoUrl(
   const urls = stageUrls[englishLevel as keyof typeof stageUrls];
   if (!urls) return undefined;
 
-  const stageVideos = videoData[stage];
-  if (!stageVideos) return undefined;
-
-  const levelVideos = stageVideos[englishLevel];
+  const levelVideos = stageData[englishLevel];
   if (!levelVideos) return undefined;
 
   const index = levelVideos.findIndex((v) => v.id === video.id);
   return urls[index] || undefined;
 }
 
-function getVideos(stage: StageKey, levelLabel: string): Video[] {
-  const levelMap: Record<string, keyof LevelVideos> = {
-    الأول: "first",
-    الثاني: "second",
-    الموهوبين: "gifted",
-  };
-  const englishLevel = levelMap[levelLabel];
-  const stageData = videoData[stage];
-  return stageData && englishLevel ? stageData[englishLevel] || [] : [];
+function getVideos(stageData: LevelVideos | null, levelLabel: string): Video[] {
+  if (!stageData || !levelLabel) return [];
+  const englishLevel = mapArabicToEnglishLevel(levelLabel);
+  return stageData[englishLevel] || [];
+}
+
+function getHazzatImages(video: Video): string[] {
+  return [
+    video.hazzatImage,
+    video.hazzatImage٢,
+    video.hazzatImage٣,
+    video.hazzatImage٤,
+    video.hazzatImage٥,
+    video.hazzatImage٦,
+    video.hazzatImage٧,
+    video.hazzatImage٨,
+    video.hazzatImage٩,
+    video.hazzatImage١٠,
+  ].filter((src): src is string => Boolean(src));
+}
+
+const LAST_OPENED_STORAGE_KEY = "esmo-erof:last-opened-melody";
+
+interface LastOpenedMelody {
+  stage: StageKey;
+  level: string;
+  videoId: string;
+}
+
+function safeParseJson<T>(value: string | null, fallback: T): T {
+  if (!value) return fallback;
+  try {
+    return JSON.parse(value) as T;
+  } catch {
+    return fallback;
+  }
 }
 
 // --- 4. أيقونة الترس (Gear Icon SVG Component) - تصميم احترافي ---
@@ -78,7 +105,9 @@ function GearIcon({ className = "w-5 h-5" }: { className?: string }) {
 export default function MelodiesPage() {
   const [stage, setStage] = useState<StageKey | "">("");
   const [level, setLevel] = useState<string>("");
-  const [videos, setVideos] = useState<Video[]>([]);
+  const [stageData, setStageData] = useState<LevelVideos | null>(null);
+  const [isStageLoading, setIsStageLoading] = useState(false);
+  const [stageLoadError, setStageLoadError] = useState<string | null>(null);
   const [fullscreenLyrics, setFullscreenLyrics] = useState<Video | null>(null);
 
   // ====== خاصية التحكم في اللغات ======
@@ -95,8 +124,11 @@ export default function MelodiesPage() {
   const [isHazzatZoomed, setIsHazzatZoomed] = useState(false);
   const [showVideoInModal, setShowVideoInModal] = useState(false);
   const [videoTime, setVideoTime] = useState<Record<string, number>>({});
+  const [lastOpened, setLastOpened] = useState<LastOpenedMelody | null>(null);
+  const [pendingOpenVideoId, setPendingOpenVideoId] = useState<string | null>(
+    null,
+  );
 
-  const [_rotateFromSidebar, setRotateFromSidebar] = useState(false);
   const [showControlsPanel, setShowControlsPanel] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
@@ -111,39 +143,76 @@ export default function MelodiesPage() {
   const controlsPanelRef = useRef<HTMLDivElement>(null);
   const lastPrewarmedUrls = useRef<Set<string>>(new Set());
 
+  useEffect(() => {
+    setLastOpened(
+      safeParseJson<LastOpenedMelody | null>(
+        localStorage.getItem(LAST_OPENED_STORAGE_KEY),
+        null,
+      ),
+    );
+  }, []);
+
+  useEffect(() => {
+    if (!stage) {
+      setStageData(null);
+      setStageLoadError(null);
+      return;
+    }
+
+    let cancelled = false;
+    setIsStageLoading(true);
+    setStageLoadError(null);
+    setStageData(null);
+
+    loadStageVideos(stage)
+      .then((data) => {
+        if (cancelled) return;
+        setStageData(data);
+      })
+      .catch((error: unknown) => {
+        if (cancelled) return;
+        setStageLoadError(
+          error instanceof Error ? error.message : "تعذر تحميل بيانات المرحلة",
+        );
+      })
+      .finally(() => {
+        if (!cancelled) setIsStageLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [stage]);
+
+  const videos = useMemo(() => getVideos(stageData, level), [stageData, level]);
+
+  const filteredVideos = videos;
+
+  const getCurrentVideoUrl = useCallback(
+    (video: Video): string | undefined => {
+      if (!stage || !stageData || !level) return undefined;
+      return getVideoUrl(video, stage, stageData, level);
+    },
+    [level, stage, stageData],
+  );
+
   // ====== useEffect لتحميل الفيديوهات وصور الهزات مسبقاً ======
   // يتم التحميل عند اختيار المرحلة أو المستوى أو تغير الفيديوهات
   useEffect(() => {
-    if (!stage) return;
-
-    const stageKey = stage as StageKey;
+    if (!stage || !stageData) return;
     const allUrlsToPrewarm: string[] = [];
 
     // 1. جمع صور الهزات للمرحلة (فقط إذا لم يتم تحميلها من قبل في هذه الجلسة للمرحلة الحالية)
-    const stageData = videoData[stageKey];
-    if (stageData) {
-      Object.values(stageData).forEach((levelVideos) => {
-        if (Array.isArray(levelVideos)) {
-          levelVideos.forEach((video) => {
-            if (video.hazzatImage) allUrlsToPrewarm.push(video.hazzatImage);
-            if (video.hazzatImage٢) allUrlsToPrewarm.push(video.hazzatImage٢);
-            if (video.hazzatImage٣) allUrlsToPrewarm.push(video.hazzatImage٣);
-            if (video.hazzatImage٤) allUrlsToPrewarm.push(video.hazzatImage٤);
-            if (video.hazzatImage٥) allUrlsToPrewarm.push(video.hazzatImage٥);
-            if (video.hazzatImage٦) allUrlsToPrewarm.push(video.hazzatImage٦);
-            if (video.hazzatImage٧) allUrlsToPrewarm.push(video.hazzatImage٧);
-            if (video.hazzatImage٨) allUrlsToPrewarm.push(video.hazzatImage٨);
-            if (video.hazzatImage٩) allUrlsToPrewarm.push(video.hazzatImage٩);
-            if (video.hazzatImage١٠) allUrlsToPrewarm.push(video.hazzatImage١٠);
-          });
-        }
+    Object.values(stageData).forEach((levelVideos: Video[] | undefined) => {
+      levelVideos?.forEach((video) => {
+        allUrlsToPrewarm.push(...getHazzatImages(video));
       });
-    }
+    });
 
     // 2. جمع فيديوهات المستوى الحالي
     if (level && videos.length > 0) {
       videos.forEach((v) => {
-        const url = getVideoUrl(v, stageKey, level);
+        const url = getCurrentVideoUrl(v);
         if (url) allUrlsToPrewarm.push(url);
       });
     }
@@ -165,7 +234,7 @@ export default function MelodiesPage() {
         prewarmVideos(newUrls);
       }
     }
-  }, [stage, level, videos]);
+  }, [getCurrentVideoUrl, level, stage, stageData, videos]);
 
   // ====== useEffect للإغلاق الذكي (Click Outside to Close) ======
   useEffect(() => {
@@ -198,25 +267,44 @@ export default function MelodiesPage() {
   // ====== Memoized handlers for performance ======
   const handleStageChange = useCallback((newStage: StageKey) => {
     setStage(newStage);
-    setLevel("");
-    setVideos([]);
-
-    if (newStage === StageKey.WeddingOfCana) {
-      const weddingContent = getVideos(newStage, "الأول");
-      setVideos(weddingContent);
-      setLevel("الأول");
-    }
+    setLevel(newStage === StageKey.WeddingOfCana ? "الأول" : "");
+    setFullscreenLyrics(null);
+    setShowHazzat(false);
+    setShowVideoInModal(false);
   }, []);
 
-  const handleLevelChange = useCallback(
-    (newLevel: string) => {
-      setLevel(newLevel);
-      if (stage && newLevel && isValidStageLevel(stage, newLevel)) {
-        setVideos(getVideos(stage as StageKey, newLevel));
-      } else setVideos([]);
+  const handleLevelChange = useCallback((newLevel: string) => {
+    setLevel(newLevel);
+  }, []);
+
+  const openLyrics = useCallback(
+    (video: Video) => {
+      if (!stage || !level) return;
+      const nextLastOpened = { stage, level, videoId: video.id };
+      setFullscreenLyrics(video);
+      setLastOpened(nextLastOpened);
+      localStorage.setItem(
+        LAST_OPENED_STORAGE_KEY,
+        JSON.stringify(nextLastOpened),
+      );
     },
-    [stage],
+    [level, stage],
   );
+
+  const continueLastOpened = useCallback(() => {
+    if (!lastOpened) return;
+    setPendingOpenVideoId(lastOpened.videoId);
+    setStage(lastOpened.stage);
+    setLevel(lastOpened.level);
+  }, [lastOpened]);
+
+  useEffect(() => {
+    if (!pendingOpenVideoId || !videos.length) return;
+    const video = videos.find((item) => item.id === pendingOpenVideoId);
+    if (!video) return;
+    setFullscreenLyrics(video);
+    setPendingOpenVideoId(null);
+  }, [pendingOpenVideoId, videos]);
 
   // ====== Memoized computed values ======
   const visibleColumns = useMemo(
@@ -340,6 +428,9 @@ export default function MelodiesPage() {
         fullscreenLyrics.hazzatImage١٠,
       ].filter(Boolean).length
     : 0;
+  const fullscreenVideoUrl = fullscreenLyrics
+    ? getCurrentVideoUrl(fullscreenLyrics)
+    : undefined;
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-950 text-white font-sans">
@@ -406,39 +497,62 @@ export default function MelodiesPage() {
 
             {/* Videos Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {videos.map((v) => (
-                <div
-                  key={v.id}
-                  className="bg-gray-900 rounded-3xl overflow-hidden border border-white/5 shadow-2xl"
-                >
-                  <div className="aspect-video bg-black relative">
-                    {getVideoUrl(v, stage as StageKey, level) ? (
-                      <LazyVideo
-                        src={getVideoUrl(v, stage as StageKey, level)!}
-                        title={v.title}
-                        startTime={videoTime[v.id] || 0}
-                        onTimeUpdate={(time) =>
-                          setVideoTime((prev) => ({ ...prev, [v.id]: time }))
-                        }
-                      />
-                    ) : (
-                      <div className="flex flex-col items-center justify-center h-full text-gray-600 italic">
-                        <span className="text-4xl mb-2">🎬</span> متاح قريباً
+              {filteredVideos.map((v) => {
+                const videoUrl = getCurrentVideoUrl(v);
+                return (
+                  <div
+                    key={v.id}
+                    className="bg-gray-900 rounded-3xl overflow-hidden border border-white/5 shadow-2xl"
+                  >
+                    <div className="aspect-video bg-black relative">
+                      {videoUrl ? (
+                        <LazyVideo
+                          src={videoUrl}
+                          title={v.title}
+                          startTime={videoTime[v.id] || 0}
+                          onTimeUpdate={(time) =>
+                            setVideoTime((prev) => ({ ...prev, [v.id]: time }))
+                          }
+                        />
+                      ) : (
+                        <div className="flex flex-col items-center justify-center h-full text-gray-600 italic">
+                          <span className="text-4xl mb-2">🎬</span> متاح قريباً
+                        </div>
+                      )}
+                    </div>
+                    <div className="p-6">
+                      <h3 className="text-xl font-bold mb-4">{v.title}</h3>
+                      <div className="grid grid-cols-1 gap-2">
+                        <button
+                          onClick={() => openLyrics(v)}
+                          className="w-full py-3 bg-blue-600/10 text-blue-400 border border-blue-600/30 rounded-xl font-bold hover:bg-blue-600/20 transition-all"
+                        >
+                          عرض كلمات اللحن
+                        </button>
                       </div>
-                    )}
+                    </div>
                   </div>
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold mb-4">{v.title}</h3>
-                    <button
-                      onClick={() => setFullscreenLyrics(v)}
-                      className="w-full py-3 bg-blue-600/10 text-blue-400 border border-blue-600/30 rounded-xl font-bold hover:bg-blue-600/20 transition-all"
-                    >
-                      عرض كلمات اللحن
-                    </button>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
+            {!isStageLoading &&
+              stage &&
+              level &&
+              filteredVideos.length === 0 && (
+                <div className="py-10 text-center text-gray-400">
+                  لا توجد ألحان مطابقة للاختيار الحالي.
+                </div>
+              )}
+            {isStageLoading && (
+              <div className="text-center text-blue-200 py-10">
+                جاري تحميل بيانات المرحلة...
+              </div>
+            )}
+            {stageLoadError && (
+              <div className="text-center text-red-300 py-10">
+                {stageLoadError}
+              </div>
+            )}
           </div>
         </div>
       </main>
@@ -678,7 +792,6 @@ export default function MelodiesPage() {
                             ) as HTMLButtonElement | null;
                             if (btn) {
                               btn.click();
-                              setRotateFromSidebar((prev) => !prev);
                             }
                           }}
                           className="w-full px-4 py-2.5 rounded-xl font-bold text-xs bg-gray-800 hover:bg-gray-700 border border-gray-700 text-gray-300 transition-all flex items-center justify-center gap-2"
@@ -694,7 +807,7 @@ export default function MelodiesPage() {
               {/* نهاية حاوية الترس */}
 
               {/* زر تشغيل الفيديو المدمج */}
-              {getVideoUrl(fullscreenLyrics, stage as StageKey, level) && (
+              {fullscreenVideoUrl && (
                 <div className="flex items-center gap-1">
                   <button
                     onClick={() => setShowVideoInModal((prev) => !prev)}
@@ -724,7 +837,6 @@ export default function MelodiesPage() {
                 setShowVideoInModal(false);
                 setIsMinimized(false);
                 setIsVideoPlaying(false);
-                setRotateFromSidebar(false);
                 setShowControlsPanel(false);
               }}
               className="text-2xl md:text-3xl p-2 hover:bg-white/10 rounded-lg transition-colors flex-shrink-0"
@@ -742,7 +854,7 @@ export default function MelodiesPage() {
               <div className="w-full max-w-7xl mx-auto">
                 <AnimatePresence mode="popLayout">
                   {showVideoInModal &&
-                    getVideoUrl(fullscreenLyrics!, stage as StageKey, level) &&
+                    fullscreenVideoUrl &&
                     fullscreenLyrics && (
                       <motion.div
                         layout
@@ -819,13 +931,7 @@ export default function MelodiesPage() {
                           >
                             <LazyVideo
                               key={fullscreenLyrics.id}
-                              src={
-                                getVideoUrl(
-                                  fullscreenLyrics,
-                                  stage as StageKey,
-                                  level,
-                                )!
-                              }
+                              src={fullscreenVideoUrl}
                               title={fullscreenLyrics.title}
                               startTime={videoTime[fullscreenLyrics.id] || 0}
                               onTimeUpdate={(time) =>

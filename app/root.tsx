@@ -12,9 +12,14 @@ import type { Route } from "./+types/root";
 import { useEffect, useState } from "react";
 import { AppInstaller } from "./components/AppInstaller";
 import { OfflineManager } from "./components/OfflineManager";
+import { registerSW, requestPersistentStorage } from "./utils/swClient";
 import "./app.css";
 import "./styles/mobile-improvements.css";
 import "./styles/mobile-advanced.css";
+
+interface WebKitFullscreenElement extends HTMLElement {
+  webkitRequestFullscreen?: () => Promise<void> | void;
+}
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -54,7 +59,6 @@ export const links: Route.LinksFunction = () => [
     rel: "manifest",
     href: "/manifest.json",
   },
-  { rel: "manifest", href: "/manifest-mobile.json" },
 ];
 
 export function meta() {
@@ -203,54 +207,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
-                // ✅ FIX 1: طلب التخزين الدائم فوراً — قبل أي تخزين
-                // بدون persist() المتصفح ممكن يمسح الكاش أي وقت
-                if (navigator.storage && navigator.storage.persist) {
-                  navigator.storage.persist().then(function(granted) {
-                    console.log('[App] Persistent storage granted:', granted);
-                    if (!granted) {
-                      console.warn(
-                        '[App] التخزين الدائم مرفوض. ' +
-                        'أضف التطبيق للشاشة الرئيسية لضمان بقاء الكاش.'
-                      );
-                    }
-                  });
-                }
-
-                if ('serviceWorker' in navigator) {
-                  window.addEventListener('load', function() {
-                    navigator.serviceWorker.register('/sw.js')
-                      .then(function(reg) {
-                        console.log('[SW] registered:', reg.scope);
-
-                        // ✅ FIX 2: إزالة window.location.reload() التلقائي
-                        // الـ reload المتكرر كان يمنع persist() من الاكتمال
-                        // وكان يسبب إعادة تحميل كل مرة يوجد SW جديد
-                        reg.addEventListener('updatefound', function() {
-                          var newWorker = reg.installing;
-                          if (newWorker) {
-                            newWorker.addEventListener('statechange', function() {
-                              if (
-                                newWorker.state === 'installed' &&
-                                navigator.serviceWorker.controller
-                              ) {
-                                // ✅ إبلاغ التطبيق بوجود نسخة جديدة فقط
-                                // بدون reload تلقائي — المستخدم يختار وقت التحديث
-                                console.log('[SW] نسخة جديدة جاهزة');
-                                window.dispatchEvent(
-                                  new CustomEvent('sw-update-available')
-                                );
-                              }
-                            });
-                          }
-                        });
-                      })
-                      .catch(function(err) {
-                        console.log('[SW] registration failed:', err);
-                      });
-                  });
-                }
-
                 function loadMobileFeatures() {
                   var script = document.createElement('script');
                   script.src = '/scripts/mobile-features.js';
@@ -274,35 +230,32 @@ export function Layout({ children }: { children: React.ReactNode }) {
 export default function App() {
   const [landscapeEnabled, setLandscapeEnabled] = useState(false);
 
-  // ✅ FIX 3: طلب persist() مرة ثانية من داخل React بعد الـ hydration
-  // لضمان تنفيذه حتى لو الـ inline script فوق ما اشتغلش في وقت معين
   useEffect(() => {
-    async function ensurePersistentStorage() {
-      if (!navigator.storage?.persist) return;
-
+    async function initializePwaRuntime() {
       try {
-        const alreadyPersisted = await navigator.storage.persisted();
-        if (alreadyPersisted) {
+        if (navigator.storage?.persisted && (await navigator.storage.persisted())) {
           console.log("[App] التخزين الدائم مفعّل مسبقاً ✓");
-          return;
-        }
-
-        const granted = await navigator.storage.persist();
-        if (granted) {
-          console.log("[App] ✅ التخزين الدائم تم تفعيله بنجاح");
         } else {
-          console.warn(
-            "[App] ⚠️ التخزين الدائم لم يُمنح. " +
-              "المتصفح قد يمسح الكاش عند نقص المساحة. " +
-              "أضف التطبيق للشاشة الرئيسية لضمان التخزين.",
-          );
+          await requestPersistentStorage();
         }
       } catch (err) {
         console.warn("[App] فشل طلب التخزين الدائم:", err);
       }
+
+      await registerSW({
+        onUpdate: () => {
+          window.dispatchEvent(new CustomEvent("sw-update-available"));
+        },
+      });
     }
 
-    ensurePersistentStorage();
+    if (document.readyState === "complete") {
+      initializePwaRuntime();
+      return;
+    }
+
+    window.addEventListener("load", initializePwaRuntime, { once: true });
+    return () => window.removeEventListener("load", initializePwaRuntime);
   }, []);
 
   useEffect(() => {
@@ -318,14 +271,14 @@ export default function App() {
 
   async function enableLandscape() {
     try {
-      const docEl = document.documentElement as any;
+      const docEl = document.documentElement as WebKitFullscreenElement;
       if (docEl.requestFullscreen) {
         await docEl.requestFullscreen();
       } else if (docEl.webkitRequestFullscreen) {
         await docEl.webkitRequestFullscreen();
       }
-      if (screen.orientation && (screen.orientation as any).lock) {
-        await (screen.orientation as any).lock("landscape");
+      if (screen.orientation?.lock) {
+        await screen.orientation.lock("landscape");
       }
       setLandscapeEnabled(true);
     } catch {
@@ -335,8 +288,8 @@ export default function App() {
 
   async function disableLandscape() {
     try {
-      if (screen.orientation && (screen.orientation as any).unlock) {
-        (screen.orientation as any).unlock();
+      if (screen.orientation?.unlock) {
+        screen.orientation.unlock();
       }
       if (document.fullscreenElement) {
         await document.exitFullscreen();

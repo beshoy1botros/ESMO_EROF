@@ -1,11 +1,33 @@
-/tmp
-/out-tsc
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
 
-/node_modules
+# Build and generated output
+build/
+dist/
+out-tsc/
+.react-router/
+.vite/
+tmp/
+
+# Local environment
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-/.pnp
-.pnp.js
+pnpm-debug.log*
 
+# Editor and OS files
+.DS_Store
+Thumbs.db
+.idea/
 .vscode/*
+
+# Deployment metadata
+.vercel/

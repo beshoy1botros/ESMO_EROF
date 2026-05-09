@@ -18,17 +18,10 @@ export function OfflineManager({ className = "" }: OfflineManagerProps) {
   // ✅ التحقق من التخزين الدائم (Persistence)
   useEffect(() => {
     async function checkPersist() {
-      if (typeof navigator !== "undefined" && navigator.storage) {
+      if (typeof navigator !== "undefined" && navigator.storage?.persisted) {
         try {
           const persisted = await navigator.storage.persisted();
-          if (!persisted) {
-            // نطلب التخزين الدائم من سياق الصفحة
-            const granted = await navigator.storage.persist();
-            setIsPersistent(granted);
-            console.log("[Storage] persist granted:", granted);
-          } else {
-            setIsPersistent(true);
-          }
+          setIsPersistent(persisted);
         } catch (err) {
           console.warn("[Storage] فشل فحص التخزين الدائم:", err);
         }

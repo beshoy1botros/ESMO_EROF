@@ -1,17 +1,16 @@
 import { reactRouter } from "@react-router/dev/vite";
 import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "vite";
-import tsconfigPaths from "vite-tsconfig-paths";
 
 const isTest = !!process.env.VITEST;
 
 export default defineConfig({
   // نستبعد reactRouter أثناء الاختبارات لأن Vitest لا يحتاج حقن الـ preamble
-  plugins: [
-    tailwindcss(), 
-    !isTest && reactRouter(), 
-    tsconfigPaths()
-  ].filter(Boolean) as any,
+  plugins: [tailwindcss(), ...(isTest ? [] : [reactRouter()])],
+
+  resolve: {
+    tsconfigPaths: true,
+  },
   
   // تحسينات البناء
   build: {

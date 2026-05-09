@@ -264,7 +264,6 @@ export default function PreparatoryPage() {
   const [fontSize, setFontSize] = useState(12);
   const [showHazzat, setShowHazzat] = useState(false);
   const [isHazzatZoomed, setIsHazzatZoomed] = useState(false);
-  const [_rotateFromSidebar, setRotateFromSidebar] = useState(false);
   const [showControlsPanel, setShowControlsPanel] = useState(false);
 
   // حالات مودال الفيديو
@@ -437,11 +436,11 @@ export default function PreparatoryPage() {
     const videoWidth = Math.min(window.innerWidth * 0.85, 320);
     const videoHeight = 180;
     const padding = 10;
-    let newX = Math.min(
+    const newX = Math.min(
       videoPosition.x,
       window.innerWidth - videoWidth - padding,
     );
-    let newY = Math.min(
+    const newY = Math.min(
       videoPosition.y,
       window.innerHeight - videoHeight - padding,
     );
@@ -452,10 +451,10 @@ export default function PreparatoryPage() {
 
   const increaseFontSize = () =>
     setFontSize((prev) => Math.min(prev + 1, maxFontSize));
-  const decreaseFontSize = () => setFontSize((prev) => Math.max(prev - 1, 14));
+  const decreaseFontSize = () => setFontSize((prev) => Math.max(prev - 1, 10));
 
   useEffect(() => {
-    setFontSize((prev) => Math.min(prev, maxFontSize));
+    setFontSize((prev) => Math.min(Math.max(prev, 10), maxFontSize));
   }, [maxFontSize]);
 
   const showRiteToggle =
@@ -873,7 +872,6 @@ export default function PreparatoryPage() {
                             ) as HTMLButtonElement | null;
                             if (btn) {
                               btn.click();
-                              setRotateFromSidebar((prev) => !prev);
                             }
                           }}
                           className="w-full px-4 py-2.5 rounded-xl font-bold text-xs bg-gray-800 hover:bg-gray-700 border border-gray-700 text-gray-300 transition-all flex items-center justify-center gap-2"
@@ -919,7 +917,6 @@ export default function PreparatoryPage() {
                 setShowVideoInModal(false);
                 setIsMinimized(false);
                 setIsVideoPlaying(false);
-                setRotateFromSidebar(false);
                 setShowControlsPanel(false);
               }}
               className="text-2xl md:text-3xl p-2 hover:bg-white/10 rounded-lg transition-colors flex-shrink-0"
@@ -1208,6 +1205,16 @@ export default function PreparatoryPage() {
                         : isEvenRow
                           ? "lyrics-row-even"
                           : "lyrics-row-odd";
+                    const rowStyle = {
+                      "--grid-columns": visibleColumns,
+                    } as React.CSSProperties & {
+                      "--grid-columns": number;
+                    };
+                    const lyricFontStyle = {
+                      "--font-size": `${fontSize}px`,
+                    } as React.CSSProperties & {
+                      "--font-size": string;
+                    };
 
                     return (
                       <div
@@ -1215,7 +1222,7 @@ export default function PreparatoryPage() {
                         className={`lyrics-row ${
                           isSectionHeader ? "lyrics-row-section" : ""
                         } ${quarterColorClass} ${disableQuarterNumbers ? "lyrics-row-no-numbering" : ""}`}
-                        style={{ ["--grid-columns" as any]: visibleColumns }}
+                        style={rowStyle}
                       >
                         {quarterNumber !== null && (
                           <div className="lyrics-quarter">
@@ -1232,7 +1239,7 @@ export default function PreparatoryPage() {
                             className={`lyrics-col lyrics-col-coptic-arabic ${
                               isSectionHeader ? "lyrics-section-text" : ""
                             }`}
-                            style={{ ["--font-size" as any]: `${fontSize}px` }}
+                            style={lyricFontStyle}
                           >
                             {copticAr[i] || "-"}
                           </div>
@@ -1244,7 +1251,7 @@ export default function PreparatoryPage() {
                             className={`lyrics-col lyrics-col-coptic ${
                               isSectionHeader ? "lyrics-section-text" : ""
                             }`}
-                            style={{ ["--font-size" as any]: `${fontSize}px` }}
+                            style={lyricFontStyle}
                           >
                             {coptic[i] || "-"}
                           </div>

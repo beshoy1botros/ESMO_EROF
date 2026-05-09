@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import { useBodyScrollLock } from "../hooks/useBodyScrollLock";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 type ContactType = "مشكلة" | "اقتراح" | "أخرى";
@@ -92,6 +93,7 @@ function ContactModal({ isOpen, onClose }: ModalProps) {
   const [visible, setVisible] = useState(false);
   const [animating, setAnimating] = useState(false);
   const firstButtonRef = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
 
   // Handle open/close animation lifecycle
   useEffect(() => {
@@ -112,19 +114,34 @@ function ContactModal({ isOpen, onClose }: ModalProps) {
   useEffect(() => {
     if (!isOpen) return;
     const handleKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") {
+        onClose();
+        return;
+      }
+
+      if (e.key !== "Tab" || !panelRef.current) return;
+
+      const focusable = panelRef.current.querySelectorAll<HTMLElement>(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+      );
+      if (!focusable.length) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
     };
     document.addEventListener("keydown", handleKey);
     return () => document.removeEventListener("keydown", handleKey);
   }, [isOpen, onClose]);
 
-  // Prevent body scroll
-  useEffect(() => {
-    document.body.style.overflow = isOpen ? "hidden" : "";
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [isOpen]);
+  useBodyScrollLock(isOpen);
 
   if (!visible) return null;
 
@@ -151,6 +168,7 @@ function ContactModal({ isOpen, onClose }: ModalProps) {
 
       {/* Panel */}
       <div
+        ref={panelRef}
         className="relative w-full sm:max-w-sm bg-gradient-to-b from-slate-800 to-slate-900 border border-white/10 rounded-t-2xl sm:rounded-2xl shadow-2xl transition-all duration-300 ease-out"
         style={{
           transform: animating
@@ -284,7 +302,7 @@ export default function Footer() {
           </button>
           {/* تنبيه أخطاء */}
           <p className="mt-5 text-white/60 text-xs leading-relaxed">
-            <span className="text-yellow-90">⚠</span> احتمال وجود أخطاء في بعض كلمات اللحن أو الطقس،
+            <span className="text-yellow-300">⚠</span> احتمال وجود أخطاء في بعض كلمات اللحن أو الطقس،
             <br />
             يُرجى مراجعتهما جيداً مع مدرس الألحان.
           </p>

@@ -49,10 +49,12 @@ const PAGES_TO_PRECACHE = [
   "/melodies",
   "/about",
   "/preparatory",
+  "/help",
   "/index.html",
   "/melodies/index.html",
   "/about/index.html",
   "/preparatory/index.html",
+  "/help/index.html",
 ];
 const CRITICAL_ASSETS = ["/", "/index.html"];
 const GOOGLE_FONTS = [
@@ -60,7 +62,10 @@ const GOOGLE_FONTS = [
 ];
 
 // ─── BroadcastChannel ────────────────────────────────────────────────────────
-const broadcast = new BroadcastChannel("sw-updates");
+const broadcast =
+  "BroadcastChannel" in self
+    ? new BroadcastChannel("sw-updates")
+    : { postMessage() {} };
 
 // ─── IndexedDB للـ LRU ────────────────────────────────────────────────────────
 const IDB_NAME = "sw-lru-store";
