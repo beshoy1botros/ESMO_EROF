@@ -14,13 +14,13 @@ export default defineConfig({
   
   // تحسينات البناء
   build: {
-    // ضغط إضافي
+    // ضغط محسّن
     minify: 'terser',
     terserOptions: {
       compress: {
         drop_console: true, // إزالة console.log في الإنتاج
         drop_debugger: true,
-        passes: 2, // ضغط إضافي
+        passes: 1, // تقليل الضغط لتسريع البناء
       },
       mangle: {
         safari10: true,
