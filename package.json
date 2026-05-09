@@ -1,46 +1,14 @@
 {
-  "name": "esmo-erof-app",
-  "description": "Coptic Hymns",
-  "version": "1.1.0",
-  "private": true,
-  "type": "module",
+  "name": "${PROJECT_NAME}",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
   "scripts": {
-    "build": "react-router build",
-    "dev": "react-router dev",
-    "start": "react-router-serve ./build/server/nodejs_eyJydW50aW1lIjoibm9kZWpzIn0/index.js",
-    "typecheck": "react-router typegen && tsc",
-    "test": "vitest run",
-    "test:watch": "vitest",
-    "test:ui": "vitest --ui"
+    "build": "tsc"
   },
-  "dependencies": {
-    "@react-router/node": "^7.15.0",
-    "@react-router/serve": "^7.15.0",
-    "@vercel/react-router": "^1.3.0",
-    "framer-motion": "^12.38.0",
-    "isbot": "^5",
-    "react": "^19.2.6",
-    "react-dom": "^19.2.6",
-    "react-icons": "^5.6.0",
-    "react-router": "^7.15.0",
-    "react-zoom-pan-pinch": "^4.0.3"
-  },
+  "dependencies": {},
   "devDependencies": {
-    "@react-router/dev": "^7.15.0",
-    "@tailwindcss/vite": "^4.2.4",
-    "@testing-library/jest-dom": "^6.9.1",
-    "@testing-library/react": "^16.3.2",
-    "@testing-library/user-event": "^14.6.1",
-    "@types/node": "^25",
-    "@types/react": "^19.2.14",
-    "@types/react-dom": "^19.2.3",
-    "jsdom": "^29.1.1",
-    "sharp": "^0.34.5",
-    "tailwindcss": "^4.2.4",
-    "terser": "^5.47.1",
-    "typescript": "^6.0.3",
-    "vite": "^8.0.11",
-    "vite-tsconfig-paths": "^6.1.1",
-    "vitest": "^4.1.5"
-  }
+    "typescript": "^5.5.3"
+  },
+  "private": true
 }
