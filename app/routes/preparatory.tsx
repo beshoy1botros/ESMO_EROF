@@ -1165,7 +1165,7 @@ export default function PreparatoryPage() {
                     const isSectionHeader =
                       !isAfEranav &&
                       (headerSource.includes("القطعة") ||
-                        headerSource.includes("المزمور"));
+                        headerSource.includes("(المزمور"));
 
                     if (!disableQuarterNumbers) {
                       if (isSectionHeader) {

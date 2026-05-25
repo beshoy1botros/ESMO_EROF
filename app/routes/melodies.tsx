@@ -1075,7 +1075,7 @@ export default function MelodiesPage() {
                     (fullscreenLyrics.copticcoptic || "");
 
                   const afEranavRegex =
-                    /ايراناف|إيراناف|راناف|ⲣⲁⲛⲁϥ|يليق\s*ل[اإأآ]لهنا/i;
+                    /ايراناف|إيراناف|يليق\s*ل[اإأآ]لهنا/i;
 
                   const hasAfEranav = afEranavRegex.test(allLyricsText);
 
@@ -1085,8 +1085,19 @@ export default function MelodiesPage() {
                       "ختام التسبحة السنوي (افنوتي ناي نان)",
                     );
 
+                  const isMokadematKiahk =
+                    fullscreenLyrics.title &&
+                    (fullscreenLyrics.title.includes(
+                      "مقدمة الذكصولوجيات بالنغمه الكيهكي",
+                    ) ||
+                      fullscreenLyrics.title.includes(
+                        "مقدمة الذكصولوجيات الكهيكي السريعة كاملة",
+                      ));
+
+                  const skipFirstQuarter = isKhatamTasbeha || isMokadematKiahk;
+
                   const disableQuarterNumbers =
-                    !hasAfEranav && maxParts <= 3 && !isKhatamTasbeha;
+                    !hasAfEranav && maxParts <= 3 && !skipFirstQuarter;
 
                   return Array.from({ length: maxParts }).map((_, i) => {
                     const arText = (arabic[i] || "").trim();
@@ -1103,8 +1114,7 @@ export default function MelodiesPage() {
                     const isSectionHeader =
                       !isAfEranav &&
                       (headerSource.includes("القطعة") ||
-                        headerSource.includes("المزمور"));
-
+                        headerSource.includes("(المزمور"));
                     if (!disableQuarterNumbers) {
                       if (isSectionHeader) {
                         currentQuarter = 0;
@@ -1113,10 +1123,10 @@ export default function MelodiesPage() {
                       }
                     }
 
-                    // For ختام التسبحة السنوي: skip first quarter, start numbering from second quarter as 1
+                    // For special melodies: skip first quarter, start numbering from second quarter as 1
                     let displayQuarter: number | null = currentQuarter;
                     if (
-                      isKhatamTasbeha &&
+                      skipFirstQuarter &&
                       currentQuarter !== null &&
                       currentQuarter > 0
                     ) {
@@ -1125,9 +1135,8 @@ export default function MelodiesPage() {
                     }
 
                     // إخفاء آخر ربع (16) من الليلويا التوزيع الكيهكي
-                    const isAlleluiaKiahk = fullscreenLyrics?.title?.includes(
-                      "الليلويا التوزيع الكيهكي",
-                    );
+                    const isAlleluiaKiahk = fullscreenLyrics?.title?.includes("الليلويا التوزيع الكيهكي") ||
+                      fullscreenLyrics?.title?.includes("التوزيع الكيهكي قبطيا كاملا + اللي كيه نين");
                     if (isAlleluiaKiahk && displayQuarter === 16) {
                       displayQuarter = null;
                     }
@@ -1142,7 +1151,7 @@ export default function MelodiesPage() {
                       ? getNumberFromTitle(arabic[i] || "")
                       : isAfEranav
                         ? currentQuarter || 1
-                        : isKhatamTasbeha
+                        : skipFirstQuarter
                           ? displayQuarter !== null
                             ? displayQuarter + 1
                             : quarterNumber
@@ -1205,9 +1214,10 @@ export default function MelodiesPage() {
                                 "--font-size": string;
                               }
                             }
-                          >
-                            {copticAr[i] || "-"}
-                          </div>
+                            dangerouslySetInnerHTML={{
+                              __html: copticAr[i] || "-",
+                            }}
+                          />
                         )}
 
                         {showCoptic && (
@@ -1224,9 +1234,10 @@ export default function MelodiesPage() {
                                 "--font-size": string;
                               }
                             }
-                          >
-                            {coptic[i] || "-"}
-                          </div>
+                            dangerouslySetInnerHTML={{
+                              __html: coptic[i] || "-",
+                            }}
+                          />
                         )}
 
                         {showArabic && (
@@ -1243,9 +1254,10 @@ export default function MelodiesPage() {
                                 "--font-size": string;
                               }
                             }
-                          >
-                            {arabic[i] || "-"}
-                          </div>
+                            dangerouslySetInnerHTML={{
+                              __html: arabic[i] || "-",
+                            }}
+                          />
                         )}
                       </div>
                     );
