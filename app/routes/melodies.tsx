@@ -65,23 +65,6 @@ function getHazzatImages(video: Video): string[] {
   ].filter((src): src is string => Boolean(src));
 }
 
-const LAST_OPENED_STORAGE_KEY = "esmo-erof:last-opened-melody";
-
-interface LastOpenedMelody {
-  stage: StageKey;
-  level: string;
-  videoId: string;
-}
-
-function safeParseJson<T>(value: string | null, fallback: T): T {
-  if (!value) return fallback;
-  try {
-    return JSON.parse(value) as T;
-  } catch {
-    return fallback;
-  }
-}
-
 // --- 4. أيقونة الترس (Gear Icon SVG Component) - تصميم احترافي ---
 
 function GearIcon({ className = "w-5 h-5" }: { className?: string }) {
@@ -124,10 +107,6 @@ export default function MelodiesPage() {
   const [isHazzatZoomed, setIsHazzatZoomed] = useState(false);
   const [showVideoInModal, setShowVideoInModal] = useState(false);
   const [videoTime, setVideoTime] = useState<Record<string, number>>({});
-  const [lastOpened, setLastOpened] = useState<LastOpenedMelody | null>(null);
-  const [pendingOpenVideoId, setPendingOpenVideoId] = useState<string | null>(
-    null,
-  );
 
   const [showControlsPanel, setShowControlsPanel] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
@@ -142,15 +121,6 @@ export default function MelodiesPage() {
   // ====== Ref للإغلاق الذكي عند النقر خارج القائمة ======
   const controlsPanelRef = useRef<HTMLDivElement>(null);
   const lastPrewarmedUrls = useRef<Set<string>>(new Set());
-
-  useEffect(() => {
-    setLastOpened(
-      safeParseJson<LastOpenedMelody | null>(
-        localStorage.getItem(LAST_OPENED_STORAGE_KEY),
-        null,
-      ),
-    );
-  }, []);
 
   useEffect(() => {
     if (!stage) {
@@ -280,31 +250,10 @@ export default function MelodiesPage() {
   const openLyrics = useCallback(
     (video: Video) => {
       if (!stage || !level) return;
-      const nextLastOpened = { stage, level, videoId: video.id };
       setFullscreenLyrics(video);
-      setLastOpened(nextLastOpened);
-      localStorage.setItem(
-        LAST_OPENED_STORAGE_KEY,
-        JSON.stringify(nextLastOpened),
-      );
     },
     [level, stage],
   );
-
-  const continueLastOpened = useCallback(() => {
-    if (!lastOpened) return;
-    setPendingOpenVideoId(lastOpened.videoId);
-    setStage(lastOpened.stage);
-    setLevel(lastOpened.level);
-  }, [lastOpened]);
-
-  useEffect(() => {
-    if (!pendingOpenVideoId || !videos.length) return;
-    const video = videos.find((item) => item.id === pendingOpenVideoId);
-    if (!video) return;
-    setFullscreenLyrics(video);
-    setPendingOpenVideoId(null);
-  }, [pendingOpenVideoId, videos]);
 
   // ====== Memoized computed values ======
   const visibleColumns = useMemo(
@@ -1074,8 +1023,7 @@ export default function MelodiesPage() {
                     (fullscreenLyrics.copticArabic || "") +
                     (fullscreenLyrics.copticcoptic || "");
 
-                  const afEranavRegex =
-                    /ايراناف|إيراناف|يليق\s*ل[اإأآ]لهنا/i;
+                  const afEranavRegex = /ايراناف|إيراناف|يليق\s*ل[اإأآ]لهنا/i;
 
                   const hasAfEranav = afEranavRegex.test(allLyricsText);
 
@@ -1135,8 +1083,13 @@ export default function MelodiesPage() {
                     }
 
                     // إخفاء آخر ربع (16) من الليلويا التوزيع الكيهكي
-                    const isAlleluiaKiahk = fullscreenLyrics?.title?.includes("الليلويا التوزيع الكيهكي") ||
-                      fullscreenLyrics?.title?.includes("التوزيع الكيهكي قبطيا كاملا + اللي كيه نين");
+                    const isAlleluiaKiahk =
+                      fullscreenLyrics?.title?.includes(
+                        "الليلويا التوزيع الكيهكي",
+                      ) ||
+                      fullscreenLyrics?.title?.includes(
+                        "التوزيع الكيهكي قبطيا كاملا + اللي كيه نين",
+                      );
                     if (isAlleluiaKiahk && displayQuarter === 16) {
                       displayQuarter = null;
                     }

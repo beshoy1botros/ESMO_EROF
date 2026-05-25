@@ -43,7 +43,6 @@ export default function Header() {
   const firstMobileLinkRef = useRef<HTMLAnchorElement>(null);
   const wasMenuOpenRef = useRef(false);
 
-  // Generate random floating dots only on client to avoid hydration mismatch
   useEffect(() => {
     const dots: FloatingDot[] = [...Array(18)].map(() => ({
       width: Math.random() * 2 + 1 + "px",
@@ -70,12 +69,14 @@ export default function Header() {
   useBodyScrollLock(isMenuOpen);
 
   useEffect(() => {
+    // تحديث aria-expanded بشكل مباشر لتجنب مشكلة التحليل الثابت للـ linter
+    menuButtonRef.current?.setAttribute("aria-expanded", String(isMenuOpen));
+
     if (isMenuOpen) {
       requestAnimationFrame(() => firstMobileLinkRef.current?.focus());
     } else if (wasMenuOpenRef.current) {
       menuButtonRef.current?.focus();
     }
-
     wasMenuOpenRef.current = isMenuOpen;
   }, [isMenuOpen]);
 
@@ -121,7 +122,7 @@ export default function Header() {
                 space-y-1.5
               "
               aria-label={isMenuOpen ? "إغلاق القائمة" : "فتح القائمة"}
-              aria-expanded={isMenuOpen}
+              aria-expanded="false"
               aria-controls="mobile-nav"
             >
               <span
@@ -141,7 +142,6 @@ export default function Header() {
               />
             </button>
 
-            {/* ✏️ الاسم الجديد بالإنجليزية */}
             {/* الاسم */}
             <div className="flex-1 flex items-center justify-center">
               <h1
@@ -232,16 +232,14 @@ export default function Header() {
           w-[min(340px,92vw)] flex flex-col
           transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]
           scan-line-effect
-          ${isMenuOpen ? "translate-x-0" : "translate-x-full"}
+          bg-[linear-gradient(160deg,#0f1e3d_0%,#071028_45%,#030b1a_100%)]
+          border-l border-blue-500/25
+          ${
+            isMenuOpen
+              ? "translate-x-0 shadow-[-20px_0_80px_rgba(0,0,0,0.9),-2px_0_0_rgba(59,130,246,0.15),inset_1px_0_0_rgba(96,165,250,0.08)]"
+              : "translate-x-full"
+          }
         `}
-        style={{
-          background:
-            "linear-gradient(160deg, #0f1e3d 0%, #071028 45%, #030b1a 100%)",
-          borderLeft: "1px solid rgba(59,130,246,0.25)",
-          boxShadow: isMenuOpen
-            ? "-20px 0 80px rgba(0,0,0,0.9), -2px 0 0 rgba(59,130,246,0.15), inset 1px 0 0 rgba(96,165,250,0.08)"
-            : "none",
-        }}
         inert={!isMenuOpen || undefined}
         role="dialog"
         aria-modal={isMenuOpen}
@@ -260,38 +258,15 @@ export default function Header() {
             />
           ))}
           {/* توهج جانبي */}
-          <div
-            className="absolute top-0 right-0 w-40 h-72 opacity-10 pointer-events-none"
-            style={{
-              background:
-                "radial-gradient(ellipse at top right, #3b82f6, transparent 70%)",
-            }}
-          />
-          <div
-            className="absolute bottom-0 right-8 w-56 h-48 opacity-8 pointer-events-none"
-            style={{
-              background:
-                "radial-gradient(ellipse at bottom, #1d4ed8, transparent 70%)",
-            }}
-          />
+          <div className="absolute top-0 right-0 w-40 h-72 opacity-10 pointer-events-none bg-[radial-gradient(ellipse_at_top_right,#3b82f6,transparent_70%)]" />
+          <div className="absolute bottom-0 right-8 w-56 h-48 opacity-[0.08] pointer-events-none bg-[radial-gradient(ellipse_at_bottom,#1d4ed8,transparent_70%)]" />
         </div>
 
         {/* ══ رأس القائمة ══ */}
-        <div
-          className="relative flex items-center justify-between px-6 py-5 flex-shrink-0"
-          style={{
-            background:
-              "linear-gradient(135deg, rgba(30,58,138,0.6) 0%, rgba(15,23,42,0.4) 100%)",
-            borderBottom: "1px solid rgba(59,130,246,0.2)",
-            backdropFilter: "blur(12px)",
-          }}
-        >
+        <div className="relative flex items-center justify-between px-6 py-5 flex-shrink-0 bg-[linear-gradient(135deg,rgba(30,58,138,0.6)_0%,rgba(15,23,42,0.4)_100%)] border-b border-blue-500/20 backdrop-blur-[12px]">
           {/* شعار النص */}
           <div className="flex flex-col gap-0.5">
-            <span
-              className="shimmer-text font-newath font-bold tracking-widest"
-              style={{ fontSize: "1.25rem", letterSpacing: "0.12em" }}
-            >
+            <span className="shimmer-text font-newath font-bold tracking-[0.12em] text-[1.25rem]">
               Cmou ; Erof ;
             </span>
             <span className="text-blue-500/60 text-xs tracking-widest font-mono">
@@ -302,20 +277,17 @@ export default function Header() {
           {/* زر الإغلاق */}
           <button
             onClick={() => setIsMenuOpen(false)}
-            className="relative group flex items-center justify-center rounded-xl transition-all duration-200 active:scale-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
-            style={{
-              width: 44,
-              height: 44,
-              background: "rgba(30,58,138,0.4)",
-              border: "1px solid rgba(96,165,250,0.2)",
-              boxShadow: "0 2px 12px rgba(0,0,0,0.4)",
-            }}
+            className="
+              relative group flex items-center justify-center
+              w-11 h-11 rounded-xl
+              bg-blue-900/40 border border-blue-400/20
+              shadow-[0_2px_12px_rgba(0,0,0,0.4)]
+              transition-all duration-200 active:scale-90
+              focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400
+            "
             aria-label="إغلاق القائمة"
           >
-            <span
-              className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-              style={{ background: "rgba(59,130,246,0.15)" }}
-            />
+            <span className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-blue-500/15" />
             <svg
               width="18"
               height="18"
@@ -332,18 +304,11 @@ export default function Header() {
         </div>
 
         {/* ── فاصل مضيء ── */}
-        <div
-          className="h-px flex-shrink-0"
-          style={{
-            background:
-              "linear-gradient(90deg, transparent 0%, rgba(96,165,250,0.5) 40%, rgba(147,197,253,0.7) 60%, transparent 100%)",
-          }}
-        />
+        <div className="h-px flex-shrink-0 bg-[linear-gradient(90deg,transparent_0%,rgba(96,165,250,0.5)_40%,rgba(147,197,253,0.7)_60%,transparent_100%)]" />
 
         {/* ══ روابط التنقل ══ */}
         <nav
-          className="relative flex-1 overflow-y-auto py-5 px-4 space-y-2"
-          style={{ scrollbarWidth: "none" }}
+          className="relative flex-1 overflow-y-auto py-5 px-4 space-y-2 [scrollbar-width:none]"
           aria-label="روابط الصفحات"
         >
           {navLinks.map(({ to, label, icon: Icon }, index) => {
@@ -361,88 +326,48 @@ export default function Header() {
                   transition-all duration-200 active:scale-[0.97]
                   focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400
                   overflow-hidden
-                  ${active ? "active-link-glow" : ""}
+                  ${
+                    active
+                      ? "active-link-glow bg-[linear-gradient(135deg,rgba(37,99,235,0.35)_0%,rgba(29,78,216,0.2)_100%)] border border-blue-400/40 text-blue-300"
+                      : "bg-[rgba(15,28,63,0.4)] border border-blue-500/[0.08] text-slate-300"
+                  }
                 `}
-                style={
-                  active
-                    ? {
-                        background:
-                          "linear-gradient(135deg, rgba(37,99,235,0.35) 0%, rgba(29,78,216,0.2) 100%)",
-                        border: "1px solid rgba(96,165,250,0.4)",
-                        color: "#93c5fd",
-                      }
-                    : {
-                        background: "rgba(15,28,63,0.4)",
-                        border: "1px solid rgba(59,130,246,0.08)",
-                        color: "#cbd5e1",
-                      }
-                }
               >
                 {/* تأثير hover */}
                 {!active && (
-                  <span
-                    className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                    style={{
-                      background:
-                        "linear-gradient(135deg, rgba(37,99,235,0.15) 0%, rgba(29,78,216,0.08) 100%)",
-                      border: "1px solid rgba(96,165,250,0.2)",
-                    }}
-                  />
+                  <span className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[linear-gradient(135deg,rgba(37,99,235,0.15)_0%,rgba(29,78,216,0.08)_100%)] border border-blue-400/20" />
                 )}
 
                 {/* بريق حركي عند الـ hover */}
-                <span
-                  className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-                  style={{
-                    background:
-                      "linear-gradient(105deg, transparent 40%, rgba(147,197,253,0.06) 50%, transparent 60%)",
-                    backgroundSize: "200% 100%",
-                  }}
-                />
+                <span className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none bg-[linear-gradient(105deg,transparent_40%,rgba(147,197,253,0.06)_50%,transparent_60%)] bg-[length:200%_100%]" />
 
                 {/* أيقونة */}
                 <span
-                  className="relative flex items-center justify-center flex-shrink-0 rounded-xl transition-all duration-200"
-                  style={{
-                    width: 42,
-                    height: 42,
-                    background: active
-                      ? "linear-gradient(135deg, rgba(59,130,246,0.5), rgba(37,99,235,0.3))"
-                      : "rgba(15,28,63,0.7)",
-                    border: active
-                      ? "1px solid rgba(96,165,250,0.5)"
-                      : "1px solid rgba(59,130,246,0.15)",
-                    boxShadow: active
-                      ? "0 0 16px rgba(59,130,246,0.4), inset 0 1px 0 rgba(255,255,255,0.05)"
-                      : "none",
-                    color: active ? "#93c5fd" : "#94a3b8",
-                  }}
+                  className={`
+                    relative flex items-center justify-center flex-shrink-0
+                    w-[42px] h-[42px] rounded-xl transition-all duration-200
+                    ${
+                      active
+                        ? "bg-[linear-gradient(135deg,rgba(59,130,246,0.5),rgba(37,99,235,0.3))] border border-blue-400/50 shadow-[0_0_16px_rgba(59,130,246,0.4),inset_0_1px_0_rgba(255,255,255,0.05)] text-blue-300"
+                        : "bg-[rgba(15,28,63,0.7)] border border-blue-500/15 text-slate-400"
+                    }
+                  `}
                 >
                   <Icon size={19} />
-                  {/* نقطة إضاءة داخل الأيقونة */}
                   {active && (
-                    <span
-                      className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-blue-300"
-                      style={{ boxShadow: "0 0 6px rgba(147,197,253,0.9)" }}
-                    />
+                    <span className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-blue-300 shadow-[0_0_6px_rgba(147,197,253,0.9)]" />
                   )}
                 </span>
 
                 {/* النص */}
-                <span
-                  className="relative flex-1 text-right font-semibold tracking-wide"
-                  style={{ fontSize: "0.975rem" }}
-                >
+                <span className="relative flex-1 text-right font-semibold tracking-wide text-[0.975rem]">
                   {label}
                 </span>
 
                 {/* مؤشر الصفحة النشطة */}
                 {active ? (
                   <span className="relative flex items-center gap-1.5 flex-shrink-0">
-                    <span
-                      className="w-1.5 h-5 rounded-full bg-blue-400"
-                      style={{ boxShadow: "0 0 8px rgba(96,165,250,0.8)" }}
-                    />
+                    <span className="w-1.5 h-5 rounded-full bg-blue-400 shadow-[0_0_8px_rgba(96,165,250,0.8)]" />
                   </span>
                 ) : (
                   <svg
@@ -461,65 +386,27 @@ export default function Header() {
         </nav>
 
         {/* ── فاصل مضيء ── */}
-        <div
-          className="h-px flex-shrink-0 mx-6"
-          style={{
-            background:
-              "linear-gradient(90deg, transparent, rgba(96,165,250,0.3), transparent)",
-          }}
-        />
+        <div className="h-px flex-shrink-0 mx-6 bg-[linear-gradient(90deg,transparent,rgba(96,165,250,0.3),transparent)]" />
 
         {/* ══ ذيل القائمة ══ */}
-        <div
-          className="relative px-6 py-5 flex-shrink-0"
-          style={{
-            background:
-              "linear-gradient(135deg, rgba(15,23,42,0.8) 0%, rgba(10,15,30,0.6) 100%)",
-          }}
-        >
+        <div className="relative px-6 py-5 flex-shrink-0 bg-[linear-gradient(135deg,rgba(15,23,42,0.8)_0%,rgba(10,15,30,0.6)_100%)]">
           {/* نص الذيل */}
-          <p
-            className="text-center text-xs tracking-widest font-mono"
-            style={{ color: "rgba(96,165,250,0.55)", letterSpacing: "0.15em" }}
-          >
+          <p className="text-center text-xs tracking-[0.15em] font-mono text-blue-400/55">
             الألحان القبطية
           </p>
-          <p
-            className="text-center font-newath text-xs mt-1 tracking-widest"
-            style={{ color: "rgba(148,163,184,0.35)", letterSpacing: "0.1em" }}
-          >
+          <p className="text-center font-newath text-xs mt-1 tracking-[0.1em] text-slate-400/35">
             Cmou ; Erof ;
           </p>
 
           {/* نقاط متحركة */}
           <div className="mt-4 flex justify-center items-center gap-2">
-            {[0, 1, 2].map((i) => (
-              <span
-                key={i}
-                className="rounded-full"
-                style={{
-                  width: i === 1 ? 10 : 6,
-                  height: i === 1 ? 10 : 6,
-                  background:
-                    i === 1
-                      ? "linear-gradient(135deg, #60a5fa, #3b82f6)"
-                      : "rgba(96,165,250,0.35)",
-                  boxShadow: i === 1 ? "0 0 12px rgba(96,165,250,0.7)" : "none",
-                  animation: `float-dot ${1.5 + i * 0.4}s ease-in-out infinite`,
-                  animationDelay: i * 0.2 + "s",
-                }}
-              />
-            ))}
+            <span className="w-1.5 h-1.5 rounded-full bg-blue-400/35 [animation:float-dot_1.5s_ease-in-out_infinite]" />
+            <span className="w-2.5 h-2.5 rounded-full bg-[linear-gradient(135deg,#60a5fa,#3b82f6)] shadow-[0_0_12px_rgba(96,165,250,0.7)] [animation:float-dot_1.9s_ease-in-out_infinite] [animation-delay:200ms]" />
+            <span className="w-1.5 h-1.5 rounded-full bg-blue-400/35 [animation:float-dot_2.3s_ease-in-out_infinite] [animation-delay:400ms]" />
           </div>
 
           {/* خط إضاءة سفلي */}
-          <div
-            className="absolute bottom-0 left-6 right-6 h-px"
-            style={{
-              background:
-                "linear-gradient(90deg, transparent, rgba(59,130,246,0.4), transparent)",
-            }}
-          />
+          <div className="absolute bottom-0 left-6 right-6 h-px bg-[linear-gradient(90deg,transparent,rgba(59,130,246,0.4),transparent)]" />
         </div>
       </div>
     </>

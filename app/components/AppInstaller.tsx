@@ -124,59 +124,46 @@ export function AppInstaller() {
   }, []);
 
   // Don't render if already installed
-  if (isInstalled) {
-    return null;
-  }
+  if (isInstalled) return null;
 
   // iOS Smart Banner
   if (showiOSBanner && !dismissed) {
     return (
       <div
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          right: 0,
-          zIndex: 99999,
-          backgroundColor: "#1e3a8a",
-          color: "white",
-          padding: "12px 16px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          boxShadow: "0 2px 10px rgba(0,0,0,0.2)",
-          fontFamily: "inherit",
-          direction: "rtl",
-        }}
+        className="
+          fixed top-0 left-0 right-0 z-[99999]
+          bg-blue-900 text-white
+          px-4 py-3
+          flex items-center justify-between
+          shadow-[0_2px_10px_rgba(0,0,0,0.2)]
+          font-inherit
+          direction-rtl
+          rtl
+        "
       >
-        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+        <div className="flex items-center gap-3">
           <img
             src="/photos/icon-172.png"
             alt="Logo"
             width="40"
             height="40"
-            style={{ borderRadius: "8px" }}
+            className="rounded-lg"
           />
           <div>
-            <div style={{ fontWeight: "bold", fontSize: "14px" }}>
-              حمل التطبيق على جهازك
-            </div>
-            <div style={{ fontSize: "12px", opacity: 0.9 }}>
+            <div className="font-bold text-sm">حمل التطبيق على جهازك</div>
+            <div className="text-xs opacity-90">
               اضغط على زر المشاركة ثم "أضف إلى الشاشة الرئيسية"
             </div>
           </div>
         </div>
         <button
           onClick={handleDismiss}
-          style={{
-            background: "none",
-            border: "none",
-            color: "white",
-            fontSize: "24px",
-            cursor: "pointer",
-            padding: "4px 8px",
-            opacity: 0.8,
-          }}
+          className="
+            bg-transparent border-none text-white
+            text-2xl cursor-pointer
+            px-2 py-1 opacity-80
+            hover:opacity-100 transition-opacity duration-200
+          "
           aria-label="إغلاق"
         >
           ✕
@@ -185,33 +172,24 @@ export function AppInstaller() {
     );
   }
 
-  // Android Auto-Install Button (fallback if auto-prompt doesn't work)
+  // Android Auto-Install Button
   if (isInstallable && !dismissed) {
     return (
       <button
         onClick={handleInstall}
-        className="install-button"
-        style={{
-          position: "fixed",
-          bottom: "20px",
-          left: "50%",
-          transform: "translateX(-50%)",
-          zIndex: 9999,
-          padding: "14px 28px",
-          backgroundColor: "#1e3a8a",
-          color: "white",
-          border: "none",
-          borderRadius: "50px",
-          fontSize: "16px",
-          fontWeight: "600",
-          cursor: "pointer",
-          boxShadow: "0 4px 20px rgba(30, 58, 138, 0.4)",
-          display: "flex",
-          alignItems: "center",
-          gap: "10px",
-          transition: "all 0.3s ease",
-          fontFamily: "inherit",
-        }}
+        className="
+          install-button
+          fixed bottom-5 left-1/2 -translate-x-1/2 z-[9999]
+          px-7 py-3.5
+          bg-blue-900 text-white
+          border-none rounded-full
+          text-base font-semibold cursor-pointer
+          shadow-[0_4px_20px_rgba(30,58,138,0.4)]
+          flex items-center gap-2.5
+          transition-all duration-300 ease-in-out
+          hover:bg-blue-800 hover:shadow-[0_6px_24px_rgba(30,58,138,0.6)] hover:-translate-y-0.5
+          active:scale-95
+        "
         aria-label="تثبيت التطبيق"
       >
         <svg
