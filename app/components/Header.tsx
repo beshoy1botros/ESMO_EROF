@@ -289,7 +289,7 @@ export default function Header() {
           {/* شعار النص */}
           <div className="flex flex-col gap-0.5">
             <span
-              className="shimmer-textewath font-newath font-bold tracking-widest"
+              className="shimmer-text font-newath font-bold tracking-widest"
               style={{ fontSize: "1.25rem", letterSpacing: "0.12em" }}
             >
               Cmou ; Erof ;
@@ -430,7 +430,7 @@ export default function Header() {
 
                 {/* النص */}
                 <span
-                  className="relative flex-1 text-rightewath font-semibold tracking-wide"
+                  className="relative flex-1 text-right font-semibold tracking-wide"
                   style={{ fontSize: "0.975rem" }}
                 >
                   {label}

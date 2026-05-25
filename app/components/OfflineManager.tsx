@@ -39,17 +39,24 @@ export function OfflineManager({ className = "" }: OfflineManagerProps) {
   useEffect(() => {
     const handleOnline = () => {
       setIsOnline(true);
-      setShowNotification(false);
+      setShowNotification(true); // Show "Back Online" message
+      setTimeout(() => setShowNotification(false), 3000);
     };
 
     const handleOffline = () => {
       setIsOnline(false);
       setShowNotification(true);
-      setTimeout(() => setShowNotification(false), 5000);
+      // Don't auto-hide offline notification
     };
 
     window.addEventListener("online", handleOnline);
     window.addEventListener("offline", handleOffline);
+
+    // Initial check
+    if (!navigator.onLine) {
+      setIsOnline(false);
+      setShowNotification(true);
+    }
 
     return () => {
       window.removeEventListener("online", handleOnline);
@@ -59,104 +66,118 @@ export function OfflineManager({ className = "" }: OfflineManagerProps) {
 
   return (
     <div className={`offline-manager ${className}`}>
-      {/* Offline Notification Banner */}
-      {showNotification && !isOnline && (
-        <div className="offline-banner">
-          <span>📴 أنت الآن تعمل بدون اتصال بالإنترنت</span>
-          <button onClick={() => setShowNotification(false)} aria-label="إغلاق">
-            ×
-          </button>
-        </div>
-      )}
+      <div className="offline-notifications-container">
+        {/* Status Banner */}
+        {showNotification && (
+          <div className={`status-banner ${isOnline ? "online" : "offline"}`}>
+            <div className="status-content">
+              <span className="status-icon">{isOnline ? "✅" : "📴"}</span>
+              <span>
+                {isOnline
+                  ? "تم استعادة الاتصال بالإنترنت"
+                  : "أنت الآن تعمل بدون اتصال بالإنترنت"}
+              </span>
+            </div>
+            {!isOnline && (
+              <button
+                onClick={() => setShowNotification(false)}
+                aria-label="إغلاق"
+              >
+                ×
+              </button>
+            )}
+          </div>
+        )}
 
-      {/* Persistence Warning */}
-      {!isPersistent && (
-        <div className="persistence-warning">
-          <span>
-            ⚠️ التخزين غير دائم — أضف التطبيق للشاشة الرئيسية لضمان بقاء الملفات
-          </span>
-        </div>
-      )}
-
-      {/* Network Status Indicator */}
+        {/* Persistence Warning */}
+        {!isPersistent && (
+          <div className="persistence-warning">
+            <span>
+              ⚠️ التخزين غير دائم — أضف التطبيق للشاشة الرئيسية لضمان بقاء
+              الملفات
+            </span>
+          </div>
+        )}
+      </div>
 
       <style>{`
         .offline-manager {
           font-family: system-ui, -apple-system, sans-serif;
         }
 
-        .offline-banner {
+        .offline-notifications-container {
           position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
-          background: linear-gradient(135deg, #ff6b6b, #ee5a24);
-          color: white;
+          bottom: 24px;
+          left: 20px;
+          right: 20px;
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+          z-index: 9999;
+          pointer-events: none;
+        }
+
+        .status-banner, .persistence-warning {
+          pointer-events: auto;
+          width: 100%;
+          max-width: 500px;
+          margin: 0 auto;
+          border-radius: 12px;
           padding: 12px 20px;
           display: flex;
           justify-content: space-between;
           align-items: center;
-          z-index: 9999;
-          animation: slideDown 0.3s ease;
+          box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+          animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        @keyframes slideDown {
-          from { transform: translateY(-100%); }
-          to   { transform: translateY(0); }
+        .status-banner.offline {
+          background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+          color: white;
+          border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .status-banner.online {
+          background: linear-gradient(135deg, #2ecc71, #27ae60);
+          color: white;
+          border: 1px solid rgba(255,255,255,0.2);
         }
 
         .persistence-warning {
-          position: fixed;
-          bottom: 20px;
-          left: 20px;
-          right: 20px;
           background: #fff3cd;
           color: #856404;
           border: 1px solid #ffeeba;
-          padding: 10px 15px;
-          border-radius: 8px;
           font-size: 13px;
-          z-index: 9998;
-          box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-          animation: fadeInUp 0.5s ease;
+          font-weight: 600;
+          text-align: center;
+          justify-content: center;
         }
 
-        @keyframes fadeInUp {
+        .status-content {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          font-weight: 600;
+        }
+
+        @keyframes slideUp {
           from { opacity: 0; transform: translateY(20px); }
           to   { opacity: 1; transform: translateY(0); }
         }
 
-        .offline-banner button {
+        .status-banner button {
           background: none;
           border: none;
           color: white;
           font-size: 24px;
           cursor: pointer;
-          padding: 0 10px;
+          padding: 0 5px;
+          opacity: 0.8;
+          line-height: 1;
         }
 
-        .network-status {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          padding: 8px 12px;
-          border-radius: 20px;
-          font-size: 12px;
-          font-weight: 500;
-        }
-
-        .network-status.online {
-          background: #d4edda;
-          color: #155724;
-        }
-
-        .network-status.offline {
-          background: #f8d7da;
-          color: #721c24;
-        }
-
-        .status-icon {
-          font-size: 10px;
+        .status-banner button:hover {
+          opacity: 1;
         }
       `}</style>
     </div>
