@@ -170,7 +170,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
     <html lang="ar" suppressHydrationWarning>
       <head>
         <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -192,6 +195,27 @@ export function Layout({ children }: { children: React.ReactNode }) {
                     root.style.setProperty('--theme-color', '#ffffff');
                   }
                 } catch (e) {}
+              })();
+            `,
+          }}
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                window.__esmoDeferredInstallPrompt = null;
+                window.addEventListener('beforeinstallprompt', function(event) {
+                  event.preventDefault();
+                  window.__esmoDeferredInstallPrompt = event;
+                  window.dispatchEvent(new Event('esmo-beforeinstallprompt'));
+                });
+                window.addEventListener('appinstalled', function() {
+                  window.__esmoDeferredInstallPrompt = null;
+                  try {
+                    localStorage.setItem('esmo-erof-app-installed', 'true');
+                  } catch (e) {}
+                  window.dispatchEvent(new Event('esmo-appinstalled'));
+                });
               })();
             `,
           }}

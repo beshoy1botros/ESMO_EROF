@@ -682,6 +682,15 @@ img {
   backdrop-filter: blur(16px) saturate(180%);
 }
 
+/* iOS notch safe area: moves tappable header content below the sensor housing. */
+.ios-safe-header {
+  padding-top: calc(12px + env(safe-area-inset-top));
+}
+
+.ios-safe-drawer {
+  padding-top: calc(12px + env(safe-area-inset-top));
+}
+
 /* Overlay — blur عند فتح القائمة */
 .nav-overlay--open {
   -webkit-backdrop-filter: blur(4px);

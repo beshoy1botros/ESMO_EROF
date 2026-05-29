@@ -9,11 +9,63 @@ interface OfflineManagerProps {
   className?: string;
 }
 
+interface IOSNavigator extends Navigator {
+  standalone?: boolean;
+}
+
+const APP_INSTALLED_KEY = "esmo-erof-app-installed";
+
+function isStandaloneDisplayMode() {
+  return (
+    window.matchMedia("(display-mode: standalone)").matches ||
+    (window.navigator as IOSNavigator).standalone === true
+  );
+}
+
+function getKnownInstalled() {
+  try {
+    return localStorage.getItem(APP_INSTALLED_KEY) === "true";
+  } catch {
+    return false;
+  }
+}
+
+function setKnownInstalled() {
+  try {
+    localStorage.setItem(APP_INSTALLED_KEY, "true");
+  } catch {
+    // Storage may be blocked; standalone detection still covers installed launches.
+  }
+}
+
 export function OfflineManager({ className = "" }: OfflineManagerProps) {
   // ✅ إصلاح SSR: ابدأ بـ true كقيمة آمنة للسيرفر
   const [isOnline, setIsOnline] = useState(true);
   const [showNotification, setShowNotification] = useState(false);
   const [isPersistent, setIsPersistent] = useState(true);
+  const [isAppInstalled, setIsAppInstalled] = useState(false);
+
+  // ✅ لا تعرض تحذير التخزين لمن ثبت التطبيق بالفعل
+  useEffect(() => {
+    const installed = isStandaloneDisplayMode() || getKnownInstalled();
+    if (installed) {
+      if (isStandaloneDisplayMode()) setKnownInstalled();
+      setIsAppInstalled(true);
+    }
+
+    const handleAppInstalled = () => {
+      setKnownInstalled();
+      setIsAppInstalled(true);
+    };
+
+    window.addEventListener("appinstalled", handleAppInstalled);
+    window.addEventListener("esmo-appinstalled", handleAppInstalled);
+
+    return () => {
+      window.removeEventListener("appinstalled", handleAppInstalled);
+      window.removeEventListener("esmo-appinstalled", handleAppInstalled);
+    };
+  }, []);
 
   // ✅ التحقق من التخزين الدائم (Persistence)
   useEffect(() => {
@@ -90,7 +142,7 @@ export function OfflineManager({ className = "" }: OfflineManagerProps) {
         )}
 
         {/* Persistence Warning */}
-        {!isPersistent && (
+        {!isPersistent && !isAppInstalled && (
           <div className="persistence-warning">
             <span>
               ⚠️ التخزين غير دائم — أضف التطبيق للشاشة الرئيسية لضمان بقاء

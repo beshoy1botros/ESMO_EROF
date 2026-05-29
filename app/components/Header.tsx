@@ -33,15 +33,32 @@ interface FloatingDot {
   animationDelay: string;
 }
 
+function isIOSDevice() {
+  const nav = window.navigator as Navigator & {
+    maxTouchPoints?: number;
+    platform?: string;
+  };
+
+  return (
+    /iPad|iPhone|iPod/.test(nav.userAgent) ||
+    (nav.platform === "MacIntel" && (nav.maxTouchPoints ?? 0) > 1)
+  );
+}
+
 export default function Header() {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [isIOS, setIsIOS] = useState(false);
   const [floatingDots, setFloatingDots] = useState<FloatingDot[]>([]);
   const menuRef = useRef<HTMLDivElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const firstMobileLinkRef = useRef<HTMLAnchorElement>(null);
   const wasMenuOpenRef = useRef(false);
+
+  useEffect(() => {
+    setIsIOS(isIOSDevice());
+  }, []);
 
   useEffect(() => {
     const dots: FloatingDot[] = [...Array(18)].map(() => ({
@@ -97,6 +114,7 @@ export default function Header() {
       <header
         className={`
           header-blur sticky top-0 z-50 transition-all duration-300
+          ${isIOS ? "ios-safe-header" : ""}
           ${
             scrolled
               ? "bg-blue-950/95 shadow-[0_4px_24px_rgba(0,0,0,0.4)] border-b border-blue-800/60"
@@ -229,6 +247,7 @@ export default function Header() {
         ref={menuRef}
         className={`
           fixed top-0 right-0 bottom-0 z-50 md:hidden
+          ${isIOS ? "ios-safe-drawer" : ""}
           w-[min(340px,92vw)] flex flex-col
           transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]
           scan-line-effect

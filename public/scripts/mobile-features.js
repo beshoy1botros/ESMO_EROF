@@ -25,28 +25,40 @@
   /* ══════════════════════════════════════════
      PWA — Install Banner
   ══════════════════════════════════════════ */
-  let deferredInstallPrompt = null;
+  let deferredInstallPrompt = window.__esmoDeferredInstallPrompt || null;
 
   window.addEventListener("beforeinstallprompt", (e) => {
     e.preventDefault();
     deferredInstallPrompt = e;
+    window.__esmoDeferredInstallPrompt = e;
     // أظهر زر التثبيت إن وجد في الصفحة
+    const btn = document.querySelector("[data-pwa-install]");
+    if (btn) btn.classList.remove("hidden");
+  });
+
+  window.addEventListener("esmo-beforeinstallprompt", () => {
+    deferredInstallPrompt = window.__esmoDeferredInstallPrompt || null;
     const btn = document.querySelector("[data-pwa-install]");
     if (btn) btn.classList.remove("hidden");
   });
 
   window.addEventListener("appinstalled", () => {
     deferredInstallPrompt = null;
+    window.__esmoDeferredInstallPrompt = null;
+    try {
+      localStorage.setItem("esmo-erof-app-installed", "true");
+    } catch {}
     const btn = document.querySelector("[data-pwa-install]");
     if (btn) btn.classList.add("hidden");
   });
 
   function triggerInstallPrompt() {
-    if (!deferredInstallPrompt) return;
+    if (!deferredInstallPrompt) return false;
     deferredInstallPrompt.prompt();
     deferredInstallPrompt.userChoice.then(() => {
       deferredInstallPrompt = null;
     });
+    return true;
   }
 
   /* ══════════════════════════════════════════
