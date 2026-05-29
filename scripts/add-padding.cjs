@@ -7,15 +7,15 @@ const outputPath = path.join(__dirname, "../public/photos/icon-172-padded.png");
 sharp(inputPath)
   .resize(172, 172)
   .extend({
-    top: 14,
-    bottom: 14,
-    left: 14,
-    right: 14,
+    top: 10,
+    bottom: 10,
+    left: 10,
+    right: 10,
     background: { r: 0, g: 0, b: 0, alpha: 0 },
   })
   .toFile(outputPath)
   .then(() => {
-    console.log("Image with 10% padding created successfully!");
+    console.log("Image with padding created successfully (192x192)!");
     console.log("Output:", outputPath);
   })
   .catch((err) => {
