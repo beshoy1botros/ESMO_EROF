@@ -102,8 +102,6 @@ export default function MelodiesPage() {
   // يبدأ بحجم أصغر، ويمكن تصغيره حتى 10px (بدلاً من 14px سابقاً)
   const [fontSize, setFontSize] = useState(12);
 
-  // ====== خاصية التحكم في صور الهزات ======
-  const [showHazzat, setShowHazzat] = useState(false);
   const [isHazzatZoomed, setIsHazzatZoomed] = useState(false);
   const [showVideoInModal, setShowVideoInModal] = useState(false);
   const [videoTime, setVideoTime] = useState<Record<string, number>>({});
@@ -239,7 +237,6 @@ export default function MelodiesPage() {
     setStage(newStage);
     setLevel(newStage === StageKey.WeddingOfCana ? "الأول" : "");
     setFullscreenLyrics(null);
-    setShowHazzat(false);
     setShowVideoInModal(false);
   }, []);
 
@@ -717,22 +714,6 @@ export default function MelodiesPage() {
                         <label className="text-[11px] uppercase tracking-widest text-orange-400 font-bold px-1">
                           الأدوات
                         </label>
-
-                        {hazzatImagesCount > 0 && (
-                          <button
-                            onClick={() => setShowHazzat(!showHazzat)}
-                            className={`w-full px-4 py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all duration-500 ${
-                              showHazzat
-                                ? "bg-yellow-600 text-white shadow-lg shadow-yellow-900/20"
-                                : "bg-gradient-to-r from-purple-600 to-indigo-600 text-white hover:scale-[1.02] active:scale-95"
-                            }`}
-                          >
-                            <span className="text-sm animate-bounce">🎵</span>
-                            <span>
-                              {showHazzat ? "إخفاء الهزات" : "عرض هزات اللحن"}
-                            </span>
-                          </button>
-                        )}
 
                         <button
                           onClick={() => {
@@ -1217,7 +1198,7 @@ export default function MelodiesPage() {
                   });
                 })()}
 
-                {showHazzat && hazzatImagesCount > 0 && (
+                {hazzatImagesCount > 0 && (
                   <div className="mt-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
                     <div className="bg-gradient-to-r from-purple-900/30 to-yellow-900/30 border border-purple-500/30 rounded-xl p-4 mb-6">
                       <h3 className="text-2xl font-bold text-center text-yellow-400 flex items-center justify-center gap-3">
