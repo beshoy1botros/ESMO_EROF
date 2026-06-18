@@ -12,17 +12,35 @@ import type { Route } from "./+types/root";
 import { useEffect, useState } from "react";
 import { AppInstaller } from "./components/AppInstaller";
 import { OfflineManager } from "./components/OfflineManager";
-import {
-  activateWaitingSW,
-  registerSW,
-  requestPersistentStorage,
-} from "./utils/swClient";
+import { registerSW, requestPersistentStorage } from "./utils/swClient";
 import "./app.css";
 import "./styles/mobile-improvements.css";
 import "./styles/mobile-advanced.css";
 
 interface WebKitFullscreenElement extends HTMLElement {
   webkitRequestFullscreen?: () => Promise<void> | void;
+}
+
+const OPEN_REFRESH_LIMIT = 3;
+const OPEN_REFRESH_KEY = "esmo-erof-open-refresh-count";
+
+function shouldReloadOnOpen() {
+  if (typeof window === "undefined") return false;
+
+  try {
+    const current = Number(sessionStorage.getItem(OPEN_REFRESH_KEY) ?? "0");
+    if (current < OPEN_REFRESH_LIMIT) {
+      sessionStorage.setItem(OPEN_REFRESH_KEY, String(current + 1));
+      window.setTimeout(() => window.location.reload(), 150);
+      return true;
+    }
+
+    sessionStorage.removeItem(OPEN_REFRESH_KEY);
+  } catch {
+    // If storage is blocked, keep the app usable and skip the forced refresh loop.
+  }
+
+  return false;
 }
 
 export const links: Route.LinksFunction = () => [
@@ -257,9 +275,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 export default function App() {
   const [landscapeEnabled, setLandscapeEnabled] = useState(false);
-  const [isUpdateAvailable, setIsUpdateAvailable] = useState(false);
 
   useEffect(() => {
+    if (shouldReloadOnOpen()) return;
+
     async function initializePwaRuntime() {
       try {
         if (
@@ -274,14 +293,7 @@ export default function App() {
         console.warn("[App] فشل طلب التخزين الدائم:", err);
       }
 
-      await registerSW({
-        onUpdate: (event) => {
-          if (event?.type === "SW_WAITING") {
-            setIsUpdateAvailable(true);
-            window.dispatchEvent(new CustomEvent("sw-update-available"));
-          }
-        },
-      });
+      await registerSW({});
     }
 
     if (document.readyState === "complete") {
@@ -341,26 +353,6 @@ export default function App() {
   return (
     <div dir="rtl">
       <Outlet />
-
-      {isUpdateAvailable && (
-        <div className="fixed bottom-4 left-4 right-4 z-[9998] mx-auto flex w-[min(92vw,560px)] items-center justify-between gap-4 rounded-2xl border border-cyan-300/20 bg-gradient-to-r from-slate-950 via-blue-950 to-cyan-950 px-4 py-3 text-white shadow-[0_20px_50px_rgba(2,6,23,0.45)] backdrop-blur-xl">
-          <div className="min-w-0">
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-cyan-200/75">
-              تحديث متاح
-            </p>
-            <p className="mt-1 text-sm font-semibold text-white/95">
-              نسخة جديدة جاهزة، اضغط تحديث الآن لعرض آخر التغييرات مباشرة.
-            </p>
-          </div>
-          <button
-            type="button"
-            onClick={activateWaitingSW}
-            className="shrink-0 rounded-full bg-cyan-400 px-4 py-2 text-sm font-black text-slate-950 transition hover:bg-cyan-300 active:scale-95"
-          >
-            تحديث الآن
-          </button>
-        </div>
-      )}
 
       <AppInstaller />
 
