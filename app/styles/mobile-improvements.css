@@ -547,6 +547,11 @@ video {
     padding-top: env(safe-area-inset-top);
     padding-bottom: env(safe-area-inset-bottom);
   }
+
+  /* iOS notch support: ensure content is positioned below notch */
+  body {
+    padding-top: env(safe-area-inset-top);
+  }
 }
 
 /* دعم المناطق الآمنة لـ iPhone X والأحدث */

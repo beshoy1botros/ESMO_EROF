@@ -682,13 +682,23 @@ img {
   backdrop-filter: blur(16px) saturate(180%);
 }
 
-/* iOS notch safe area: moves tappable header content below the sensor housing. */
+/* iOS notch safe area: positions header below the notch to support touch */
 .ios-safe-header {
-  padding-top: calc(12px + env(safe-area-inset-top));
+  top: 0;
+  margin-top: env(safe-area-inset-top);
+  padding-top: 0;
 }
 
 .ios-safe-drawer {
-  padding-top: calc(12px + env(safe-area-inset-top));
+  top: env(safe-area-inset-top);
+  padding-top: 0;
+}
+
+/* iOS notch safe area for lyrics modal header */
+.ios-safe-lyrics-header {
+  top: 0;
+  margin-top: env(safe-area-inset-top);
+  padding-top: 0;
 }
 
 /* Overlay — blur عند فتح القائمة */

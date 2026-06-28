@@ -113,8 +113,8 @@ export default function Header() {
       {/* ══════════════ الهيدر ══════════════ */}
       <header
         className={`
-          header-blur sticky top-0 z-50 transition-all duration-300
-          ${isIOS ? "ios-safe-header" : ""}
+          header-blur sticky z-50 transition-all duration-300
+          ${isIOS ? "ios-safe-header" : "top-0"}
           ${
             scrolled
               ? "bg-blue-950/95 shadow-[0_4px_24px_rgba(0,0,0,0.4)] border-b border-blue-800/60"
@@ -246,8 +246,8 @@ export default function Header() {
         id="mobile-nav"
         ref={menuRef}
         className={`
-          fixed top-0 right-0 bottom-0 z-50 md:hidden
-          ${isIOS ? "ios-safe-drawer" : ""}
+          fixed right-0 bottom-0 z-50 md:hidden
+          ${isIOS ? "ios-safe-drawer" : "top-0"}
           w-[min(340px,92vw)] flex flex-col
           transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]
           scan-line-effect

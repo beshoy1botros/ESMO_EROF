@@ -83,7 +83,20 @@ function GearIcon({ className = "w-5 h-5" }: { className?: string }) {
     </svg>
   );
 }
-// --- 5. المكون الرئيسي ---
+// --- 5. دالة اكتشاف iOS ---
+function isIOSDevice() {
+  const nav = window.navigator as Navigator & {
+    maxTouchPoints?: number;
+    platform?: string;
+  };
+
+  return (
+    /iPad|iPhone|iPod/.test(nav.userAgent) ||
+    (nav.platform === "MacIntel" && (nav.maxTouchPoints ?? 0) > 1)
+  );
+}
+
+// --- 6. المكون الرئيسي ---
 
 export default function MelodiesPage() {
   const [stage, setStage] = useState<StageKey | "">("");
@@ -92,6 +105,7 @@ export default function MelodiesPage() {
   const [isStageLoading, setIsStageLoading] = useState(false);
   const [stageLoadError, setStageLoadError] = useState<string | null>(null);
   const [fullscreenLyrics, setFullscreenLyrics] = useState<Video | null>(null);
+  const [isIOS, setIsIOS] = useState(false);
 
   // ====== خاصية التحكم في اللغات ======
   const [showCopticArabic, setShowCopticArabic] = useState(true);
@@ -119,6 +133,11 @@ export default function MelodiesPage() {
   // ====== Ref للإغلاق الذكي عند النقر خارج القائمة ======
   const controlsPanelRef = useRef<HTMLDivElement>(null);
   const lastPrewarmedUrls = useRef<Set<string>>(new Set());
+
+  // ====== اكتشاف iOS ======
+  useEffect(() => {
+    setIsIOS(isIOSDevice());
+  }, []);
 
   useEffect(() => {
     if (!stage) {
@@ -511,7 +530,9 @@ export default function MelodiesPage() {
           {/* ============================================================
               الهيدر المُعدَّل - أيقونة الترس مع الأنيميشن والإغلاق الذكي
           ============================================================ */}
-          <header className="sticky top-0 z-50 p-3 md:p-4 bg-gray-900 border-b border-white/10 flex items-center gap-2">
+          <header
+            className={`sticky z-50 p-3 md:p-4 bg-gray-900 border-b border-white/10 flex items-center gap-2 ${isIOS ? "ios-safe-lyrics-header" : "top-0"}`}
+          >
             <div className="flex items-center gap-2 flex-shrink-0">
               {/* حاوية الترس مع الـ Ref للإغلاق الذكي */}
               <div className="relative" ref={controlsPanelRef}>

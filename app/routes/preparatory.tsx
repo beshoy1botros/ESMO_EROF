@@ -252,11 +252,25 @@ function GearIcon({ className = "w-5 h-5" }: { className?: string }) {
   );
 }
 
+// --- دالة اكتشاف iOS ---
+function isIOSDevice() {
+  const nav = window.navigator as Navigator & {
+    maxTouchPoints?: number;
+    platform?: string;
+  };
+
+  return (
+    /iPad|iPhone|iPod/.test(nav.userAgent) ||
+    (nav.platform === "MacIntel" && (nav.maxTouchPoints ?? 0) > 1)
+  );
+}
+
 // --- المكون الرئيسي ---
 export default function PreparatoryPage() {
   const [selectedStage, setSelectedStage] = useState<string>("");
   const [fullscreenLyrics, setFullscreenLyrics] = useState<Video | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>("videos");
+  const [isIOS, setIsIOS] = useState(false);
 
   const [showCopticArabic, setShowCopticArabic] = useState(true);
   const [showArabic, setShowArabic] = useState(true);
@@ -283,6 +297,11 @@ export default function PreparatoryPage() {
   // ====== Ref للإغلاق الذكي عند النقر خارج القائمة ======
   const controlsPanelRef = useRef<HTMLDivElement>(null);
   const lastPrewarmedUrls = useRef<Set<string>>(new Set());
+
+  // ====== اكتشاف iOS ======
+  useEffect(() => {
+    setIsIOS(isIOSDevice());
+  }, []);
 
   // ====== useEffect للإغلاق الذكي (Click Outside to Close) ======
   useEffect(() => {
@@ -644,7 +663,9 @@ export default function PreparatoryPage() {
           {/* ============================================================
               الهيدر - أيقونة الترس مع الأنيميشن والإغلاق الذكي
           ============================================================ */}
-          <header className="sticky top-0 z-50 p-3 md:p-4 bg-gray-900 border-b border-white/10 flex items-center gap-2">
+          <header
+            className={`sticky z-50 p-3 md:p-4 bg-gray-900 border-b border-white/10 flex items-center gap-2 ${isIOS ? "ios-safe-lyrics-header" : "top-0"}`}
+          >
             <div className="flex items-center gap-2 flex-shrink-0">
               {/* حاوية الترس مع الـ Ref للإغلاق الذكي */}
               <div className="relative" ref={controlsPanelRef}>
