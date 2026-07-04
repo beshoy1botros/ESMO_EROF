@@ -548,9 +548,9 @@ video {
     padding-bottom: env(safe-area-inset-bottom);
   }
 
-  /* iOS notch support: ensure content is positioned below notch */
+  /* iOS notch support: Header handles safe area, no need for body padding */
   body {
-    padding-top: env(safe-area-inset-top);
+    margin: 0;
   }
 }
 

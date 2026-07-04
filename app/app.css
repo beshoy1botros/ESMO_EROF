@@ -685,20 +685,20 @@ img {
 /* iOS notch safe area: positions header below the notch to support touch */
 .ios-safe-header {
   top: 0;
-  margin-top: env(safe-area-inset-top);
-  padding-top: 0;
+  padding-top: env(safe-area-inset-top);
+  margin-top: 0;
 }
 
 .ios-safe-drawer {
-  top: env(safe-area-inset-top);
-  padding-top: 0;
+  top: 0;
+  padding-top: env(safe-area-inset-top);
 }
 
 /* iOS notch safe area for lyrics modal header */
 .ios-safe-lyrics-header {
   top: 0;
-  margin-top: env(safe-area-inset-top);
-  padding-top: 0;
+  padding-top: env(safe-area-inset-top);
+  margin-top: 0;
 }
 
 /* Overlay — blur عند فتح القائمة */
