@@ -13,7 +13,11 @@ import { useEffect, useState } from "react";
 import { AppInstaller } from "./components/AppInstaller";
 import { OfflineManager } from "./components/OfflineManager";
 import { UpdateToast, useUpdateToast } from "./components/UpdateToast";
-import { registerSW, requestPersistentStorage, subscribeSWEvents } from "./utils/swClient";
+import {
+  registerSW,
+  requestPersistentStorage,
+  subscribeSWEvents,
+} from "./utils/swClient";
 import "./app.css";
 import "./styles/mobile-improvements.css";
 import "./styles/mobile-advanced.css";

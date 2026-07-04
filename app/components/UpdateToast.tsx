@@ -9,7 +9,7 @@ interface UpdateToastProps {
 /**
  * UpdateToast Component
  * عرض إشعار قصير عند تحديث التطبيق
- * 
+ *
  * الميزات:
  * - اختفاء تلقائي بعد المدة المحددة
  * - عدم مقاطعة المستخدم
@@ -66,11 +66,11 @@ export function UpdateToast({
 /**
  * Hook للتحكم في UpdateToast
  * الاستخدام:
- * 
+ *
  * const { visible, show } = useUpdateToast();
- * 
+ *
  * <UpdateToast visible={visible} onDismiss={() => setVisible(false)} />
- * 
+ *
  * // عند التحديث:
  * show();
  */
