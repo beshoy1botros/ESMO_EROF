@@ -12,7 +12,8 @@ import type { Route } from "./+types/root";
 import { useEffect, useState } from "react";
 import { AppInstaller } from "./components/AppInstaller";
 import { OfflineManager } from "./components/OfflineManager";
-import { registerSW, requestPersistentStorage } from "./utils/swClient";
+import { UpdateToast, useUpdateToast } from "./components/UpdateToast";
+import { registerSW, requestPersistentStorage, subscribeSWEvents } from "./utils/swClient";
 import "./app.css";
 import "./styles/mobile-improvements.css";
 import "./styles/mobile-advanced.css";
@@ -275,6 +276,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 export default function App() {
   const [landscapeEnabled, setLandscapeEnabled] = useState(false);
+  const { visible: updateToastVisible, show: showUpdateToast } =
+    useUpdateToast(2000);
 
   useEffect(() => {
     if (shouldReloadOnOpen()) return;
@@ -304,6 +307,23 @@ export default function App() {
     window.addEventListener("load", initializePwaRuntime, { once: true });
     return () => window.removeEventListener("load", initializePwaRuntime);
   }, []);
+
+  // ✅ Auto-skip waiting SW (تحديث تلقائي بدون مطالبة المستخدم)
+  useEffect(() => {
+    const unsubscribe = subscribeSWEvents((event) => {
+      if (event.type === "SW_WAITING") {
+        // إخبر SW لتخطي الانتظار وتفعيل نفسها فوراً
+        navigator.serviceWorker.controller?.postMessage({
+          type: "SKIP_WAITING",
+        });
+      } else if (event.type === "SW_ACTIVATED") {
+        // تحديث تم بنجاح - عرض إشعار قصير
+        showUpdateToast();
+        console.log("[App] تم تحديث التطبيق إلى النسخة:", event.version);
+      }
+    });
+    return unsubscribe;
+  }, [showUpdateToast]);
 
   useEffect(() => {
     if (landscapeEnabled) {
@@ -359,6 +379,9 @@ export default function App() {
       {/* ✅ FIX 4: تفعيل OfflineManager — كان موجود في الكود بس مش متضمّن هنا */}
       {/* هو اللي بيعرض تحذير "أضف للشاشة الرئيسية" للمستخدم */}
       <OfflineManager />
+
+      {/* ✅ عرض إشعار التحديث التلقائي */}
+      <UpdateToast visible={updateToastVisible} />
 
       <button
         id="landscape-toggle-button"

@@ -173,8 +173,8 @@ export async function registerSW(options: RegistrationOptions = {}): Promise<boo
     // ✅ الاشتراك في BroadcastChannel بعد التسجيل
     if (onUpdate) subscribeSWEvents(onUpdate);
 
-    // ✅ فحص التحديثات دورياً (كل ساعة)
-    setInterval(() => _registration?.update(), 60 * 60 * 1000);
+    // ✅ فحص التحديثات دورياً (كل 30 دقيقة)
+    setInterval(() => _registration?.update(), 30 * 60 * 1000);
 
     return true;
   } catch (error) {
